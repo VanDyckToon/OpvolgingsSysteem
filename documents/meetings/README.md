@@ -2,6 +2,7 @@
 
 This folder is intended to hold all the files related to the SCRUM flow.  
 Documents should be written in the markdown format.
+First meeting
 
 ## Examples
 
