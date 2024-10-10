@@ -6,6 +6,9 @@ import ormConfig from './typeorm/orm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolModule } from './rol/rol.module';
 import { CompetentieModule } from './competentie/competentie.module';
+import { MateriaalModule } from './materiaal/materiaal.module';
+import { OpleidingModule } from './opleiding/opleiding.module';
+import { GroepModule } from './groep/groep.module';
 
 @Module({
   imports: [
@@ -21,6 +24,9 @@ import { CompetentieModule } from './competentie/competentie.module';
     }),
     RolModule,
     CompetentieModule,
+    MateriaalModule,
+    OpleidingModule,
+    GroepModule,
   ],
   controllers: [AppController],
   providers: [AppService],
