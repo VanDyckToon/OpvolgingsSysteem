@@ -5,6 +5,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import ormConfig from './typeorm/orm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolModule } from './rol/rol.module';
+import { MateriaalModule } from './materiaal/materiaal.module';
+import { OpleidingModule } from './opleiding/opleiding.module';
+import { GroepModule } from './groep/groep.module';
 
 @Module({
   imports: [
@@ -19,6 +22,9 @@ import { RolModule } from './rol/rol.module';
       inject: [ConfigService],
     }),
     RolModule,
+    MateriaalModule,
+    OpleidingModule,
+    GroepModule,
   ],
   controllers: [AppController],
   providers: [AppService],
