@@ -13,6 +13,7 @@ import { ScoreModule } from './score/score.module';
 import { TaakModule } from './taak/taak.module';
 import { TechnischeCompetentieModule } from './technische-competentie/technische-competentie.module';
 import { GebruikerModule } from './gebruiker/gebruiker.module';
+import { SubgroepModule } from './subgroep/subgroep.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { GebruikerModule } from './gebruiker/gebruiker.module';
     TaakModule,
     TechnischeCompetentieModule,
     GebruikerModule,
+    SubgroepModule,
   ],
   controllers: [AppController],
   providers: [AppService],

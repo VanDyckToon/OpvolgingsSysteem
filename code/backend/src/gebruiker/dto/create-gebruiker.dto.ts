@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Rol } from '../../rol/entities/rol.entity';
+import { Subgroep } from '../../subgroep/entities/subgroep.entity';
 
 export class CreateGebruikerDto {
   @ApiProperty()
@@ -70,4 +71,7 @@ export class CreateGebruikerDto {
 
   @ApiProperty()
   rol: Rol;
+
+  @ApiProperty()
+  subgroep: Subgroep;
 }
