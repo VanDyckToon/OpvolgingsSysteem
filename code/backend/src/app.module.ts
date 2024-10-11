@@ -10,6 +10,7 @@ import { MateriaalModule } from './materiaal/materiaal.module';
 import { OpleidingModule } from './opleiding/opleiding.module';
 import { GroepModule } from './groep/groep.module';
 import { ScoreModule } from './score/score.module';
+import { TaakModule } from './taak/taak.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ScoreModule } from './score/score.module';
     OpleidingModule,
     GroepModule,
     ScoreModule,
+    TaakModule,
   ],
   controllers: [AppController],
   providers: [AppService],
