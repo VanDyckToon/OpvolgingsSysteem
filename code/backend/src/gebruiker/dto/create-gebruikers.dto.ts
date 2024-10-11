@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Rol } from '../../rol/entities/rol.entity';
 import { IsNotEmpty } from 'class-validator';
 import { JoinColumn } from 'typeorm';
+import { Subgroep } from '../../subgroep/entities/subgroep.entity';
+
 
 export class CreateGebruikerDto {
   @ApiProperty()
@@ -16,6 +18,9 @@ export class CreateGebruikerDto {
   @ApiProperty()
   @IsNotEmpty()
   achternaam: string;
+
+  @ApiProperty()
+  subgroep: Subgroep;
 
   @ApiProperty({ default: null })
   straat: string = null;
