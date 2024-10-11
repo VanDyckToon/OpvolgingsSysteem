@@ -3,7 +3,7 @@ import { Rol } from '../../rol/entities/rol.entity';
 import { IsNotEmpty } from 'class-validator';
 import { JoinColumn } from 'typeorm';
 import { Subgroep } from '../../subgroep/entities/subgroep.entity';
-
+import { Gebruiker } from '../entities/gebruiker.entity';
 
 export class CreateGebruikerDto {
   @ApiProperty()
@@ -42,4 +42,7 @@ export class CreateGebruikerDto {
 
   @ApiProperty({ default: null })
   foto: string = null;
+
+  @ApiProperty({ default: null })
+  begeleider: Gebruiker;
 }

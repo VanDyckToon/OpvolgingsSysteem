@@ -55,4 +55,13 @@ export class Gebruiker {
   @ManyToOne(() => Subgroep, (subgroep) => subgroep.gebruikers)
   @JoinColumn({ name: 'subgroepID' })
   subgroep: Subgroep;
+
+  @ManyToOne(() => Gebruiker, (begeleider) => begeleider.gebruikers, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'begeleiderID' })
+  begeleider: Gebruiker;
+
+  @OneToMany(() => Gebruiker, (gebruiker) => gebruiker.begeleider)
+  gebruikers: Gebruiker[];
 }
