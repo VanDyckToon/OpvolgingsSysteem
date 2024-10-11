@@ -1,14 +1,14 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Taak } from "../../taak/entities/taak.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Taak } from '../../taak/entities/taak.entity';
 
 @Entity()
 export class Groep {
-    @PrimaryGeneratedColumn()
-    groepID: number;
+  @PrimaryGeneratedColumn()
+  groepID: number;
 
-    @Column()
-    naam: string;
+  @Column()
+  naam: string;
 
-    @OneToMany(() => Taak, (taak) => taak.groep)
-    taaks: Taak[];
+  @OneToMany(() => Taak, (taak) => taak.groep)
+  taken: Taak[];
 }
