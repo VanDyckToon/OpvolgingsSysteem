@@ -13,6 +13,7 @@ import { ScoreModule } from './score/score.module';
 import { TaakModule } from './taak/taak.module';
 import { TechnischeCompetentieModule } from './technische-competentie/technische-competentie.module';
 import { GebruikerModule } from './gebruiker/gebruiker.module';
+import { SubgroepModule } from './subgroep/subgroep.module';
 import { TaakMateriaalModule } from './taak-materiaal/taak-materiaal.module';
 
 @Module({
@@ -36,6 +37,7 @@ import { TaakMateriaalModule } from './taak-materiaal/taak-materiaal.module';
     TaakModule,
     TechnischeCompetentieModule,
     GebruikerModule,
+    SubgroepModule,
     TaakMateriaalModule,
   ],
   controllers: [AppController],
