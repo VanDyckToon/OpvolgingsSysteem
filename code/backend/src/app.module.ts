@@ -9,6 +9,7 @@ import { CompetentieModule } from './competentie/competentie.module';
 import { MateriaalModule } from './materiaal/materiaal.module';
 import { OpleidingModule } from './opleiding/opleiding.module';
 import { GroepModule } from './groep/groep.module';
+import { ScoreModule } from './score/score.module';
 import { TaakModule } from './taak/taak.module';
 
 @Module({
@@ -28,6 +29,7 @@ import { TaakModule } from './taak/taak.module';
     MateriaalModule,
     OpleidingModule,
     GroepModule,
+    ScoreModule,
     TaakModule,
   ],
   controllers: [AppController],
