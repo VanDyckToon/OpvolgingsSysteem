@@ -1,7 +1,8 @@
 import { Rol } from '../../rol/entities/rol.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { OpleidingGebruiker } from '../../opleiding-gebruiker/entities/opleiding-gebruiker.entity';
 
 @Entity()
 export class Gebruiker {
@@ -97,4 +98,7 @@ export class Gebruiker {
   @ManyToOne(() => Rol, (rol) => rol.gebruikers)
   @IsNotEmpty()
   rol: Rol;
+
+  @OneToMany(() => OpleidingGebruiker, (opleidingGebruiker) => opleidingGebruiker.gebruiker)
+    opleidingGebruikers: OpleidingGebruiker[];
 }

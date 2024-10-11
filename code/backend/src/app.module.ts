@@ -14,6 +14,7 @@ import { TaakModule } from './taak/taak.module';
 import { TechnischeCompetentieModule } from './technische-competentie/technische-competentie.module';
 import { GebruikerModule } from './gebruiker/gebruiker.module';
 import { TaakMateriaalModule } from './taak-materiaal/taak-materiaal.module';
+import { OpleidingGebruikerModule } from './opleiding-gebruiker/opleiding-gebruiker.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { TaakMateriaalModule } from './taak-materiaal/taak-materiaal.module';
     TechnischeCompetentieModule,
     GebruikerModule,
     TaakMateriaalModule,
+    OpleidingGebruikerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
