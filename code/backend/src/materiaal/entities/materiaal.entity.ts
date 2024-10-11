@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { TaakMateriaal } from "../../taak-materiaal/entities/taak-materiaal.entity";
 
 @Entity()
 export class Materiaal {
@@ -7,4 +8,10 @@ export class Materiaal {
 
     @Column()
     beschrijving: string;
+
+    @OneToMany(
+        () => TaakMateriaal, 
+        (taakMateriaal) => taakMateriaal.materiaal,
+    )
+    taakMaterialen: TaakMateriaal[];
 }
