@@ -11,6 +11,7 @@ import { OpleidingModule } from './opleiding/opleiding.module';
 import { GroepModule } from './groep/groep.module';
 import { ScoreModule } from './score/score.module';
 import { TaakModule } from './taak/taak.module';
+import { TechnischeCompetentieModule } from './technische-competentie/technische-competentie.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { TaakModule } from './taak/taak.module';
     GroepModule,
     ScoreModule,
     TaakModule,
+    TechnischeCompetentieModule
   ],
   controllers: [AppController],
   providers: [AppService],
