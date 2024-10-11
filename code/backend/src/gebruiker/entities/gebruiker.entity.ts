@@ -1,5 +1,13 @@
 import { Rol } from '../../rol/entities/rol.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+} from 'typeorm';
+
+import { Subgroep } from '../../subgroep/entities/subgroep.entity';
 
 @Entity()
 export class Gebruiker {
@@ -35,4 +43,8 @@ export class Gebruiker {
 
   @ManyToOne(() => Rol, (rol) => rol.gebruikers)
   rol: Rol;
+
+  @ManyToOne(() => Subgroep, (subgroep) => subgroep.gebruikers)
+  @JoinColumn({ name: 'subgroepID' })
+  subgroep: Subgroep;
 }
