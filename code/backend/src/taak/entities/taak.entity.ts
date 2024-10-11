@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, JoinColumn } from "typeorm";
 import { Groep } from "../../groep/entities/groep.entity";
+import { TechnischeCompetentie } from "../../technische-competentie/entities/technische-competentie.entity";
 
 @Entity()
 export class Taak {
@@ -12,4 +13,7 @@ export class Taak {
     @ManyToOne(() => Groep, (groep) => groep.taaks)
     @JoinColumn({ name: 'groepID' })
     groep: Groep;
+
+    @OneToMany(() => TechnischeCompetentie, (technischeCompetentie) => technischeCompetentie.taak)
+    technischeCompetenties: TechnischeCompetentie[];
 }
