@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGebruikerDto } from './dto/create-gebruiker.dto';
+import { CreateGebruikerDto } from './dto/create-gebruikers.dto';
 import { UpdateGebruikerDto } from './dto/update-gebruiker.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gebruiker } from './entities/gebruiker.entity';
@@ -12,7 +12,7 @@ export class GebruikerService {
     private readonly gebruikerRepository: Repository<Gebruiker>,
   ) {}
 
-  create(createGebruikerDto: CreateGebruikerDto) {
+  createGebruiker(createGebruikerDto: CreateGebruikerDto) {
     return this.gebruikerRepository.save(createGebruikerDto);
   }
 
