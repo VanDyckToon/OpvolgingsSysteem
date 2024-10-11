@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { OpleidingGebruiker } from "../../opleiding-gebruiker/entities/opleiding-gebruiker.entity";
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 
 @Entity()
 export class Opleiding {
@@ -16,4 +17,7 @@ export class Opleiding {
 
     @Column()
     datumEind: Date;
+
+    @OneToMany(() => OpleidingGebruiker, (opleidingGebruiker) => opleidingGebruiker.opleiding)
+    opleidingGebruikers: OpleidingGebruiker[];
 }
