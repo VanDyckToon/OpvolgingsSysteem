@@ -20,11 +20,19 @@ export class OpleidingGebruikerService {
   }
 
   findOne(opleidingGebruikerID: number) {
-    return this.opleidingGebruikerRepository.findOneBy({ opleidingGebruikerID });
+    return this.opleidingGebruikerRepository.findOneBy({
+      opleidingGebruikerID,
+    });
   }
 
-  update(opleidingGebruikerID: number, updateOpleidingGebruikerDto: UpdateOpleidingGebruikerDto) {
-    return this.opleidingGebruikerRepository.update(opleidingGebruikerID, updateOpleidingGebruikerDto);
+  update(
+    opleidingGebruikerID: number,
+    updateOpleidingGebruikerDto: UpdateOpleidingGebruikerDto,
+  ) {
+    return this.opleidingGebruikerRepository.update(
+      opleidingGebruikerID,
+      updateOpleidingGebruikerDto,
+    );
   }
 
   remove(opleidingGebruikerID: number) {
