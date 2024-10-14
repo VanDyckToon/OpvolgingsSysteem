@@ -16,6 +16,7 @@ import { GebruikerModule } from './gebruiker/gebruiker.module';
 import { SubgroepModule } from './subgroep/subgroep.module';
 import { TaakMateriaalModule } from './taak-materiaal/taak-materiaal.module';
 import { OpleidingGebruikerModule } from './opleiding-gebruiker/opleiding-gebruiker.module';
+import { CompetentieGebruikerModule } from './competentie-gebruiker/competentie-gebruiker.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { OpleidingGebruikerModule } from './opleiding-gebruiker/opleiding-gebrui
     SubgroepModule,
     TaakMateriaalModule,
     OpleidingGebruikerModule,
+    CompetentieGebruikerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
