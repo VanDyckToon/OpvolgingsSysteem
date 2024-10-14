@@ -17,11 +17,16 @@ export class GebruikerService {
   }
 
   findAll() {
-    return this.gebruikerRepository.find();
+    return this.gebruikerRepository.find({
+      relations: ['rol', 'opleidingGebruikers', 'subgroep'],
+    });
   }
 
-  findOne(gebruikerID: number) {
-    return this.gebruikerRepository.findOneBy({ gebruikerID });
+  async findOne(gebruikerID: number): Promise<Gebruiker> {
+    return this.gebruikerRepository.findOne({
+      where: { gebruikerID },
+      relations: ['rol', 'opleidingGebruikers', 'subgroep'],
+    });
   }
 
   update(gebruikerID: number, updateGebruikerDto: UpdateGebruikerDto) {

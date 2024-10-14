@@ -12,6 +12,7 @@ import { OpleidingGebruiker } from '../../opleiding-gebruiker/entities/opleiding
 import { Subgroep } from '../../subgroep/entities/subgroep.entity';
 import { CompetentieGebruiker } from '../../competentie-gebruiker/entities/competentie-gebruiker.entity';
 import { TechnischeCompetentieGebruiker } from '../../technische-competentie-gebruiker/entities/technische-competentie-gebruiker.entity';
+import { Opmerking } from '../../opmerking/entities/opmerking.entity';
 
 @Entity()
 export class Gebruiker {
@@ -67,9 +68,22 @@ export class Gebruiker {
   @OneToMany(() => Gebruiker, (gebruiker) => gebruiker.begeleider)
   gebruikers: Gebruiker[];
 
-  @OneToMany(() => CompetentieGebruiker, (competentieGebruiker) => competentieGebruiker.gebruiker)
+  @OneToMany(
+    () => CompetentieGebruiker,
+    (competentieGebruiker) => competentieGebruiker.gebruiker,
+  )
   competentieGebruikers: CompetentieGebruiker[];
 
-  @OneToMany(() => TechnischeCompetentieGebruiker, (technischeCompetentieGebruiker) => technischeCompetentieGebruiker.gebruiker)
+  @OneToMany(
+    () => TechnischeCompetentieGebruiker,
+    (technischeCompetentieGebruiker) =>
+      technischeCompetentieGebruiker.gebruiker,
+  )
   technischeCompetentieGebruikers: TechnischeCompetentieGebruiker[];
+
+  @OneToMany(() => Opmerking, (opmerking) => opmerking.werknemer)
+  werknemerOpmerkingen: Opmerking[];
+
+  @OneToMany(() => Opmerking, (opmerking) => opmerking.begeleider)
+  begeleiderOpmerkingen: Opmerking[];
 }
