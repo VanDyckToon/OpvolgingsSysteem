@@ -1,3 +1,4 @@
+import { TechnischeCompetentieGebruiker } from "../../technische-competentie-gebruiker/entities/technische-competentie-gebruiker.entity";
 import { CompetentieGebruiker } from "../../competentie-gebruiker/entities/competentie-gebruiker.entity";
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 
@@ -13,5 +14,8 @@ export class Score {
     waarde: number;
 
     @OneToMany(() => CompetentieGebruiker, (competentieGebruiker) => competentieGebruiker.score)
-  competentieGebruikers: CompetentieGebruiker[];
+    competentieGebruikers: CompetentieGebruiker[];
+
+    @OneToMany(() => TechnischeCompetentieGebruiker, (technischeCompetentieGebruiker) => technischeCompetentieGebruiker.score)
+    technischeCompetentieGebruikers: TechnischeCompetentieGebruiker[];
 }

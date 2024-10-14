@@ -11,6 +11,7 @@ import {
 import { OpleidingGebruiker } from '../../opleiding-gebruiker/entities/opleiding-gebruiker.entity';
 import { Subgroep } from '../../subgroep/entities/subgroep.entity';
 import { CompetentieGebruiker } from '../../competentie-gebruiker/entities/competentie-gebruiker.entity';
+import { TechnischeCompetentieGebruiker } from '../../technische-competentie-gebruiker/entities/technische-competentie-gebruiker.entity';
 
 @Entity()
 export class Gebruiker {
@@ -68,4 +69,7 @@ export class Gebruiker {
 
   @OneToMany(() => CompetentieGebruiker, (competentieGebruiker) => competentieGebruiker.gebruiker)
   competentieGebruikers: CompetentieGebruiker[];
+
+  @OneToMany(() => TechnischeCompetentieGebruiker, (technischeCompetentieGebruiker) => technischeCompetentieGebruiker.gebruiker)
+  technischeCompetentieGebruikers: TechnischeCompetentieGebruiker[];
 }
