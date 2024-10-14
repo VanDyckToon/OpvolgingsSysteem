@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { CompetentieGebruiker } from '../../competentie-gebruiker/entities/competentie-gebruiker.entity';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class Competentie {
@@ -10,4 +11,7 @@ export class Competentie {
 
   @Column()
   beschrijving: string;
+
+  @OneToMany(() => CompetentieGebruiker, (competentieGebruiker) => competentieGebruiker.competentie)
+  competentieGebruikers: CompetentieGebruiker[];
 }
