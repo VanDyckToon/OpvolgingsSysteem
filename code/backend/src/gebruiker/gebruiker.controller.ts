@@ -10,6 +10,7 @@ import {
 import { GebruikerService } from './gebruiker.service';
 import { CreateGebruikerDto } from './dto/create-gebruikers.dto';
 import { UpdateGebruikerDto } from './dto/update-gebruiker.dto';
+import { Gebruiker } from './entities/gebruiker.entity';
 
 @Controller('gebruiker')
 export class GebruikerController {
@@ -41,5 +42,12 @@ export class GebruikerController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.gebruikerService.remove(+id);
+  }
+
+  @Get('begeleider/:id')
+  async getGebruikersVanBegeleider(
+    @Param('id') begeleiderID: number,
+  ): Promise<Gebruiker[]> {
+    return this.gebruikerService.getAllGebruikersVanBegeleider(begeleiderID);
   }
 }
