@@ -4,7 +4,7 @@ import { IsEmail, IsNotEmpty } from 'class-validator';
 export class SignInDto {
   @ApiProperty()
   @IsEmail()
-  emails: string;
+  email: string;
 
   @ApiProperty()
   @IsNotEmpty()
