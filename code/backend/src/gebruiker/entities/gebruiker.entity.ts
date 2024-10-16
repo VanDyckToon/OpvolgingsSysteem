@@ -23,11 +23,11 @@ export class Gebruiker {
   @Column()
   achternaam: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   email: string;
 
-  @Column()
-  password: string;
+  @Column({ nullable: true })
+  wachtwoord: string;
 
   @Column({ nullable: true })
   straat: string;

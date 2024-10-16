@@ -4,6 +4,7 @@ import { UpdateGebruikerDto } from './dto/update-gebruiker.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gebruiker } from './entities/gebruiker.entity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class GebruikerService {
@@ -12,8 +13,15 @@ export class GebruikerService {
     private readonly gebruikerRepository: Repository<Gebruiker>,
   ) {}
 
-  createGebruiker(createGebruikerDto: CreateGebruikerDto) {
-    return this.gebruikerRepository.save(createGebruikerDto);
+  async createGebruiker(createGebruikerDto: CreateGebruikerDto) {
+    const hashedWachtwoord = await bcrypt.hash(
+      createGebruikerDto.wachtwoord,
+      10,
+    );
+    return this.gebruikerRepository.save({
+      ...createGebruikerDto,
+      wachtwoord: hashedWachtwoord,
+    });
   }
 
   findAll() {
@@ -33,6 +41,9 @@ export class GebruikerService {
   }
 
   async findGebruikerByEmail(email: string): Promise<Gebruiker | undefined> {
-    return this.gebruikerRepository.findOneBy({ email });
+    return this.gebruikerRepository.findOne({
+      where: { email },
+      relations: ['rol'],
+    });
   }
 }
