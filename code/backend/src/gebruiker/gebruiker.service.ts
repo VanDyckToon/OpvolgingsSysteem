@@ -13,15 +13,24 @@ export class GebruikerService {
     private readonly gebruikerRepository: Repository<Gebruiker>,
   ) {}
 
-  async createGebruiker(createGebruikerDto: CreateGebruikerDto) {
-    const hashedWachtwoord = await bcrypt.hash(
-      createGebruikerDto.wachtwoord,
-      10,
-    );
-    return this.gebruikerRepository.save({
-      ...createGebruikerDto,
-      wachtwoord: hashedWachtwoord,
-    });
+  async createGebruiker(data: CreateGebruikerDto): Promise<Gebruiker> {
+    const { wachtwoord, rol } = data;
+
+    if (rol && rol.rolID !== 3) {
+      if (wachtwoord) {
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(wachtwoord, saltRounds);
+        data.wachtwoord = hashedPassword;
+      } else {
+        throw new Error('Password is required');
+      }
+    } else {
+      data.wachtwoord = null;
+      data.email = null;
+    }
+
+    const gebruiker = await this.gebruikerRepository.save(data);
+    return gebruiker;
   }
 
   findAll() {
