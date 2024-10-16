@@ -51,4 +51,13 @@ export class GebruikerService {
       relations: ['rol'],
     });
   }
+
+  async getAllGebruikersVanBegeleider(
+    begeleiderID: number,
+  ): Promise<Gebruiker[]> {
+    return this.gebruikerRepository.find({
+      where: { begeleider: { gebruikerID: begeleiderID } },
+      relations: ['begeleider'], // Optioneel, als je ook de begeleider details wilt ophalen
+    });
+  }
 }
