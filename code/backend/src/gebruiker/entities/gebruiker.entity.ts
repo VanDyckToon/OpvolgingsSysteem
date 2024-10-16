@@ -7,7 +7,6 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-
 import { OpleidingGebruiker } from '../../opleiding-gebruiker/entities/opleiding-gebruiker.entity';
 import { Subgroep } from '../../subgroep/entities/subgroep.entity';
 import { CompetentieGebruiker } from '../../competentie-gebruiker/entities/competentie-gebruiker.entity';
@@ -24,6 +23,12 @@ export class Gebruiker {
 
   @Column()
   achternaam: string;
+
+  @Column({ unique: true, nullable: true })
+  email: string;
+
+  @Column({ nullable: true })
+  wachtwoord: string;
 
   @Column({ nullable: true })
   straat: string;
