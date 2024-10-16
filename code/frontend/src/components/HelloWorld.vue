@@ -1,61 +1,41 @@
+<script setup lang="ts">
+defineProps<{
+  msg: string
+}>()
+</script>
+
 <template>
-  <div v-if="gebruiker">
-    <h1>Details van gebruiker</h1>
-    <div>
-      <img
-        v-if="gebruiker.foto"
-        :src="gebruiker.foto"
-        alt="Foto van gebruiker"
-      />
-      <h2>{{ gebruiker.voornaam }} {{ gebruiker.achternaam }}</h2>
-      <p><strong>Rol:</strong> {{ gebruiker.rol?.naam }}</p>
-      <!-- Vervang naam door de juiste eigenschap van Rol -->
-      <p>
-        <strong>Adres:</strong> {{ gebruiker.straat }}
-        {{ gebruiker.huisNummer }}, {{ gebruiker.postcode }}
-        {{ gebruiker.woonplaats }}
-      </p>
-      <p><strong>ICE Naam:</strong> {{ gebruiker.ICENaam }}</p>
-      <p>
-        <strong>ICE Telefoonnummer:</strong> {{ gebruiker.ICETelefoonnummer }}
-      </p>
-    </div>
-  </div>
-  <div v-else>
-    <p>Loading...</p>
+  <div class="greetings">
+    <h1 class="green">{{ msg }}</h1>
+    <h3>
+      You’ve successfully created a project with
+      <a href="https://vite.dev/" target="_blank" rel="noopener">Vite</a> +
+      <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>.
+    </h3>
   </div>
 </template>
 
-<script>
-import axios from "axios";
+<style scoped>
+h1 {
+  font-weight: 500;
+  font-size: 2.6rem;
+  position: relative;
+  top: -10px;
+}
 
-export default {
-  data() {
-    return {
-      gebruiker: null,
-    };
-  },
-  async created() {
-    await this.fetchGebruiker(4); // Fetch gebruiker with ID 4
-  },
-  methods: {
-    async fetchGebruiker(id) {
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/gebruiker/${id}`
-        );
-        this.gebruiker = response.data;
-      } catch (error) {
-        console.error(
-          "Er is een fout opgetreden bij het ophalen van gebruiker:",
-          error
-        );
-      }
-    },
-  },
-};
-</script>
+h3 {
+  font-size: 1.2rem;
+}
 
-<style>
-/* Voeg hier je stijl toe */
+.greetings h1,
+.greetings h3 {
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .greetings h1,
+  .greetings h3 {
+    text-align: left;
+  }
+}
 </style>

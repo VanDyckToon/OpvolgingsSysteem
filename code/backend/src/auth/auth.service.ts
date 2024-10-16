@@ -16,7 +16,7 @@ export class AuthService {
   ): Promise<{ access_token: string }> {
     const gebruiker = await this.gebruikerService.findGebruikerByEmail(email);
     if (!gebruiker || !(await bcrypt.compare(password, gebruiker.wachtwoord))) {
-      throw new UnauthorizedException('Invalid email or password');
+      throw new UnauthorizedException();
     }
     const payload = {
       gebruikerID: gebruiker.gebruikerID,
