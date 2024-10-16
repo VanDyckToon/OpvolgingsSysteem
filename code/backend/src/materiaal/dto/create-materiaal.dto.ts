@@ -1,7 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateMateriaalDto {
-    @ApiProperty()
-    beschrijving: string;
+  @ApiProperty()
+  beschrijving: string;
 }
-    

@@ -19,6 +19,7 @@ import { OpleidingGebruikerModule } from './opleiding-gebruiker/opleiding-gebrui
 import { CompetentieGebruikerModule } from './competentie-gebruiker/competentie-gebruiker.module';
 import { TechnischeCompetentieGebruikerModule } from './technische-competentie-gebruiker/technische-competentie-gebruiker.module';
 import { AuthModule } from './auth/auth.module';
+import { OpmerkingModule } from './opmerking/opmerking.module';
 
 @Module({
   imports: [
@@ -47,6 +48,8 @@ import { AuthModule } from './auth/auth.module';
     CompetentieGebruikerModule,
     TechnischeCompetentieGebruikerModule,
     AuthModule,
+    OpmerkingModule,
+
   ],
   controllers: [AppController],
   providers: [AppService],
