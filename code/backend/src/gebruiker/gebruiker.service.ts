@@ -31,4 +31,8 @@ export class GebruikerService {
   remove(gebruikerID: number) {
     return this.gebruikerRepository.delete({ gebruikerID });
   }
+
+  async findGebruikerByEmail(email: string): Promise<Gebruiker | undefined> {
+    return this.gebruikerRepository.findOneBy({ email });
+  }
 }

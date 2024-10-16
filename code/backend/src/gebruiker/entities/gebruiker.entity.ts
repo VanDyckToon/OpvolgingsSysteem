@@ -7,7 +7,6 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-
 import { OpleidingGebruiker } from '../../opleiding-gebruiker/entities/opleiding-gebruiker.entity';
 import { Subgroep } from '../../subgroep/entities/subgroep.entity';
 import { CompetentieGebruiker } from '../../competentie-gebruiker/entities/competentie-gebruiker.entity';
@@ -23,6 +22,12 @@ export class Gebruiker {
 
   @Column()
   achternaam: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  password: string;
 
   @Column({ nullable: true })
   straat: string;
@@ -67,9 +72,16 @@ export class Gebruiker {
   @OneToMany(() => Gebruiker, (gebruiker) => gebruiker.begeleider)
   gebruikers: Gebruiker[];
 
-  @OneToMany(() => CompetentieGebruiker, (competentieGebruiker) => competentieGebruiker.gebruiker)
+  @OneToMany(
+    () => CompetentieGebruiker,
+    (competentieGebruiker) => competentieGebruiker.gebruiker,
+  )
   competentieGebruikers: CompetentieGebruiker[];
 
-  @OneToMany(() => TechnischeCompetentieGebruiker, (technischeCompetentieGebruiker) => technischeCompetentieGebruiker.gebruiker)
+  @OneToMany(
+    () => TechnischeCompetentieGebruiker,
+    (technischeCompetentieGebruiker) =>
+      technischeCompetentieGebruiker.gebruiker,
+  )
   technischeCompetentieGebruikers: TechnischeCompetentieGebruiker[];
 }
