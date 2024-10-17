@@ -1,9 +1,10 @@
-import './assets/main.css'
+// src/main.ts
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router/router' // Import the router
+import router from './router/router'
+import './index.css'
 
-// Create the app with the router
 const app = createApp(App)
-app.use(router) // Tell the app to use the router
+
+app.use(router) // Gebruik Vue Router in de app
 app.mount('#app')
