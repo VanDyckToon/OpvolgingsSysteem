@@ -49,7 +49,6 @@ import { OpmerkingModule } from './opmerking/opmerking.module';
     TechnischeCompetentieGebruikerModule,
     AuthModule,
     OpmerkingModule,
-
   ],
   controllers: [AppController],
   providers: [AppService],
