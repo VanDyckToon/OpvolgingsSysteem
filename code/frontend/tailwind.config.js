@@ -4,7 +4,11 @@ export default {
   darkMode: false,
   content: [],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Zilla Slab', 'serif']
+      }
+    },
   },
   plugins: [],
 }

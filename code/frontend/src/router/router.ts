@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../components/Login.vue'
 import Gebruikers from '../components/Gebruikers.vue'
+import Adminpanel from '../components/Adminpanel.vue'
 
 const routes = [
   {
@@ -12,6 +13,11 @@ const routes = [
     path: '/begeleider/:id',
     name: 'GebruikersPage',
     component: Gebruikers,
+  },
+  {
+    path: '/adminpanel',
+    name: 'AdminPanel',
+    component: Adminpanel,
   },
 ]
 
