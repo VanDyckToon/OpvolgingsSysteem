@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-[#ECF3EB] flex flex-col">
-    <HeaderComponent />
+    <HeaderComponent :begeleiderID="begeleiderID" />
     <div class="flex-grow flex justify-center items-center">
       <div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
         <h2 class="text-2xl font-bold mb-6 text-center text-[#456A50]">
@@ -32,6 +32,7 @@
               <Icon
                 icon="pepicons-pop:dots-x-circle-filled"
                 class="text-[#456A50] w-8 h-8"
+                @click="goToDetails(gebruiker.gebruikerID)"
               />
               <Icon icon="mdi:comments" class="text-[#456A50] w-8 h-8" />
             </div>
@@ -60,7 +61,7 @@ export default defineComponent({
   name: 'GebruikersPage',
   components: {
     Icon,
-    HeaderComponent, // Headercomponent registreren
+    HeaderComponent,
   },
   data() {
     return {
@@ -84,6 +85,12 @@ export default defineComponent({
           error,
         )
       }
+    },
+    goToDetails(gebruikerID: number) {
+      this.$router.push({
+        name: 'GebruikerDetail',
+        params: { id: gebruikerID, begeleiderID: this.begeleiderID },
+      })
     },
   },
 })

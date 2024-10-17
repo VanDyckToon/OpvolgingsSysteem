@@ -1,7 +1,6 @@
 <template>
   <div class="min-h-screen bg-[#ECF3EB] flex flex-col">
     <HeaderComponent :begeleiderID="begeleiderID" />
-   
     <div class="flex-grow flex justify-center items-center">
       <div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
         <div v-if="gebruiker" class="space-y-4">
@@ -87,21 +86,10 @@ export default defineComponent({
   components: {
     HeaderComponent,
   },
-  props: {
-    id: {
-      // The gebruikerID
-      type: String,
-      required: true,
-    },
-    begeleiderID: {
-      // The begeleiderID
-      type: String,
-      required: true,
-    },
-  },
   data() {
     return {
       gebruiker: null as Gebruiker | null,
+      begeleiderID: this.$route.params.id as string, // Retrieve the begeleiderID from route parameters
     }
   },
   async mounted() {
@@ -111,7 +99,7 @@ export default defineComponent({
     async fetchGebruikerDetails() {
       try {
         const response = await axios.get(
-          `http://localhost:3000/gebruiker/${this.id}`,
+          `http://localhost:3000/gebruiker/${this.$route.params.id}`,
         )
         this.gebruiker = response.data
       } catch (error) {
