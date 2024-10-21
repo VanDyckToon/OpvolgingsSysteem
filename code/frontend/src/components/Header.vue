@@ -54,10 +54,10 @@ export default defineComponent({
       try {
         const decodedToken = jwtDecode(token) as {
           gebruikerID: string
-          rolID: string
+          rol: { rolID: string }
         }
         this.gebruikerID = decodedToken.gebruikerID
-        this.rolID = decodedToken.rolID
+        this.rolID = decodedToken.rol.rolID
       } catch (error) {
         console.error('Error decoding token:', error)
       }
