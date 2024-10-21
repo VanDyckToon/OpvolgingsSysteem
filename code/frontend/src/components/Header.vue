@@ -7,7 +7,6 @@
         class="w-44 h-44 ml-10"
       />
       <div class="flex space-x-4 mr-10">
-
         <router-link :to="`/begeleider/${gebruikerID}`">
           <!-- Use :to binding -->
           <Icon icon="mingcute:home-3-fill" class="text-[#456A50] w-12 h-12" />
@@ -15,8 +14,7 @@
 
         <!-- Conditionally render the settings icon based on rolID -->
 
-        <router-link v-if="rolID === '1'" :to="`/adminpanel`">
-
+        <router-link v-if="rolID == '1'" :to="`/adminpanel`">
           <Icon
             icon="material-symbols-light:settings-account-box-rounded"
             class="text-[#456A50] w-12 h-12"
@@ -57,16 +55,14 @@ export default defineComponent({
       try {
         const decodedToken = jwtDecode(token) as {
           gebruikerID: string
-
           rol: { rolID: string }
         }
         this.gebruikerID = decodedToken.gebruikerID
         this.rolID = decodedToken.rol.rolID
-    
       } catch (error) {
         console.error('Error decoding token:', error)
       }
-    }
+    } 
   },
   setup() {
     const router = useRouter()
