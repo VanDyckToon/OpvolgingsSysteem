@@ -27,7 +27,7 @@
           </form>
         </div>
         <div class="col-span-1">
-          <img src="../assets/kruiwagen.svg" alt="Image" class="h-32 w-auto mb-2 object-contain m-auto place-content-center">
+          <img src="../assets/medal.svg" alt="Image" class="h-32 w-auto mb-2 object-contain m-auto place-content-center">
         </div>
       </div>
       <div class="flex-grow flex justify-center items-center mb-16 mt-8">
