@@ -115,7 +115,7 @@
         isDeleteModalVisible: false,
         selectedRolID: 0, // ID van de rol dat wordt aangepast
         selectedRolNaam: '',
-        editedBeschrijving: '', // de nieuwe beschrijving van de aangepaste rol
+        editedNaam: '', // de nieuwe beschrijving van de aangepaste rol
       }
     },
     async mounted() {

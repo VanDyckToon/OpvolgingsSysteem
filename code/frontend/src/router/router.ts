@@ -38,6 +38,12 @@ const routes = [
     name: 'Rol',
     component: Rol,
   },
+  {
+    path: '/opmerkingen/:id',
+    name: 'OpmerkingenPage',
+    component: OpmerkingenPage,
+
+  },
 ]
 
 const router = createRouter({
