@@ -66,7 +66,7 @@ export class GebruikerService {
   ): Promise<Gebruiker[]> {
     return this.gebruikerRepository.find({
       where: { begeleider: { gebruikerID: begeleiderID } },
-      relations: ['begeleider'], // Optioneel, als je ook de begeleider details wilt ophalen
+      relations: ['begeleider'],
     });
   }
 }

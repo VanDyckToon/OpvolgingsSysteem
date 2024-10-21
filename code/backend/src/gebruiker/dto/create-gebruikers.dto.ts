@@ -24,6 +24,9 @@ export class CreateGebruikerDto {
   email: string;
 
   @ApiProperty()
+  telefoonnummer: string;
+
+  @ApiProperty()
   wachtwoord: string;
 
   @ApiProperty()
@@ -49,6 +52,9 @@ export class CreateGebruikerDto {
 
   @ApiProperty({ default: null })
   foto: string = null;
+
+  @ApiProperty({ default: null })
+  extraOpmerking: string = null;
 
   @ApiProperty({ default: null })
   begeleider: Gebruiker;
