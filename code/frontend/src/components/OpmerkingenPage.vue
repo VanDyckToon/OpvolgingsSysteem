@@ -3,11 +3,10 @@
     <HeaderComponent :begeleiderID="begeleiderID" />
     <div class="flex-grow flex justify-center items-center">
       <div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
-        <h2 class="text-2xl font-bold mb-4 text-left text-black">
-          Opmerkingen: {{ gebruiker?.voornaam }} {{ gebruiker?.achternaam }}
-        </h2>
-
-        <div class="flex justify-end mb-4">
+        <div class="flex justify-between mb-6">
+          <h2 class="text-2xl font-bold mb-4 text-left text-black">
+            Opmerkingen: {{ gebruiker?.voornaam }} {{ gebruiker?.achternaam }}
+          </h2>
           <button
             @click="openModal"
             class="mt-2 px-4 py-2 bg-[#456A50] text-white rounded"
@@ -19,7 +18,7 @@
         <div class="flex">
           <!-- Left Side: List of Comments -->
           <div class="w-1/2 pr-4">
-            <h3 class="text-xl font-semibold mb-2">Laatste 5 Opmerkingen</h3>
+            <h3 class="text-xl font-semibold mb-2">Laatste 4 Opmerkingen</h3>
             <div v-if="limitedComments.length > 0" class="space-y-2">
               <div
                 v-for="comment in limitedComments"
@@ -49,7 +48,9 @@
               </p>
               <p>{{ latestComment.beschrijving }}</p>
             </div>
-            <h3 class="text-xl font-semibold mb-2">Geef een Opmerking</h3>
+            <p v-else class="text-gray-500 mb-4">Geen opmerkingen gevonden</p>
+            <hr />
+            <h3 class="text-xl font-semibold my-2">Geef een Opmerking</h3>
             <input
               v-model="newTitle"
               type="text"
@@ -144,7 +145,7 @@ export default defineComponent({
   },
   computed: {
     limitedComments() {
-      return this.comments.slice(0, 5) // Limit to first 5 comments
+      return this.comments.slice(0, 4)
     },
   },
   async mounted() {

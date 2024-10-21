@@ -18,6 +18,9 @@ export class Opmerking {
   @Column()
   beschrijving: string;
 
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
   @ManyToOne(() => Gebruiker, (gebruiker) => gebruiker.werknemerOpmerkingen)
   @JoinColumn({ name: 'werknemerID' })
   werknemer: Gebruiker;
