@@ -23,8 +23,8 @@
                   Contact gegevens
                 </h2>
                 <div class="flex flex-col text-[#104116] rounded-md">
-                  <p class="font-bold">GSM: nog toe te voegen!</p>
-                  <p class="font-bold">E-mailadres: nog toe te voegen</p>
+                  <p class="font-bold">GSM: {{ gebruiker.telefoonnummer }}</p>
+                  <p class="font-bold">E-mailadres: {{ gebruiker.email }}</p>
                   <p class="font-bold text-[#C72C41]">
                     ICE: {{ gebruiker.ICENaam }} -
                     {{ gebruiker.ICETelefoonnummer }}
@@ -36,7 +36,7 @@
                   Extra opmerkingen
                 </h2>
                 <div class="flex flex-col text-[#104116] rounded-md">
-                  <p class="font-bold">Nog toevoegen</p>
+                  <p class="font-bold">{{ gebruiker.extraOpmerking }}</p>
                 </div>
               </div>
             </div>
@@ -79,6 +79,8 @@ interface Gebruiker {
   ICENaam: string
   ICETelefoonnummer: string
   foto: string
+  telefoonnummer: string
+  extraOpmerking: string
 }
 
 export default defineComponent({
@@ -98,8 +100,11 @@ export default defineComponent({
   methods: {
     async fetchGebruikerDetails() {
       try {
+        const token = localStorage.getItem('access_token')
+
         const response = await axios.get(
           `http://localhost:3000/gebruiker/${this.$route.params.id}`,
+          { headers: { Authorization: `Bearer ${token}` } },
         )
         this.gebruiker = response.data
       } catch (error) {

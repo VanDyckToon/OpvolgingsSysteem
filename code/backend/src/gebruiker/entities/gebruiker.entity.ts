@@ -27,6 +27,9 @@ export class Gebruiker {
   @Column({ unique: true, nullable: true })
   email: string;
 
+  @Column({ unique: true, nullable: true })
+  telefoonnummer: string;
+
   @Column({ nullable: true })
   wachtwoord: string;
 
@@ -50,6 +53,9 @@ export class Gebruiker {
 
   @Column({ nullable: true })
   foto: string;
+
+  @Column({ nullable: true })
+  extraOpmerking: string;
 
   @ManyToOne(() => Rol, (rol) => rol.gebruikers)
   rol: Rol;

@@ -6,6 +6,7 @@
         <h2 class="text-2xl font-bold mb-6 text-center text-[#456A50]">
           Werknemer(s)
         </h2>
+
         <ul v-if="gebruikers.length" class="divide-y divide-gray-200">
           <li
             v-for="gebruiker in gebruikers"
@@ -79,9 +80,13 @@ export default defineComponent({
   methods: {
     async fetchGebruikers() {
       try {
+        const token = localStorage.getItem('access_token')
+
         const response = await axios.get(
           `http://localhost:3000/gebruiker/begeleider/${this.begeleiderID}`,
+          { headers: { Authorization: `Bearer ${token}` } },
         )
+
         this.gebruikers = response.data
       } catch (error) {
         console.error(

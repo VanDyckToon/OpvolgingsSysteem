@@ -18,8 +18,8 @@ import { TaakMateriaalModule } from './taak-materiaal/taak-materiaal.module';
 import { OpleidingGebruikerModule } from './opleiding-gebruiker/opleiding-gebruiker.module';
 import { CompetentieGebruikerModule } from './competentie-gebruiker/competentie-gebruiker.module';
 import { TechnischeCompetentieGebruikerModule } from './technische-competentie-gebruiker/technische-competentie-gebruiker.module';
-import { AuthModule } from './auth/auth.module';
 import { OpmerkingModule } from './opmerking/opmerking.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
