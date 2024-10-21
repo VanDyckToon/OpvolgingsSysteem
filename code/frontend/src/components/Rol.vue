@@ -3,18 +3,18 @@
       <HeaderComponent />
       <div class="grid grid-cols-4 gap-4 pt-8 pb-2 px-14">
         <div class="col-span-3">
-          <h1 class="text-[#104116] text-4xl font-extrabold pt-4">Materiaal Beheren</h1>
-          <form @submit.prevent="addMateriaal">
+          <h1 class="text-[#104116] text-4xl font-extrabold pt-4">Rolen Beheren</h1>
+          <form @submit.prevent="addRol">
             <div class="mb-6">
-              <label class="block text-[#456A50] text-xl font-bold mb-2 py-1" for="materialName">
-                Materiaal Naam:
+              <label class="block text-[#456A50] text-xl font-bold mb-2 py-1" for="rolName">
+                Rol Naam:
               </label>
               <input
-                v-model="beschrijving"
+                v-model="naam"
                 type="text"
-                id="beschrijving"
+                id="naam"
                 class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
-                placeholder="Vul hier het naam van het type materiaal in"
+                placeholder="Vul hier de naam van de rol in"
                 required
               />
             </div>
@@ -32,44 +32,44 @@
       </div>
       <div class="flex-grow flex justify-center items-center mb-16 mt-8">
         <div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
-          <h2 class="text-3xl font-bold mb-6 text-center text-[#456A50]">Materialen</h2>
-          <ul v-if="materialen.length" class="divide-y divide-gray-200">
+          <h2 class="text-3xl font-bold mb-6 text-center text-[#456A50]">Rolen</h2>
+          <ul v-if="rolen.length" class="divide-y divide-gray-200">
             <li
-              v-for="materiaal in materialen"
-              :key="materiaal.materiaalID"
+              v-for="rol in rolen"
+              :key="rol.rolID"
               class="py-4 flex items-center justify-between"
             >
               <div>
-                <div class="text-[#456A50] font-bold">{{ materiaal.beschrijving }}</div>
+                <div class="text-[#456A50] font-bold">{{ rol.naam }}</div>
               </div>
               <div class="flex space-x-4">
                 <Icon
                   icon="material-symbols:edit"
                   class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
-                  @click="openEditModal(materiaal.materiaalID, materiaal.beschrijving)"
+                  @click="openEditModal(rol.rolID, rol.naam)"
                 />
                 <Icon
                   icon="mynaui:trash-solid"
                   class="text-[#c9184a] hover:text-[#800f2f] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
-                  @click="openDeleteModal(materiaal.materiaalID, materiaal.beschrijving)"
+                  @click="openDeleteModal(rol.rolID, rol.naam)"
                 />
               </div>
             </li>
           </ul>
-          <p v-else class="text-center text-gray-500">Geen materialen gevonden</p>
+          <p v-else class="text-center text-gray-500">Geen rolen gevonden</p>
         </div>
       </div>
   
-      <!-- Modal component voor het aanpassen van materialen -->
+      <!-- Modal component voor het aanpassen van de rolen -->
       <div v-if="isEditModalVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
-          <h2 class="text-2xl font-bold mb-4 text-center">Materiaal Bewerken</h2>
+          <h2 class="text-2xl font-bold mb-4 text-center">Rol Bewerken</h2>
           <div class="mb-4">
             <label class="block text-gray-700 font-bold mb-2" for="editNaam">
-              Nieuwe Materiaal Beschrijving:
+              Nieuwe Rol Naam:
             </label>
             <input
-              v-model="editedBeschrijving"
+              v-model="editedNaam"
               type="text"
               id="editNaam"
               class="w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:shadow-outline"
@@ -77,14 +77,14 @@
           </div>
           <div class="flex justify-end space-x-4">
             <button @click="closeModal" class="bg-gray-500 text-white px-4 py-2 rounded">Annuleer</button>
-            <button @click="updateMateriaal(selectedMateriaalID, editedBeschrijving); closeModal()" class="bg-[#456A50] hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white px-4 py-2 rounded">Bijwerken</button>          </div>
+            <button @click="updateRol(selectedRolID, editedNaam); closeModal()" class="bg-[#456A50] hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white px-4 py-2 rounded">Bijwerken</button>          </div>
         </div>
       </div>
 
       <!-- Modal voor het verwijderen van een item -->
       <div v-if="isDeleteModalVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
     <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
-      <h3 class="text-xl font-semibold mb-4">Weet je zeker dat je "{{ selectedMateriaalBeschrijving }}" wilt verwijderen?</h3>
+      <h3 class="text-xl font-semibold mb-4">Weet je zeker dat je "{{ selectedRolNaam }}" wilt verwijderen?</h3>
       <div class="flex justify-end space-x-4">
         <button @click="closeDeleteModal" class="bg-gray-500 text-white px-4 py-2 rounded">Annuleer</button>
         <button @click="confirmDelete" class="bg-[#c9184a] hover:bg-[#800f2f] hover:ease-in-out hover:duration-500 text-white px-4 py-2 rounded">Verwijder</button>
@@ -102,30 +102,30 @@
   import HeaderComponent from '../components/Header.vue'
   
   export default defineComponent({
-    name: 'Materiaal',
+    name: 'Rol',
     components: {
       Icon,
       HeaderComponent,
     },
     data() {
       return {
-        materialen: [] as Materiaal[], // Lijst van materialen
-        beschrijving: '', // naam van materiaal
+        rolen: [] as Rol[], // Lijst van de rolen
+        naam: '', // naam van de rol
         isEditModalVisible: false, 
         isDeleteModalVisible: false,
-        selectedMateriaalID: 0, // ID van het materiaal dat wordt aangepast
-        selectedMateriaalBeschrijving: '',
-        editedBeschrijving: '', // de nieuwe beschrijving van het aangepaste materiaal
+        selectedRolID: 0, // ID van de rol dat wordt aangepast
+        selectedRolNaam: '',
+        editedBeschrijving: '', // de nieuwe beschrijving van de aangepaste rol
       }
     },
     async mounted() {
-      this.fetchMaterialen() // haalt materialen
+      this.fetchRolen() // haalt rolen
     },
     methods: {
-        openDeleteModal(materiaalID: number, beschrijving: string) {
-      // Set the selected material and show the delete modal
-      this.selectedMateriaalID = materiaalID;
-      this.selectedMateriaalBeschrijving = beschrijving;
+        openDeleteModal(rolID: number, naam: string) {
+      // Zet de geselecteerde rol en laat de delete modal zien
+      this.selectedRolID = rolID;
+      this.selectedRolNaam = naam;
       this.isDeleteModalVisible = true;
     },
 
@@ -133,73 +133,73 @@
       this.isDeleteModalVisible = false;
     },
 
-  async fetchMaterialen() {
+  async fetchRolen() {
     try {
         const token = localStorage.getItem('access_token')
 
-      const response = await axios.get('http://localhost:3000/materiaal', { headers: { Authorization: `Bearer ${token}` } })
-      this.materialen = response.data.sort((a: Materiaal, b: Materiaal) => 
-      a.beschrijving.localeCompare(b.beschrijving)
+      const response = await axios.get('http://localhost:3000/rol', { headers: { Authorization: `Bearer ${token}` } })
+      this.rolen = response.data.sort((a: Rol, b: Rol) => 
+      a.naam.localeCompare(b.naam)
     );
     } catch (error) {
-      console.error('Er is een fout opgetreden bij het ophalen van de materialen:', error)
+      console.error('Er is een fout opgetreden bij het ophalen van de rolen:', error)
     }
   },
   
-  async addMateriaal() {
+  async addRol() {
   try {
     const token = localStorage.getItem('access_token');
-    await axios.post('http://localhost:3000/materiaal', 
-      { beschrijving: this.beschrijving }, 
+    await axios.post('http://localhost:3000/rol', 
+      { naam: this.naam }, 
       { headers: { Authorization: `Bearer ${token}` } }
     );
-    this.beschrijving = '';  // Clear the input field
-    this.fetchMaterialen();  // Refresh the list
+    this.naam = '';  // Clear the input field
+    this.fetchRolen();  // Refresh the list
   } catch (error) {
-    console.error('Error adding materiaal:', error);
+    console.error('Error adding rol:', error);
   }
 },
 
     async confirmDelete() {
       try {
         const token = localStorage.getItem('access_token');
-        await this.deleteMateriaal(this.selectedMateriaalID);
+        await this.deleteRol(this.selectedRolID);
         this.isDeleteModalVisible = false; // Close the modal after confirmation
       } catch (error) {
-        console.error('Error deleting materiaal:', error);
+        console.error('Error deleting rol:', error);
       }
     },
 
-    async deleteMateriaal(materiaalID: number) {
+    async deleteRol(rolID: number) {
       try {
         const token = localStorage.getItem('access_token');
-        await axios.delete(`http://localhost:3000/materiaal/${materiaalID}`, {
+        await axios.delete(`http://localhost:3000/rol/${rolID}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        this.fetchMaterialen(); // Refresh the list after deletion
+        this.fetchRolen(); // Refresh the list after deletion
       } catch (error) {
-        console.error('Er is een fout opgetreden bij het verwijderen van het materiaal:', error);
+        console.error('Er is een fout opgetreden bij het verwijderen van de rol:', error);
       }
     },
   
-  openEditModal(materiaalID: number, beschrijving: string) {
-    // Kiest het juiste materiaal voor het aan te passen
-    this.selectedMateriaalID = materiaalID
-    this.editedBeschrijving = beschrijving
+  openEditModal(rolID: number, naam: string) {
+    // Kiest de juiste rol voor het aan te passen
+    this.selectedRolID = rolID
+    this.editedNaam = naam
     this.isEditModalVisible = true // Laat de Modal zien
   },
   
-  async updateMateriaal(materiaalID: number, updatedBeschrijving: string) {
+  async updateRol(rolID: number, updatedNaam: string) {
   try {
     const token = localStorage.getItem('access_token');
-    await axios.patch(`http://localhost:3000/materiaal/${materiaalID}`, 
-      { beschrijving: updatedBeschrijving }, 
+    await axios.patch(`http://localhost:3000/rol/${rolID}`, 
+      { naam: updatedNaam }, 
       { headers: { Authorization: `Bearer ${token}` } }
     );
     this.isEditModalVisible = false;
-    this.fetchMaterialen();  // Laad de lijst opnieuw na het updaten
+    this.fetchRolen();  // Laad de lijst opnieuw na het updaten
   } catch (error) {
-    console.error('Error updating materiaal:', error.response ? error.response.data : error);
+    console.error('Error updating rol:', error.response ? error.response.data : error);
   }
 },
   
