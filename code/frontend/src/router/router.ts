@@ -37,9 +37,6 @@ const routes = [
     path: '/rol',
     name: 'Rol',
     component: Rol,
-    path: '/opmerkingen/:id',
-    name: 'OpmerkingenPage',
-    component: OpmerkingenPage,
   },
 ]
 
