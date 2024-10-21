@@ -42,6 +42,7 @@ const routes = [
     path: '/opmerkingen/:id',
     name: 'OpmerkingenPage',
     component: OpmerkingenPage,
+
   },
 ]
 

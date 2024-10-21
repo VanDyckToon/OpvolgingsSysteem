@@ -23,6 +23,7 @@
               class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline"
             >
               Toevoegen
+
             </button>
           </form>
         </div>
@@ -67,30 +68,59 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-bold mb-2" for="editNaam">
               Nieuwe Materiaal Beschrijving:
+
             </label>
             <input
               v-model="editedBeschrijving"
               type="text"
+
               id="editNaam"
               class="w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:shadow-outline"
+
             />
+            <button
+              type="submit"
+              class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline"
+            >
+              Toevoegen
+            </button>
           </div>
           <div class="flex justify-end space-x-4">
             <button @click="closeModal" class="bg-gray-500 text-white px-4 py-2 rounded">Annuleer</button>
             <button @click="updateMateriaal(selectedMateriaalID, editedBeschrijving); closeModal()" class="bg-[#456A50] hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white px-4 py-2 rounded">Bijwerken</button>          </div>
+
         </div>
       </div>
+    </div>
 
-      <!-- Modal voor het verwijderen van een item -->
-      <div v-if="isDeleteModalVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
-      <h3 class="text-xl font-semibold mb-4">Weet je zeker dat je "{{ selectedMateriaalBeschrijving }}" wilt verwijderen?</h3>
-      <div class="flex justify-end space-x-4">
-        <button @click="closeDeleteModal" class="bg-gray-500 text-white px-4 py-2 rounded">Annuleer</button>
-        <button @click="confirmDelete" class="bg-[#c9184a] hover:bg-[#800f2f] hover:ease-in-out hover:duration-500 text-white px-4 py-2 rounded">Verwijder</button>
+    <!-- Modal voor het verwijderen van een item -->
+    <div
+      v-if="isDeleteModalVisible"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
+        <h3 class="text-xl font-semibold mb-4">
+          Weet je zeker dat je "{{ selectedMateriaalBeschrijving }}" wilt
+          verwijderen?
+        </h3>
+        <div class="flex justify-end space-x-4">
+          <button
+            @click="closeDeleteModal"
+            class="bg-gray-500 text-white px-4 py-2 rounded"
+          >
+            Annuleer
+          </button>
+          <button
+            @click="confirmDelete"
+            class="bg-[#c9184a] hover:bg-[#800f2f] hover:ease-in-out hover:duration-500 text-white px-4 py-2 rounded"
+          >
+            Verwijder
+          </button>
+        </div>
       </div>
     </div>
   </div>
+
 
     </div>
   </template>
