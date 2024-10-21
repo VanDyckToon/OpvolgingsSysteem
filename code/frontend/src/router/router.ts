@@ -3,6 +3,7 @@ import Login from '../components/Login.vue'
 import Gebruikers from '../components/Gebruikers.vue'
 import Adminpanel from '../components/Adminpanel.vue'
 import GebruikerDetailPage from '../components/GebruikerDetailPage.vue'
+import Materiaal from '@/components/Materiaal.vue'
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/gebruiker/:id',
     name: 'GebruikerDetail',
     component: GebruikerDetailPage,
+  },
+  {
+    path: '/materiaal',
+    name: 'Materiaal',
+    component: Materiaal,
   },
 ]
 

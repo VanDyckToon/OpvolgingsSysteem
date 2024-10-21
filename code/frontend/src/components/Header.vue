@@ -9,7 +9,7 @@
       <div class="flex space-x-4 mr-10">
         <router-link :to="`/begeleider/${begeleiderID}`">
           <!-- Use :to binding -->
-          <Icon icon="material-symbols:home" class="text-[#456A50] w-12 h-12" />
+          <Icon icon="mingcute:home-3-fill" class="text-[#456A50] w-12 h-12" />
         </router-link>
         <router-link :to="`/settings/${begeleiderID}`">
           <!-- Pass the ID to settings as well -->
