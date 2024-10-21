@@ -42,4 +42,9 @@ export class OpmerkingController {
   remove(@Param('id') id: string) {
     return this.opmerkingService.remove(+id);
   }
+
+  @Get('werknemer/:werknemerID')
+  async findByWerknemer(@Param('werknemerID') werknemerID: number) {
+    return this.opmerkingService.findByWerknemer(werknemerID);
+  }
 }

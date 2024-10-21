@@ -14,7 +14,9 @@
         </router-link>
 
         <!-- Conditionally render the settings icon based on rolID -->
-        <router-link v-if="rolID === '1'" :to="`/settings/${gebruikerID}`">
+
+        <router-link v-if="rolID === '1'" :to="`/adminpanel`">
+
           <Icon
             icon="material-symbols-light:settings-account-box-rounded"
             class="text-[#456A50] w-12 h-12"
@@ -55,10 +57,12 @@ export default defineComponent({
       try {
         const decodedToken = jwtDecode(token) as {
           gebruikerID: string
-          rolID: string
+
+          rol: { rolID: string }
         }
         this.gebruikerID = decodedToken.gebruikerID
-        this.rolID = decodedToken.rolID
+        this.rolID = decodedToken.rol.rolID
+    
       } catch (error) {
         console.error('Error decoding token:', error)
       }

@@ -4,6 +4,7 @@ import Gebruikers from '../components/Gebruikers.vue'
 import Adminpanel from '../components/Adminpanel.vue'
 import GebruikerDetailPage from '../components/GebruikerDetailPage.vue'
 import Materiaal from '@/components/Materiaal.vue'
+import OpmerkingenPage from '@/components/OpmerkingenPage.vue'
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/materiaal',
     name: 'Materiaal',
     component: Materiaal,
+  },
+  {
+    path: '/opmerkingen/:id',
+    name: 'OpmerkingenPage',
+    component: OpmerkingenPage,
   },
 ]
 

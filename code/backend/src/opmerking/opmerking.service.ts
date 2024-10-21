@@ -30,4 +30,11 @@ export class OpmerkingService {
   remove(opmerkingID: number) {
     return this.opmerkingRepository.delete({ opmerkingID });
   }
+  async findByWerknemer(werknemerID: number) {
+    return this.opmerkingRepository.find({
+      where: { werknemer: { gebruikerID: werknemerID } },
+      order: { createdAt: 'DESC' },
+      relations: ['werknemer', 'begeleider'],
+    });
+  }
 }
