@@ -34,7 +34,11 @@
                 class="text-[#456A50] w-8 h-8"
                 @click="goToDetails(gebruiker.gebruikerID)"
               />
-              <Icon icon="mdi:comments" class="text-[#456A50] w-8 h-8" />
+              <Icon
+                icon="mdi:comments"
+                class="text-[#456A50] w-8 h-8"
+                @click="goToOpmerkingen(gebruiker.gebruikerID)"
+              />
             </div>
           </li>
         </ul>
@@ -89,6 +93,12 @@ export default defineComponent({
     goToDetails(gebruikerID: number) {
       this.$router.push({
         name: 'GebruikerDetail',
+        params: { id: gebruikerID, begeleiderID: this.begeleiderID },
+      })
+    },
+    goToOpmerkingen(gebruikerID: number) {
+      this.$router.push({
+        name: 'OpmerkingenPage',
         params: { id: gebruikerID, begeleiderID: this.begeleiderID },
       })
     },
