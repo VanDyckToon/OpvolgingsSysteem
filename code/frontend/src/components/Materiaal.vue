@@ -68,22 +68,13 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-bold mb-2" for="editNaam">
               Nieuwe Materiaal Beschrijving:
-
             </label>
             <input
               v-model="editedBeschrijving"
               type="text"
-
               id="editNaam"
               class="w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:shadow-outline"
-
             />
-            <button
-              type="submit"
-              class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline"
-            >
-              Toevoegen
-            </button>
           </div>
           <div class="flex justify-end space-x-4">
             <button @click="closeModal" class="bg-gray-500 text-white px-4 py-2 rounded">Annuleer</button>
@@ -118,10 +109,6 @@
           </button>
         </div>
       </div>
-    </div>
-  </div>
-
-
     </div>
   </template>
   
