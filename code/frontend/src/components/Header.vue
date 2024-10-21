@@ -7,8 +7,10 @@
         class="w-44 h-44 ml-10"
       />
       <div class="flex space-x-4 mr-10">
+
         <router-link :to="`/begeleider/${gebruikerID}`">
-          <Icon icon="material-symbols:home" class="text-[#456A50] w-12 h-12" />
+          <!-- Use :to binding -->
+          <Icon icon="mingcute:home-3-fill" class="text-[#456A50] w-12 h-12" />
         </router-link>
 
         <!-- Conditionally render the settings icon based on rolID -->
