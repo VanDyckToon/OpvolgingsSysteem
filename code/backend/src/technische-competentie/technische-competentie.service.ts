@@ -10,9 +10,12 @@ export class TechnischeCompetentieService {
   constructor(
     @InjectRepository(TechnischeCompetentie)
     private readonly technischeCompetentieRepository: Repository<TechnischeCompetentie>,
+    
   ) {}
   create(createTechnischeCompetentieDto: CreateTechnischeCompetentieDto) {
-    return this.technischeCompetentieRepository.save(createTechnischeCompetentieDto);
+    return this.technischeCompetentieRepository.save(
+      createTechnischeCompetentieDto,
+    );
   }
 
   findAll() {
@@ -20,14 +23,24 @@ export class TechnischeCompetentieService {
   }
 
   findOne(technischeCompetentieID: number) {
-    return this.technischeCompetentieRepository.findOneBy({ technischeCompetentieID });
+    return this.technischeCompetentieRepository.findOneBy({
+      technischeCompetentieID,
+    });
   }
 
-  update(technischeCompetentieID: number, updateTechnischeCompetentieDto: UpdateTechnischeCompetentieDto) {
-    return this.technischeCompetentieRepository.update(technischeCompetentieID, updateTechnischeCompetentieDto);
+  update(
+    technischeCompetentieID: number,
+    updateTechnischeCompetentieDto: UpdateTechnischeCompetentieDto,
+  ) {
+    return this.technischeCompetentieRepository.update(
+      technischeCompetentieID,
+      updateTechnischeCompetentieDto,
+    );
   }
 
   remove(technischeCompetentieID: number) {
-    return this.technischeCompetentieRepository.delete({ technischeCompetentieID });
+    return this.technischeCompetentieRepository.delete({
+      technischeCompetentieID,
+    });
   }
 }
