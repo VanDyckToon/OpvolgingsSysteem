@@ -4,11 +4,11 @@
       <img src="../assets/logo-de-sprong.svg" alt="Logo" class="w-44 h-44" />
     </div>
     <div class="w-full max-w-xl p-8 bg-white shadow-lg rounded-lg">
-      <h2 class="text-2xl font-bold mb-6 text-center text-[#456A50]">Login</h2>
+      <h2 class="text-4xl font-bold mb-6 text-center text-[#456A50]">Login</h2>
       <form @submit.prevent="login">
         <div class="mb-4">
           <label
-            class="block text-[#456A50] text-sm font-bold mb-2"
+            class="block text-[#456A50] text-xl font-bold mb-2"
             for="email"
           >
             E-mailadres
@@ -24,7 +24,7 @@
         </div>
         <div class="mb-6">
           <label
-            class="block text-[#456A50] text-sm font-bold mb-2"
+            class="block text-[#456A50] text-xl font-bold mb-2"
             for="password"
           >
             Wachtwoord
@@ -41,7 +41,7 @@
         <div class="flex items-center justify-center">
           <button
             type="submit"
-            class="bg-[#456A50] hover:bg-[#385A45] text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+            class="bg-[#456A50] hover:bg-[#385A45] text-white text-lg font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
           >
             Aanmelden
           </button>

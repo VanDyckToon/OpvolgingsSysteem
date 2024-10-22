@@ -37,26 +37,36 @@
         </router-link>
     </div>
     <div class="grid grid-cols-5 gap-4 py-4 px-16">
+        <router-link :to="`/`">
         <button class="w-full h-48 flex flex-col items-center justify-center font-bold text-[#104116] text-2xl bg-white shadow-xl rounded overflow-hidden transition-transform duration-500 hover:scale-110">
             <img src="../assets/competentie.svg" alt="Image" class="h-16 w-auto mb-2 object-contain color-[#101234]">
             <span class="text-center">Competenties Beheren</span>
         </button>
+        </router-link>
+        <router-link :to="`/`">
         <button class="w-full h-48 flex flex-col items-center justify-center font-bold text-[#104116] text-2xl bg-white shadow-xl rounded overflow-hidden transition-transform duration-500 hover:scale-110">
             <img src="../assets/opleiding.svg" alt="Image" class="h-16 w-auto mb-2 object-contain">
             <span class="text-center">Opleidingen Beheren</span>
         </button>
+    </router-link>
+    <router-link :to="`/`">
         <button class="w-full h-48 flex flex-col items-center justify-center font-bold text-[#104116] text-2xl bg-white shadow-xl rounded overflow-hidden transition-transform duration-500 hover:scale-110">
             <img src="../assets/subgroep.svg" alt="Image" class="h-16 w-auto mb-2 object-contain">
             <span class="text-center">Subgroepen Beheren</span>
         </button>
+    </router-link>
+    <router-link :to="`/`">
         <button class="w-full h-48 flex flex-col items-center justify-center font-bold text-[#104116] text-2xl bg-white shadow-xl rounded overflow-hidden transition-transform duration-500 hover:scale-110">
             <img src="../assets/taakonderdeel.svg" alt="Image" class="h-16 w-auto mb-2 object-contain">
             <span class="text-center p-2">Taakonderdelen Beheren</span>
         </button>
+    </router-link>
+    <router-link :to="`/score`">
         <button class="w-full h-48 flex flex-col items-center justify-center font-bold text-[#104116] text-2xl bg-white shadow-xl rounded overflow-hidden transition-transform duration-500 hover:scale-110">
             <img src="../assets/score.svg" alt="Image" class="h-16 w-auto mb-2 object-contain">
             <span class="text-center p-2">Score Beheren</span>
         </button>
+    </router-link>
     </div>
     </div>
   </template>

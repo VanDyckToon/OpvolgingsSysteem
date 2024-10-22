@@ -46,7 +46,7 @@
               <div class="flex space-x-4">
                 <Icon
                   icon="material-symbols:edit"
-                  class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8"
+                  class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                   @click="openEditModal(materiaal.materiaalID, materiaal.beschrijving)"
                 />
                 <Icon
