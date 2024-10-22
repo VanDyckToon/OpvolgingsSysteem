@@ -6,6 +6,7 @@ import GebruikerDetailPage from '../components/GebruikerDetailPage.vue'
 import Materiaal from '@/components/Materiaal.vue'
 import Rol from '@/components/Rol.vue'
 import OpmerkingenPage from '@/components/OpmerkingenPage.vue'
+import Groep from '@/components/Groep.vue'
 
 const routes = [
   {
@@ -42,6 +43,12 @@ const routes = [
     path: '/opmerkingen/:id',
     name: 'OpmerkingenPage',
     component: OpmerkingenPage,
+
+  },
+  {
+    path: '/groep',
+    name: 'Groep',
+    component: Groep,
 
   },
 ]
