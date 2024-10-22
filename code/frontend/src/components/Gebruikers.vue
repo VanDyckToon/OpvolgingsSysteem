@@ -7,9 +7,19 @@
           Werknemer(s)
         </h2>
 
-        <ul v-if="gebruikers.length" class="divide-y divide-gray-200">
+        <!-- Search Input -->
+        <div class="mb-4">
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Zoek gebruikers..."
+            class="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+
+        <ul v-if="filteredGebruikers.length" class="divide-y divide-gray-200">
           <li
-            v-for="gebruiker in gebruikers"
+            v-for="gebruiker in filteredGebruikers"
             :key="gebruiker.gebruikerID"
             class="py-4 flex items-center justify-between"
           >
@@ -18,7 +28,7 @@
                 {{ gebruiker.voornaam }} {{ gebruiker.achternaam }}
               </div>
               <div class="text-gray-400 text-sm">
-                {{ gebruiker.ICENaam }}
+                {{ gebruiker.telefoonnummer }}
               </div>
             </div>
             <div class="flex space-x-4">
@@ -54,12 +64,13 @@ import axios from 'axios'
 import { defineComponent } from 'vue'
 import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
+import { jwtDecode } from 'jwt-decode'
 
 interface Gebruiker {
   gebruikerID: number
   voornaam: string
   achternaam: string
-  ICENaam: string
+  telefoonnummer: string
 }
 
 export default defineComponent({
@@ -72,22 +83,56 @@ export default defineComponent({
     return {
       gebruikers: [] as Gebruiker[],
       begeleiderID: this.$route.params.id as string,
+      rolID: null as string | null,
+      searchQuery: '', // Add a search query property
     }
   },
   async mounted() {
+    const token = localStorage.getItem('access_token')
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token) as { rol: { rolID: string } }
+        this.rolID = decodedToken.rol.rolID
+      } catch (error) {
+        console.error('Error decoding token:', error)
+      }
+    }
     this.fetchGebruikers()
+  },
+  computed: {
+    filteredGebruikers() {
+      return this.gebruikers.filter(gebruiker => {
+        const fullName =
+          `${gebruiker.voornaam} ${gebruiker.achternaam}`.toLowerCase()
+        return fullName.includes(this.searchQuery.toLowerCase()) // Filter by name
+      })
+    },
   },
   methods: {
     async fetchGebruikers() {
       try {
         const token = localStorage.getItem('access_token')
-
-        const response = await axios.get(
-          `http://localhost:3000/gebruiker/begeleider/${this.begeleiderID}`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        )
-
-        this.gebruikers = response.data
+        if (this.rolID == '1') {
+          // Fetch users with rolID 3
+          const response = await axios.get(
+            'http://localhost:3000/gebruiker/rol/3',
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          )
+          this.gebruikers = response.data
+        } else if (this.rolID == '2') {
+          const response = await axios.get(
+            `http://localhost:3000/gebruiker/begeleider/${this.begeleiderID}`,
+            { headers: { Authorization: `Bearer ${token}` } },
+          )
+          this.gebruikers = response.data
+        } else {
+          const response = await axios.get('http://localhost:3000/admin', {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          this.gebruikers = response.data
+        }
       } catch (error) {
         console.error(
           'Er is een fout opgetreden bij het ophalen van de gebruikers:',

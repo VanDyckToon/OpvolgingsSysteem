@@ -81,7 +81,10 @@
     >
       <div class="bg-white rounded-lg p-6 w-11/12 max-w-3xl">
         <h2 class="text-2xl font-bold mb-4">Alle Opmerkingen</h2>
-        <div v-if="comments.length > 0" class="space-y-4">
+        <div
+          v-if="comments.length > 0"
+          class="space-y-4 max-h-[600px] overflow-y-auto"
+        >
           <div
             v-for="comment in comments"
             :key="comment.opmerkingID"
@@ -99,7 +102,7 @@
         </p>
         <button
           @click="closeModal"
-          class="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+          class="mt-4 bg-[#456A50] text-white py-2 px-4 rounded"
         >
           Sluiten
         </button>
@@ -173,7 +176,7 @@ export default defineComponent({
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.comments = response.data
-        this.latestComment = this.comments[this.comments.length - 1] || null
+        this.latestComment = this.comments[0] || null
       } catch (error) {
         console.error('Fout bij het ophalen van opmerkingen:', error)
       }

@@ -69,4 +69,11 @@ export class GebruikerService {
       relations: ['begeleider'],
     });
   }
+
+  async getGebruikersByRol(rolID: number): Promise<Gebruiker[]> {
+    return this.gebruikerRepository.find({
+      where: { rol: { rolID: rolID } },
+      relations: ['rol'],
+    });
+  }
 }
