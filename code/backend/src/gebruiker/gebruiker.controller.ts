@@ -44,8 +44,15 @@ export class GebruikerController {
     return this.gebruikerService.remove(+id);
   }
 
+  @Get('rol/:rolID')
+  async getGebruikersByRol(
+    @Param('rolID') rolID: number,
+  ): Promise<Gebruiker[]> {
+    return this.gebruikerService.getGebruikersByRol(rolID);
+  }
+
   @Get('begeleider/:id')
-  async getGebruikersVanBegeleider(
+  async getAllGebruikersVanBegeleider(
     @Param('id') begeleiderID: number,
   ): Promise<Gebruiker[]> {
     return this.gebruikerService.getAllGebruikersVanBegeleider(begeleiderID);
