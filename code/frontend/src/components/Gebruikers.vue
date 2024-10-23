@@ -23,22 +23,43 @@
             :key="gebruiker.gebruikerID"
             class="py-4 flex items-center justify-between"
           >
-            <div>
-              <div class="text-[#456A50] font-bold">
-                {{ gebruiker.voornaam }} {{ gebruiker.achternaam }}
-              </div>
-              <div class="text-gray-400 text-sm">
-                {{ gebruiker.telefoonnummer }}
+            <div class="flex items-center">
+              <!-- Profile Image -->
+              <img
+                v-if="gebruiker.foto"
+                :src="`/src/assets/${gebruiker.foto}.jpg`"
+                alt="Profile picture"
+                class="w-10 h-10 object-cover rounded-full mr-4"
+              />
+              <img
+                v-else
+                :src="`/src/assets/no_image_available.jpg`"
+                alt="No picture available"
+                class="w-10 h-10 object-cover rounded-full mr-4"
+              />
+
+              <!-- User Details -->
+              <div>
+                <div class="text-[#456A50] font-bold">
+                  {{ gebruiker.voornaam }} {{ gebruiker.achternaam }}
+                </div>
+                <div class="text-gray-400 text-sm">
+                  {{ gebruiker.telefoonnummer }}
+                </div>
               </div>
             </div>
+
+            <!-- Icons Section -->
             <div class="flex space-x-4">
               <Icon
                 icon="fluent:person-star-16-filled"
                 class="text-[#456A50] w-8 h-8"
+                @click="goToCompetenties(gebruiker.gebruikerID)"
               />
               <Icon
                 icon="material-symbols:task"
                 class="text-[#456A50] w-8 h-8"
+                @click="goToTechnischeCompetenties(gebruiker.gebruikerID)"
               />
               <Icon
                 icon="pepicons-pop:dots-x-circle-filled"
@@ -71,6 +92,7 @@ interface Gebruiker {
   voornaam: string
   achternaam: string
   telefoonnummer: string
+  foto: string
 }
 
 export default defineComponent({
@@ -149,6 +171,18 @@ export default defineComponent({
     goToOpmerkingen(gebruikerID: number) {
       this.$router.push({
         name: 'OpmerkingenPage',
+        params: { id: gebruikerID, begeleiderID: this.begeleiderID },
+      })
+    },
+    goToCompetenties(gebruikerID: number) {
+      this.$router.push({
+        name: 'CompetentiesPage',
+        params: { id: gebruikerID, begeleiderID: this.begeleiderID },
+      })
+    },
+    goToTechnischeCompetenties(gebruikerID: number) {
+      this.$router.push({
+        name: 'TechnischeCompetentiesPage',
         params: { id: gebruikerID, begeleiderID: this.begeleiderID },
       })
     },

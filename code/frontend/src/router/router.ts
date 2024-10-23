@@ -7,6 +7,8 @@ import Materiaal from '@/components/Materiaal.vue'
 import Rol from '@/components/Rol.vue'
 import OpmerkingenPage from '@/components/OpmerkingenPage.vue'
 import Groep from '@/components/Groep.vue'
+import CompetentiesPage from '@/components/CompetentiesPage.vue'
+import TechnischeCompetentiesPage from '@/components/TechnischeCompetentiesPage.vue'
 
 const routes = [
   {
@@ -43,13 +45,21 @@ const routes = [
     path: '/opmerkingen/:id',
     name: 'OpmerkingenPage',
     component: OpmerkingenPage,
-
   },
   {
     path: '/groep',
     name: 'Groep',
     component: Groep,
-
+  },
+  {
+    path: '/competenties/:id',
+    name: 'CompetentiesPage',
+    component: CompetentiesPage,
+  },
+  {
+    path: '/technischeCompetenties/:id',
+    name: 'TechnischeCompetentiesPage',
+    component: TechnischeCompetentiesPage,
   },
 ]
 

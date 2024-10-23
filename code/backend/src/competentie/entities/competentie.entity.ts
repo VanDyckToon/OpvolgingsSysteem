@@ -12,6 +12,9 @@ export class Competentie {
   @Column()
   beschrijving: string;
 
-  @OneToMany(() => CompetentieGebruiker, (competentieGebruiker) => competentieGebruiker.competentie)
+  @OneToMany(
+    () => CompetentieGebruiker,
+    (competentieGebruiker) => competentieGebruiker.competentie,
+  )
   competentieGebruikers: CompetentieGebruiker[];
 }
