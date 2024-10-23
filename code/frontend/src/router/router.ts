@@ -7,7 +7,10 @@ import Materiaal from '@/components/Materiaal.vue'
 import Rol from '@/components/Rol.vue'
 import OpmerkingenPage from '@/components/OpmerkingenPage.vue'
 import Groep from '@/components/Groep.vue'
+
 import Score from '@/components/Score.vue'
+import CompetentiesPage from '@/components/CompetentiesPage.vue'
+import TechnischeCompetentiesPage from '@/components/TechnischeCompetentiesPage.vue'
 
 const routes = [
   {
@@ -54,6 +57,16 @@ const routes = [
     path: '/score',
     name: 'Score',
     component: Score,
+  },
+  {
+    path: '/competenties/:id',
+    name: 'CompetentiesPage',
+    component: CompetentiesPage,
+  },
+  {
+    path: '/technischeCompetenties/:id',
+    name: 'TechnischeCompetentiesPage',
+    component: TechnischeCompetentiesPage,
   },
 ]
 
