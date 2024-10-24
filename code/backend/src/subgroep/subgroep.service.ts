@@ -11,23 +11,25 @@ export class SubgroepService {
     @InjectRepository(Subgroep)
     private readonly subgroepRepository: Repository<Subgroep>,
   ) {}
-  create(createSubgroepDto: CreateSubgroepDto) {
+
+  async create(createSubgroepDto: CreateSubgroepDto) {
     return this.subgroepRepository.save(createSubgroepDto);
   }
 
-  findAll() {
-    return this.subgroepRepository.find();
+  async findAll() {
+    // Fetch subgroepen with their associated groepen
+    return this.subgroepRepository.find({ relations: ['groep'] });
   }
 
-  findOne(subgroepID: number) {
-    return this.subgroepRepository.findOneBy({ subgroepID });
+  async findOne(subgroepID: number) {
+    return this.subgroepRepository.findOne({ where: { subgroepID }, relations: ['groep'] });
   }
 
-  update(subgroepID: number, updateSubgroepDto: UpdateSubgroepDto) {
+  async update(subgroepID: number, updateSubgroepDto: UpdateSubgroepDto) {
     return this.subgroepRepository.update(subgroepID, updateSubgroepDto);
   }
 
-  remove(subgroepID: number) {
+  async remove(subgroepID: number) {
     return this.subgroepRepository.delete({ subgroepID });
   }
 }

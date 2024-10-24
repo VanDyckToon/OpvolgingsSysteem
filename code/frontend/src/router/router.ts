@@ -11,6 +11,7 @@ import Groep from '@/components/Groep.vue'
 import Score from '@/components/Score.vue'
 import CompetentiesPage from '@/components/CompetentiesPage.vue'
 import TechnischeCompetentiesPage from '@/components/TechnischeCompetentiesPage.vue'
+import Subgroep from '@/components/Subgroep.vue'
 
 const routes = [
   {
@@ -67,6 +68,11 @@ const routes = [
     path: '/technischeCompetenties/:id',
     name: 'TechnischeCompetentiesPage',
     component: TechnischeCompetentiesPage,
+  },
+  {
+    path: '/subgroep',
+    name: 'Subgroep',
+    component: Subgroep,
   },
 ]
 
