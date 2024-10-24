@@ -8,10 +8,15 @@ describe('TechnischeCompetentieGebruikerController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TechnischeCompetentieGebruikerController],
-      providers: [TechnischeCompetentieGebruikerService],
+      providers: [
+        TechnischeCompetentieGebruikerService,
+        { provide: TechnischeCompetentieGebruikerService, useValue: {} },
+      ],
     }).compile();
 
-    controller = module.get<TechnischeCompetentieGebruikerController>(TechnischeCompetentieGebruikerController);
+    controller = module.get<TechnischeCompetentieGebruikerController>(
+      TechnischeCompetentieGebruikerController,
+    );
   });
 
   it('should be defined', () => {

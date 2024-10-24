@@ -28,9 +28,6 @@ export class Taak {
   )
   technischeCompetenties: TechnischeCompetentie[];
 
-  @OneToMany(
-    () => TaakMateriaal, 
-    (taakMateriaal) => taakMateriaal.taak,
-)
-taakMaterialen: TaakMateriaal[];
+  @OneToMany(() => TaakMateriaal, (taakMateriaal) => taakMateriaal.taak)
+  taakMaterialen: TaakMateriaal[];
 }
