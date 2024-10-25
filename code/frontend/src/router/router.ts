@@ -12,6 +12,7 @@ import Score from '@/components/Score.vue'
 import CompetentiesPage from '@/components/CompetentiesPage.vue'
 import TechnischeCompetentiesPage from '@/components/TechnischeCompetentiesPage.vue'
 import Subgroep from '@/components/Subgroep.vue'
+import Taak from '@/components/Taak.vue'
 
 const routes = [
   {
@@ -73,6 +74,11 @@ const routes = [
     path: '/subgroep',
     name: 'Subgroep',
     component: Subgroep,
+  },
+  {
+    path: '/taak',
+    name: 'Taak',
+    component: Taak,
   },
 ]
 
