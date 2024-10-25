@@ -22,7 +22,10 @@ export class SubgroepService {
   }
 
   async findOne(subgroepID: number) {
-    return this.subgroepRepository.findOne({ where: { subgroepID }, relations: ['groep'] });
+    return this.subgroepRepository.findOne({
+      where: { subgroepID },
+      relations: ['groep'],
+    });
   }
 
   async update(subgroepID: number, updateSubgroepDto: UpdateSubgroepDto) {

@@ -11,23 +11,27 @@ export class TaakService {
     @InjectRepository(Taak)
     private readonly taakRepository: Repository<Taak>,
   ) {}
-  create(createTaakDto: CreateTaakDto) {
+
+  async create(createTaakDto: CreateTaakDto) {
     return this.taakRepository.save(createTaakDto);
   }
 
-  findAll() {
-    return this.taakRepository.find();
+  async findAll() {
+    return this.taakRepository.find({ relations: ['groep'] });
   }
 
-  findOne(taakID: number) {
-    return this.taakRepository.findOneBy({ taakID });
+  async findOne(taakID: number) {
+    return this.taakRepository.findOne({
+      where: { taakID },
+      relations: ['groep'],
+    });
   }
 
-  update(taakID: number, updateTaakDto: UpdateTaakDto) {
+  async update(taakID: number, updateTaakDto: UpdateTaakDto) {
     return this.taakRepository.update(taakID, updateTaakDto);
   }
 
-  remove(taakID: number) {
+  async remove(taakID: number) {
     return this.taakRepository.delete({ taakID });
   }
 }

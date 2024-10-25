@@ -3,7 +3,7 @@
       <HeaderComponent />
       <div class="grid grid-cols-4 gap-4 pt-8 pb-2 px-14">
         <div class="col-span-3">
-          <h1 class="text-[#104116] text-4xl font-extrabold pt-4">Rolen Beheren</h1>
+          <h1 class="text-[#104116] text-4xl font-extrabold pt-4">Rollen Beheren</h1>
           <form @submit.prevent="addRol">
             <div class="mb-6">
               <label class="block text-[#456A50] text-xl font-bold mb-2 py-1" for="rolName">
@@ -32,7 +32,7 @@
       </div>
       <div class="flex-grow flex justify-center items-center mb-16 mt-8">
         <div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
-          <h2 class="text-3xl font-bold mb-6 text-center text-[#456A50]">Rolen</h2>
+          <h2 class="text-3xl font-bold mb-6 text-center text-[#456A50]">Rollen</h2>
           <ul v-if="rolen.length" class="divide-y divide-gray-200">
             <li
               v-for="rol in rolen"
@@ -56,7 +56,7 @@
               </div>
             </li>
           </ul>
-          <p v-else class="text-center text-gray-500">Geen rolen gevonden</p>
+          <p v-else class="text-center text-gray-500">Geen rollen gevonden</p>
         </div>
       </div>
   
@@ -66,7 +66,7 @@
           <h2 class="text-2xl font-bold mb-4 text-center">Rol Bewerken</h2>
           <div class="mb-4">
             <label class="block text-gray-700 font-bold mb-2" for="editNaam">
-              Nieuwe Rol Naam:
+              Nieuwe rol naam:
             </label>
             <input
               v-model="editedNaam"
