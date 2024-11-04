@@ -13,29 +13,34 @@
             :key="competentie.competentieID"
             class="py-4 flex items-center justify-between"
           >
-            <!-- Competentie Naam -->
             <div class="text-[#456A50] font-bold">
               {{ competentie.naam }}
+              <span
+                v-if="latestScores[competentie.competentieID]"
+                :style="{
+                  color: latestScores[competentie.competentieID].kleurcode,
+                }"
+                class="ml-2"
+              >
+                (Laatste score:
+                {{ latestScores[competentie.competentieID].scoreNaam }})
+              </span>
             </div>
 
-            <!-- Dropdown met mogelijke scores en standaardwaarde -->
             <div class="flex items-center space-x-4">
               <select
                 v-model="selectedScores[competentie.competentieID]"
                 class="border border-gray-300 p-2 rounded"
               >
-                <!-- Voeg een standaard 'selecteer' optie toe -->
                 <option disabled value="">Selecteer een score</option>
                 <option
                   v-for="score in scores"
                   :key="score.scoreID"
-                  :value="score.scoreNaam"
+                  :value="score.scoreID"
                 >
                   {{ score.scoreNaam }}
                 </option>
               </select>
-
-              <!-- Info Icon met Popup -->
               <Icon
                 icon="material-symbols:info"
                 class="text-[#456A50] w-8 h-8 cursor-pointer"
@@ -44,13 +49,22 @@
             </div>
           </li>
         </ul>
+
         <p v-else class="text-center text-gray-500">
           Geen competenties gevonden
         </p>
+
+        <div class="text-center mt-6">
+          <button
+            class="px-6 py-2 text-white bg-[#456A50] rounded shadow hover:bg-[#3a5742] transition duration-300"
+            @click="saveScores"
+          >
+            Opslaan
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Popup Modal -->
     <div
       v-if="showPopup"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
@@ -83,9 +97,21 @@ interface Competentie {
   beschrijving: string
 }
 
+interface CompetentieGebruiker {
+  competentie: {
+    competentieID: number
+  }
+  score: {
+    scoreID: number
+    scoreNaam: string
+    kleurcode: string // Add kleurcode to the score object
+  }
+}
+
 interface Score {
   scoreID: number
   scoreNaam: string
+  kleurcode: string // Add kleurcode here as well
 }
 
 export default defineComponent({
@@ -98,15 +124,21 @@ export default defineComponent({
     return {
       begeleiderID: this.$route.params.id as string,
       competenties: [] as Competentie[],
-      scores: [] as Score[], // Houdt alle mogelijke scores bij
-      selectedScores: {} as Record<number, string>, // Houdt geselecteerde score per competentie bij
+      scores: [] as Score[],
+      selectedScores: {} as Record<number, number | null>,
       showPopup: false,
       selectedCompetentie: null as Competentie | null,
+      latestScores: {} as Record<
+        number,
+        { scoreID: number; scoreNaam: string; kleurcode: string }
+      >,
     }
   },
   async mounted() {
     await this.fetchCompetenties()
-    await this.fetchScores() // Haal scores op bij het laden van de component
+    await this.fetchScores()
+    await this.fetchLatestScoredCompetencies()
+    this.startPolling() // Start polling for updates
   },
   methods: {
     async fetchCompetenties() {
@@ -123,6 +155,35 @@ export default defineComponent({
         )
       }
     },
+
+    async fetchLatestScoredCompetencies() {
+      try {
+        const token = localStorage.getItem('access_token')
+        const response = await axios.get(
+          `http://localhost:3000/competentie-gebruiker/werknemer/${this.begeleiderID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        )
+
+        response.data.forEach((competentie: CompetentieGebruiker) => {
+          this.latestScores[competentie.competentie.competentieID] = {
+            scoreID: competentie.score?.scoreID,
+            scoreNaam: competentie.score?.scoreNaam || 'Geen score',
+            kleurcode: competentie.score?.kleurcode || '#000000', // Default color if not provided
+          }
+          // Set the selected score to the latest score
+          this.selectedScores[competentie.competentie.competentieID] =
+            competentie.score?.scoreID || null
+        })
+      } catch (error) {
+        console.error(
+          'Er is een fout opgetreden bij het ophalen van de laatste scores:',
+          error,
+        )
+      }
+    },
+
     async fetchScores() {
       try {
         const token = localStorage.getItem('access_token')
@@ -137,6 +198,7 @@ export default defineComponent({
         )
       }
     },
+
     openPopup(competentie: Competentie) {
       this.selectedCompetentie = competentie
       this.showPopup = true
@@ -145,10 +207,42 @@ export default defineComponent({
       this.showPopup = false
       this.selectedCompetentie = null
     },
+    async saveScores() {
+      try {
+        const token = localStorage.getItem('access_token')
+        const payload = Object.keys(this.selectedScores).map(competentieID => ({
+          datumBeoordeeld: new Date(),
+          gebruiker: { gebruikerID: this.begeleiderID },
+          score: { scoreID: this.selectedScores[parseInt(competentieID)] },
+          competentie: { competentieID: parseInt(competentieID) },
+        }))
+
+        await axios.post(
+          'http://localhost:3000/competentie-gebruiker',
+          payload,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        )
+
+        // Reload the page after saving
+        window.location.reload() // Reloads the entire page
+      } catch (error) {
+        console.error(
+          'Er is een fout opgetreden bij het opslaan van de scores:',
+          error,
+        )
+        alert('Er is een fout opgetreden bij het opslaan van de scores.')
+      }
+    },
+
+    startPolling() {
+      setInterval(() => {
+        this.fetchCompetenties()
+        this.fetchScores()
+        this.fetchLatestScoredCompetencies()
+      }, 5000) // Poll every 5000 ms (5 seconds)
+    },
   },
 })
 </script>
-
-<style scoped>
-/* Voeg hier extra stijlen toe als dat nodig is */
-</style>
