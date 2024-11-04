@@ -1,0 +1,330 @@
+<template>
+    <div class="min-h-screen bg-[#ECF3EB] flex flex-col">
+      <HeaderComponent />
+      <div class="grid grid-cols-4 gap-4 pt-8 pb-2 px-14">
+        <div class="col-span-3">
+          <h1 class="text-[#104116] text-4xl font-extrabold pt-4">Opleidingen Beheren</h1>
+          <form @submit.prevent="addOpleiding">
+            <div class="mb-6">
+              <label class="block text-[#456A50] text-xl font-bold mb-2 py-1" for="opleidingNaam">
+                Opleiding Naam:
+            </label>
+            <input
+                v-model="naam"
+                type="text"
+                id="opleidingNaam"
+                class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
+                placeholder="Vul hier de naam van de opleiding in"
+                required
+            />
+
+            <label class="block text-[#456A50] text-xl font-bold mb-2 py-1" for="internSwitch">
+  Intern?
+</label>
+<div class="flex items-center mb-2">
+    <label class="inline-flex items-center cursor-pointer">
+  <input type="checkbox" v-model="intern" class="sr-only peer">
+  <div class="shadow relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#A4C2A8] dark:peer-focus:ring-[#456A50] rounded-full peer dark:bg-[#456A50] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#456A50]"></div>
+  <span class="ms-3 text-md font-medium text-gray-900 dark:text-gray-300">Ja</span>
+</label>
+</div>
+
+
+  <label class="block text-[#456A50] text-xl font-bold my-2 py-1" for="beginDatum">
+    Begin datum:
+  </label>
+  <input
+    v-model="datumStart"
+    type="datetime-local"
+    id="datumStart"
+    class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
+    required
+  />
+
+  <label class="block text-[#456A50] text-xl font-bold my-2 py-1" for="eindDatum">
+    Eind datum:
+  </label>
+  <input
+    v-model="datumEind"
+    type="datetime-local"
+    id="datumEind"
+    class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
+    required
+  />
+            </div>
+            <button
+              type="submit"
+              class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline"
+            >
+              Toevoegen
+            </button>
+          </form>
+        </div>
+        <div class="col-span-1">
+          <img src="../assets/opleiding-icoon.svg" alt="Image" class="h-32 w-auto mb-2 object-contain m-auto place-content-center">
+        </div>
+      </div>
+      <div class="flex-grow flex justify-center items-center mb-16 mt-8">
+        <div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
+          <h2 class="text-3xl font-bold mb-6 text-center text-[#456A50]">Opleidingen</h2>
+          <ul v-if="opleidingen.length" class="divide-y divide-gray-200">
+            <li
+              v-for="opleiding in opleidingen"
+              :key="opleiding.opleidingID"
+              class="py-4 flex items-center justify-between"
+            >
+              <div>
+                <div class="text-[#456A50] font-bold">{{ opleiding.naam }}</div>
+                <div class="text-[#456A50]">Begin Datum: {{ formatDatum(opleiding.datumStart) }} <span class="mx-2">|</span> Uur: {{ formatUur(opleiding.datumStart) }}</div>
+                <div class="text-[#456A50]">Eind Datum: {{ formatDatum(opleiding.datumEind) }} <span class="mx-2">|</span> Uur: {{ formatUur(opleiding.datumEind) }}</div>
+              </div>
+              <div class="flex space-x-4">
+                <Icon
+                  icon="material-symbols:edit"
+                  class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
+                  @click="openEditModal(opleiding.opleidingID, opleiding.naam, opleiding.intern, opleiding.datumStart, opleiding.datumEind)"
+                />
+                <Icon
+                  icon="mynaui:trash-solid"
+                  class="text-[#c9184a] hover:text-[#800f2f] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
+                  @click="openDeleteModal(opleiding.opleidingID, opleiding.naam)"
+                />
+              </div>
+            </li>
+          </ul>
+          <p v-else class="text-center text-gray-500">Geen opleidingen gevonden</p>
+        </div>
+      </div>
+  
+      <!-- Modal component voor het aanpassen van de groepen -->
+      <div v-if="isEditModalVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
+          <h2 class="text-2xl font-bold mb-4 text-center">Opleiding Bewerken</h2>
+          <div class="mb-6">
+              <label class="block text-[#456A50] text-xl font-bold mb-2 py-1" for="opleidingNaam">
+                Nieuwe Opleiding Naam:
+            </label>
+            <input
+                v-model="editedNaam"
+                type="text"
+                id="editNaam"
+                class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
+                placeholder="Vul hier de naam van de opleiding in"
+                required
+            />
+
+            <label class="block text-[#456A50] text-xl font-bold mb-2 py-1" for="internSwitch">
+  Intern?
+</label>
+<div class="flex items-center mb-2">
+    <label class="inline-flex items-center cursor-pointer">
+  <input type="checkbox" v-model="editedIntern" id="editIntern" class="sr-only peer">
+  <div class="shadow relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#A4C2A8] dark:peer-focus:ring-[#456A50] rounded-full peer dark:bg-[#456A50] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#456A50]"></div>
+  <span class="ms-3 text-md font-medium text-gray-900 dark:text-gray-300">Ja</span>
+</label>
+</div>
+
+
+  <label class="block text-[#456A50] text-xl font-bold my-2 py-1" for="beginDatum">
+    Nieuwe Begin datum:
+  </label>
+  <input
+    v-model="editedDatumStart"
+    type="datetime-local"
+    id="editDatumStart"
+    class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
+    required
+  />
+
+  <label class="block text-[#456A50] text-xl font-bold my-2 py-1" for="eindDatum">
+    Nieuwe Eind datum:
+  </label>
+  <input
+    v-model="editedDatumEind"
+    type="datetime-local"
+    id="editDatumEind"
+    class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
+    required
+  />
+            </div>
+          <div class="flex justify-end space-x-4">
+            <button @click="closeModal" class="bg-gray-500 text-white px-4 py-2 rounded">Annuleer</button>
+            <button @click="updateOpleiding(selectedOpleidingID, editedNaam, editedIntern, editedDatumStart, editedDatumEind); closeModal()" class="bg-[#456A50] hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white px-4 py-2 rounded">Bijwerken</button>          </div>
+        </div>
+      </div>
+
+      <!-- Modal voor het verwijderen van een item -->
+      <div v-if="isDeleteModalVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
+      <h3 class="text-xl font-semibold mb-4">Weet je zeker dat je "{{ selectedOpleidingNaam }}" wilt verwijderen?</h3>
+      <div class="flex justify-end space-x-4">
+        <button @click="closeDeleteModal" class="bg-gray-500 text-white px-4 py-2 rounded">Annuleer</button>
+        <button @click="confirmDelete" class="bg-[#c9184a] hover:bg-[#800f2f] hover:ease-in-out hover:duration-500 text-white px-4 py-2 rounded">Verwijder</button>
+      </div>
+    </div>
+  </div>
+
+    </div>
+  </template>
+  
+  <script lang="ts">
+  import axios from 'axios'
+  import { defineComponent } from 'vue'
+  import { Icon } from '@iconify/vue'
+  import HeaderComponent from '../components/Header.vue'
+  
+  export default defineComponent({
+    name: 'Opleiding',
+    components: {
+      Icon,
+      HeaderComponent,
+    },
+    data() {
+      return {
+        opleidingen: [] as Opleiding[],
+        naam: '',
+        intern: false,
+        datumStart: '',
+        datumEind: '',
+        isEditModalVisible: false, 
+        isDeleteModalVisible: false,
+        selectedOpleidingID: 0,
+        selectedOpleidingNaam: '',
+        selectedIntern: '',
+        SelectedDatumStart: '',
+        SelectedDatumEind: '',
+        editedNaam: '',
+        editedIntern: '',
+        editedDatumStart: '',
+        EditedDatumEind: '',
+      }
+    },
+    async mounted() {
+      this.fetchOpleidingen()
+    },
+    methods: {
+        openDeleteModal(opleidingID: number, naam: string) {
+      this.selectedOpleidingID = opleidingID;
+      this.selectedOpleidingNaam = naam;
+      this.isDeleteModalVisible = true;
+    },
+
+    closeDeleteModal() {
+      this.isDeleteModalVisible = false;
+    },
+
+  async fetchOpleidingen() {
+    try {
+        const token = localStorage.getItem('access_token')
+
+      const response = await axios.get('http://localhost:3000/opleiding', { headers: { Authorization: `Bearer ${token}` } })
+      this.opleidingen = response.data.sort((a: Opleiding, b: Opleiding) => 
+      a.naam.localeCompare(b.naam)
+    );
+    } catch (error) {
+      console.error('Er is een fout opgetreden bij het ophalen van de opleidingen:', error)
+    }
+  },
+  
+  async addOpleiding() {
+  try {
+    const token = localStorage.getItem('access_token');
+    await axios.post('http://localhost:3000/opleiding', 
+      { naam: this.naam, intern: this.intern, datumStart: this.datumStart, datumEind: this.datumEind }, 
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    this.naam = '';
+    this.intern = '';
+    this.datumStart = '';
+    this.datumEind = '';
+    this.fetchOpleidingen();
+  } catch (error) {
+    console.error('Error adding opleiding:', error);
+  }
+},
+
+    async confirmDelete() {
+      try {
+        const token = localStorage.getItem('access_token');
+        await this.deleteOpleiding(this.selectedOpleidingID);
+        this.isDeleteModalVisible = false;
+      } catch (error) {
+        console.error('Error deleting opleiding:', error);
+      }
+    },
+
+    async deleteOpleiding(opleidingID: number) {
+      try {
+        const token = localStorage.getItem('access_token');
+        await axios.delete(`http://localhost:3000/opleiding/${opleidingID}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        this.fetchOpleidingen();
+      } catch (error) {
+        console.error('Er is een fout opgetreden bij het verwijderen van de opleiding:', error);
+      }
+    },
+  
+  openEditModal(opleidingID: number, naam: string, intern: boolean, datumStart: Date, datumEind: Date) {
+    this.selectedOpleidingID = opleidingID;
+    this.editedNaam = naam;
+    this.editedIntern = intern;
+    this.editedDatumStart = this.formatForDateTimeLocal(datumStart);
+    this.editedDatumEind = this.formatForDateTimeLocal(datumEind);
+    this.isEditModalVisible = true;
+  },
+
+  formatForDateTimeLocal(date) {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`; 
+  },
+
+  formatDate(date) {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  },
+
+  formatDatum(date) {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${day}/${month}/${year}`;
+  },
+
+  formatUur(date) {
+    const d = new Date(date);
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${hours}u${minutes}`;
+  },
+  
+  async updateOpleiding(opleidingID: number, updatedNaam: string, updatedIntern: boolean, updatedDatumStart: Date, updatedDatumEind: Date) {
+  try {
+    const token = localStorage.getItem('access_token');
+    await axios.patch(`http://localhost:3000/opleiding/${opleidingID}`, 
+      { naam: updatedNaam, intern: updatedIntern, datumStart: updatedDatumStart, datumEind: updatedDatumEind }, 
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    this.isEditModalVisible = false;
+    this.fetchOpleidingen();
+  } catch (error) {
+    console.error('Error updating opleiding:', error.response ? error.response.data : error);
+  }
+},
+  
+  closeModal() {
+    this.isEditModalVisible = false
+  },
+},
+
+  })
+  </script>

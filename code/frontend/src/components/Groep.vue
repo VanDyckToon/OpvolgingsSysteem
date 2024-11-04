@@ -102,7 +102,7 @@
   import HeaderComponent from '../components/Header.vue'
   
   export default defineComponent({
-    name: 'Rol',
+    name: 'Groep',
     components: {
       Icon,
       HeaderComponent,
