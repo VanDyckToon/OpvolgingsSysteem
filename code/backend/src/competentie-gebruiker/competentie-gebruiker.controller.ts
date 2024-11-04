@@ -1,15 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CompetentieGebruikerService } from './competentie-gebruiker.service';
 import { CreateCompetentieGebruikerDto } from './dto/create-competentie-gebruiker.dto';
 import { UpdateCompetentieGebruikerDto } from './dto/update-competentie-gebruiker.dto';
 
 @Controller('competentie-gebruiker')
 export class CompetentieGebruikerController {
-  constructor(private readonly competentieGebruikerService: CompetentieGebruikerService) {}
+  constructor(
+    private readonly competentieGebruikerService: CompetentieGebruikerService,
+  ) {}
 
   @Post()
   create(@Body() createCompetentieGebruikerDto: CreateCompetentieGebruikerDto) {
-    return this.competentieGebruikerService.create(createCompetentieGebruikerDto);
+    return this.competentieGebruikerService.create(
+      createCompetentieGebruikerDto,
+    );
   }
 
   @Get()
@@ -23,12 +35,23 @@ export class CompetentieGebruikerController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCompetentieGebruikerDto: UpdateCompetentieGebruikerDto) {
-    return this.competentieGebruikerService.update(+id, updateCompetentieGebruikerDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateCompetentieGebruikerDto: UpdateCompetentieGebruikerDto,
+  ) {
+    return this.competentieGebruikerService.update(
+      +id,
+      updateCompetentieGebruikerDto,
+    );
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.competentieGebruikerService.remove(+id);
+  }
+
+  @Get('werknemer/:werknemerID')
+  findByWerknemer(@Param('werknemerID') werknemerID: number) {
+    return this.competentieGebruikerService.findByWerknemer(werknemerID);
   }
 }

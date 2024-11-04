@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OpleidingGebruikerService } from './opleiding-gebruiker.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('OpleidingGebruikerService', () => {
   let service: OpleidingGebruikerService;

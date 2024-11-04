@@ -1,18 +1,35 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddedTelnumberEtc1729509603639 implements MigrationInterface {
-    name = 'AddedTelnumberEtc1729509603639'
+  name = 'AddedTelnumberEtc1729509603639';
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "gebruiker" ADD "telefoonnummer" character varying`);
-        await queryRunner.query(`ALTER TABLE "gebruiker" ADD CONSTRAINT "UQ_ecc969fa3f9bb267946d53a7c2f" UNIQUE ("telefoonnummer")`);
-        await queryRunner.query(`ALTER TABLE "gebruiker" ADD "extraOpmerking" character varying`);
-    }
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    // Check if the column 'telefoonnummer' already exists before adding it
+    await queryRunner.query(`
+      DO $$
+      BEGIN
+          IF NOT EXISTS (
+              SELECT 1 FROM information_schema.columns 
+              WHERE table_name='gebruiker' AND column_name='telefoonnummer'
+          ) THEN
+              ALTER TABLE "gebruiker" ADD "telefoonnummer" character varying;
+          END IF;
+      END $$;
+    `);
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "gebruiker" DROP COLUMN "extraOpmerking"`);
-        await queryRunner.query(`ALTER TABLE "gebruiker" DROP CONSTRAINT "UQ_ecc969fa3f9bb267946d53a7c2f"`);
-        await queryRunner.query(`ALTER TABLE "gebruiker" DROP COLUMN "telefoonnummer"`);
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // Optionally remove the column if it was added
+    await queryRunner.query(`
+      DO $$
+      BEGIN
+          IF EXISTS (
+              SELECT 1 FROM information_schema.columns 
+              WHERE table_name='gebruiker' AND column_name='telefoonnummer'
+          ) THEN
+              ALTER TABLE "gebruiker" DROP COLUMN "telefoonnummer";
+          END IF;
+      END $$;
+    `);
+  }
 }
