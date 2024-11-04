@@ -8,7 +8,10 @@ describe('CompetentieController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CompetentieController],
-      providers: [CompetentieService],
+      providers: [
+        CompetentieService,
+        { provide: CompetentieService, useValue: {} },
+      ],
     }).compile();
 
     controller = module.get<CompetentieController>(CompetentieController);

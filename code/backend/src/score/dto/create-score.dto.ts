@@ -1,9 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateScoreDto {
-    @ApiProperty()
-    scoreNaam: string;
-    
-    @ApiProperty()
-    waarde: number;
+  @ApiProperty()
+  scoreNaam: string;
+
+  @ApiProperty()
+  waarde: number;
+
+  @ApiProperty()
+  kleurcode: string;
 }

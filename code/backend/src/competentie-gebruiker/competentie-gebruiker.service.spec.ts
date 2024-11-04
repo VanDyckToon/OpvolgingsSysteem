@@ -6,10 +6,15 @@ describe('CompetentieGebruikerService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CompetentieGebruikerService],
+      providers: [
+        CompetentieGebruikerService,
+        { provide: CompetentieGebruikerService, useValue: {} },
+      ],
     }).compile();
 
-    service = module.get<CompetentieGebruikerService>(CompetentieGebruikerService);
+    service = module.get<CompetentieGebruikerService>(
+      CompetentieGebruikerService,
+    );
   });
 
   it('should be defined', () => {

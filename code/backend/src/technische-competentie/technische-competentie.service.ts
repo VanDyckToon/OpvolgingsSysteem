@@ -10,7 +10,6 @@ export class TechnischeCompetentieService {
   constructor(
     @InjectRepository(TechnischeCompetentie)
     private readonly technischeCompetentieRepository: Repository<TechnischeCompetentie>,
-    
   ) {}
   create(createTechnischeCompetentieDto: CreateTechnischeCompetentieDto) {
     return this.technischeCompetentieRepository.save(

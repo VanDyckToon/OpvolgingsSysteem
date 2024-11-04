@@ -8,7 +8,13 @@ describe('TaakMateriaalController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TaakMateriaalController],
-      providers: [TaakMateriaalService],
+      providers: [
+        TaakMateriaalService,
+        {
+          provide: TaakMateriaalService,
+          useValue: {},
+        },
+      ],
     }).compile();
 
     controller = module.get<TaakMateriaalController>(TaakMateriaalController);

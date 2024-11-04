@@ -13,6 +13,9 @@ export class Score {
   @Column('float')
   waarde: number;
 
+  @Column()
+  kleurcode: string = null;
+
   @OneToMany(
     () => CompetentieGebruiker,
     (competentieGebruiker) => competentieGebruiker.score,
