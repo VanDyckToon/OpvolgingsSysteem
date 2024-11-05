@@ -9,23 +9,18 @@
       <div class="flex space-x-4 mr-10">
         <router-link :to="`/begeleider/${gebruikerID}`">
           <!-- Use :to binding -->
-          <Icon icon="mingcute:home-3-fill" class="text-[#456A50] w-12 h-12" />
+          <img src="../assets/home.svg" alt="Image" class="h-10 w-auto object-contain color-[#101234]">
         </router-link>
 
         <!-- Conditionally render the settings icon based on rolID -->
 
         <router-link v-if="rolID == '1'" :to="`/adminpanel`">
-          <Icon
-            icon="material-symbols-light:settings-account-box-rounded"
-            class="text-[#456A50] w-12 h-12"
-          />
+          <img src="../assets/settings.svg" alt="Image" class="h-10 w-auto object-contain color-[#101234]">
         </router-link>
-
-        <Icon
-          icon="solar:logout-2-bold"
-          class="text-[#C72C41] w-12 h-12 cursor-pointer"
-          @click="logout"
-        />
+        
+        <button>
+          <img src="../assets/exit.svg" alt="Image" class="h-10 w-auto object-contain color-[#101234]" @click="logout">
+        </button>
       </div>
     </div>
     <div class="h-0.5 bg-[#456A50]"></div>

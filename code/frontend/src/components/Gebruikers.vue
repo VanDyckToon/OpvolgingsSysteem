@@ -52,10 +52,10 @@
             <!-- Icons Section -->
             <div class="flex space-x-4">
               <button>
-              <img src="../assets/competentiester.svg" alt="Image" class="on-click h-8 w-auto object-contain color-[#101234]" @click="goToCompetenties(gebruiker.gebruikerID)">
+              <img src="../assets/competentiester.svg" alt="Image" class="h-8 w-auto object-contain color-[#101234]" @click="goToCompetenties(gebruiker.gebruikerID)">
               </button>
               <button>
-              <img src="../assets/technischecompententie.svg" alt="Image" class="on-click h-8 w-auto object-contain color-[#101234]" @click="goToTechnischeCompetenties(gebruiker.gebruikerID)">
+              <img src="../assets/technischecompententie.svg" alt="Image" class="h-8 w-auto object-contain color-[#101234]" @click="goToTechnischeCompetenties(gebruiker.gebruikerID)">
               </button>
               <button>
               <img src="../assets/more.svg" alt="Image" class="h-8 w-auto object-contain color-[#101234]" @click="goToDetails(gebruiker.gebruikerID)">
