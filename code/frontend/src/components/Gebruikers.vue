@@ -51,26 +51,18 @@
 
             <!-- Icons Section -->
             <div class="flex space-x-4">
-              <Icon
-                icon="fluent:person-star-16-filled"
-                class="text-[#456A50] w-8 h-8"
-                @click="goToCompetenties(gebruiker.gebruikerID)"
-              />
-              <Icon
-                icon="material-symbols:task"
-                class="text-[#456A50] w-8 h-8"
-                @click="goToTechnischeCompetenties(gebruiker.gebruikerID)"
-              />
-              <Icon
-                icon="pepicons-pop:dots-x-circle-filled"
-                class="text-[#456A50] w-8 h-8"
-                @click="goToDetails(gebruiker.gebruikerID)"
-              />
-              <Icon
-                icon="mdi:comments"
-                class="text-[#456A50] w-8 h-8"
-                @click="goToOpmerkingen(gebruiker.gebruikerID)"
-              />
+              <button>
+              <img src="../assets/competentiester.svg" alt="Image" class="on-click h-8 w-auto object-contain color-[#101234]" @click="goToCompetenties(gebruiker.gebruikerID)">
+              </button>
+              <button>
+              <img src="../assets/technischecompententie.svg" alt="Image" class="on-click h-8 w-auto object-contain color-[#101234]" @click="goToTechnischeCompetenties(gebruiker.gebruikerID)">
+              </button>
+              <button>
+              <img src="../assets/more.svg" alt="Image" class="h-8 w-auto object-contain color-[#101234]" @click="goToDetails(gebruiker.gebruikerID)">
+              </button>
+              <button>
+              <img src="../assets/comment.svg" alt="Image" class="h-8 w-auto object-contain color-[#101234]" @click="goToOpmerkingen(gebruiker.gebruikerID)">
+              </button>
             </div>
           </li>
         </ul>
