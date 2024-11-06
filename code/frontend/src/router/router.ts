@@ -14,6 +14,7 @@ import TechnischeCompetentiesPage from '@/components/TechnischeCompetentiesPage.
 import Subgroep from '@/components/Subgroep.vue'
 import Taak from '@/components/Taak.vue'
 import Opleiding from '@/components/Opleiding.vue'
+import Competentie from '@/components/Competentie.vue'
 
 const routes = [
   {
@@ -85,6 +86,11 @@ const routes = [
     path: '/opleiding',
     name: 'Opleiding',
     component: Opleiding,
+  },
+  {
+    path: '/competentie',
+    name: 'Competentie',
+    component: Competentie,
   },
 ]
 

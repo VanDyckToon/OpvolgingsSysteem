@@ -35,7 +35,7 @@
             <span class="text-center">Rollen Beheren</span>
         </button>
         </router-link>
-        <router-link :to="`/`">
+        <router-link :to="`/competentie`">
         <button class="w-full h-48 flex flex-col items-center justify-center font-bold text-[#104116] text-2xl bg-white shadow-xl rounded overflow-hidden transition-transform duration-500 hover:scale-110">
             <img src="../assets/competentie-icoon.svg" alt="Image" class="h-16 w-auto mb-2 object-contain color-[#101234]">
             <span class="text-center">Competenties Beheren</span>
