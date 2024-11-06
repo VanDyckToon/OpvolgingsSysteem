@@ -52,16 +52,16 @@
             <!-- Icons Section -->
             <div class="flex space-x-4">
               <button>
-              <img src="../assets/competentiester.svg" alt="Image" class="on-click h-8 w-auto object-contain color-[#101234]" @click="goToCompetenties(gebruiker.gebruikerID)">
+              <img src="../assets/competentiester.svg" alt="competentiester" class="h-8 w-auto object-contain color-[#101234]" @click="goToCompetenties(gebruiker.gebruikerID)">
               </button>
               <button>
-              <img src="../assets/technischecompententie.svg" alt="Image" class="on-click h-8 w-auto object-contain color-[#101234]" @click="goToTechnischeCompetenties(gebruiker.gebruikerID)">
+              <img src="../assets/technischecompententie.svg" alt="technischecompententie" class="h-8 w-auto object-contain color-[#101234]" @click="goToTechnischeCompetenties(gebruiker.gebruikerID)">
               </button>
               <button>
-              <img src="../assets/more.svg" alt="Image" class="h-8 w-auto object-contain color-[#101234]" @click="goToDetails(gebruiker.gebruikerID)">
+              <img src="../assets/more.svg" alt="more" class="h-8 w-auto object-contain color-[#101234]" @click="goToDetails(gebruiker.gebruikerID)">
               </button>
               <button>
-              <img src="../assets/comment.svg" alt="Image" class="h-8 w-auto object-contain color-[#101234]" @click="goToOpmerkingen(gebruiker.gebruikerID)">
+              <img src="../assets/comment.svg" alt="comment" class="h-8 w-auto object-contain color-[#101234]" @click="goToOpmerkingen(gebruiker.gebruikerID)">
               </button>
             </div>
           </li>
