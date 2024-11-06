@@ -36,14 +36,21 @@
               placeholder="Vul hier de waarde van de score in"
               required
             />
+
             <label
               class="block text-[#456A50] text-xl font-bold my-2 py-1"
               for="scoreColor"
             >
               Score Kleur:
             </label>
-            <!-- PrimeVue Color Picker Component -->
-            <ColorPicker v-model="color" inline></ColorPicker>
+            <div class="flex items-center">
+              <!-- PrimeVue Color Picker Component -->
+              <ColorPicker v-model="color" inline format="hex"></ColorPicker>
+              <div
+                :style="{ backgroundColor: '#' + color }"
+                class="w-16 h-16 border rounded"
+              ></div>
+            </div>
           </div>
           <button
             type="submit"
@@ -134,7 +141,14 @@
         <label class="block text-gray-700 font-bold mb-2" for="editColor">
           Nieuwe Kleur:
         </label>
-        <ColorPicker v-model="editedColor" inline format="hex"></ColorPicker>
+        <div class="flex items-center">
+          <ColorPicker v-model="editedColor" inline format="hex"></ColorPicker>
+          <div
+            :style="{ backgroundColor: '#' + editedColor }"
+            class="h-16 w-16 border rounded ml-10"
+          ></div>
+        </div>
+
         <div class="flex justify-end space-x-4 mt-4 rounded-sm">
           <button
             @click="closeModal"
@@ -211,20 +225,23 @@ export default defineComponent({
       scores: [] as Score[],
       naam: '',
       waarde: '',
-      color: '#000000',
+      color: '000000',
       isEditModalVisible: false,
       isDeleteModalVisible: false,
       selectedScoreID: 0,
       selectedScoreNaam: '',
       editedNaam: '',
       editedWaarde: '',
-      editedColor: '#000000',
+      editedColor: '000000',
     }
   },
   async mounted() {
     this.fetchScores()
   },
   methods: {
+    logColor() {
+      console.log(this.color)
+    },
     async addScore() {
       try {
         const token = localStorage.getItem('access_token')
@@ -239,7 +256,7 @@ export default defineComponent({
         )
         this.naam = ''
         this.waarde = ''
-        this.color = '#000000'
+        this.color = '000000'
         this.fetchScores()
       } catch (error) {
         console.error('Error adding score:', error)
@@ -265,7 +282,7 @@ export default defineComponent({
       this.selectedScoreID = scoreID
       this.editedNaam = naam
       this.editedWaarde = waarde
-      this.editedColor = kleur
+      this.editedColor = kleur.replace('#', '')
       this.isEditModalVisible = true
     },
     closeModal() {
@@ -278,7 +295,6 @@ export default defineComponent({
       kleur: string,
     ) {
       try {
-        console.log(this.editedColor)
         const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/score/${scoreID}`,
