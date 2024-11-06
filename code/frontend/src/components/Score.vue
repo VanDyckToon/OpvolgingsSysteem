@@ -88,7 +88,7 @@
                     score.scoreID,
                     score.scoreNaam,
                     score.waarde,
-                    score.kleur,
+                    score.kleurcode,
                   )
                 "
               />
@@ -134,7 +134,7 @@
         <label class="block text-gray-700 font-bold mb-2" for="editColor">
           Nieuwe Kleur:
         </label>
-        <ColorPicker v-model="editedColor" inline></ColorPicker>
+        <ColorPicker v-model="editedColor" inline format="hex"></ColorPicker>
         <div class="flex justify-end space-x-4 mt-4 rounded-sm">
           <button
             @click="closeModal"
@@ -211,7 +211,7 @@ export default defineComponent({
       scores: [] as Score[],
       naam: '',
       waarde: '',
-      color: '#000000', // Default color value
+      color: '#000000',
       isEditModalVisible: false,
       isDeleteModalVisible: false,
       selectedScoreID: 0,
@@ -230,7 +230,11 @@ export default defineComponent({
         const token = localStorage.getItem('access_token')
         await axios.post(
           'http://localhost:3000/score',
-          { scoreNaam: this.naam, waarde: this.waarde, kleur: this.color },
+          {
+            scoreNaam: this.naam,
+            waarde: this.waarde,
+            kleurcode: '#' + this.color,
+          },
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.naam = ''
@@ -244,7 +248,7 @@ export default defineComponent({
     async fetchScores() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/score', {
+        const response = await axios.get(`http://localhost:3000/score`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.scores = response.data
@@ -274,10 +278,15 @@ export default defineComponent({
       kleur: string,
     ) {
       try {
+        console.log(this.editedColor)
         const token = localStorage.getItem('access_token')
-        await axios.put(
+        await axios.patch(
           `http://localhost:3000/score/${scoreID}`,
-          { scoreNaam: naam, waarde: waarde, kleur: kleur },
+          {
+            scoreNaam: naam,
+            waarde: waarde,
+            kleurcode: '#' + kleur,
+          },
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.fetchScores() // Refresh the scores list
