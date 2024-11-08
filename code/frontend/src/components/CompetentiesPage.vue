@@ -4,7 +4,8 @@
     <div class="flex-grow flex justify-center items-center">
       <div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
         <h2 class="text-2xl font-bold mb-6 text-center text-[#456A50]">
-          Competenties
+          Competenties - {{ gebruiker?.voornaam }}
+          {{ gebruiker?.achternaam }}
         </h2>
 
         <ul v-if="competenties.length" class="divide-y divide-gray-200">
@@ -108,6 +109,12 @@ interface CompetentieGebruiker {
   }
 }
 
+interface Gebruiker {
+  gebruikerID: number
+  voornaam: string
+  achternaam: string
+}
+
 interface Score {
   scoreID: number
   scoreNaam: string
@@ -132,12 +139,14 @@ export default defineComponent({
         number,
         { scoreID: number; scoreNaam: string; kleurcode: string }
       >,
+      gebruiker: null as Gebruiker | null,
     }
   },
   async mounted() {
     await this.fetchCompetenties()
     await this.fetchScores()
     await this.fetchLatestScoredCompetencies()
+    await this.fetchWerknemer()
     this.startPolling() // Start polling for updates
   },
   methods: {
@@ -153,6 +162,19 @@ export default defineComponent({
           'Er is een fout opgetreden bij het ophalen van de competenties:',
           error,
         )
+      }
+    },
+    async fetchWerknemer() {
+      try {
+        const token = localStorage.getItem('access_token')
+
+        const response = await axios.get(
+          `http://localhost:3000/gebruiker/${this.$route.params.id}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+        this.gebruiker = response.data
+      } catch (error) {
+        console.error('Fout bij het ophalen van gebruiker details:', error)
       }
     },
 
@@ -240,7 +262,7 @@ export default defineComponent({
       setInterval(() => {
         this.fetchCompetenties()
         this.fetchScores()
-        this.fetchLatestScoredCompetencies()
+        this.fetchLatestScoredCompetencies(), this.fetchWerknemer()
       }, 5000) // Poll every 5000 ms (5 seconds)
     },
   },

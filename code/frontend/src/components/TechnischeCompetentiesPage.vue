@@ -3,8 +3,9 @@
     <HeaderComponent :begeleiderID="begeleiderID" />
     <div class="flex-grow flex justify-center items-center">
       <div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
-        <h2 class="text-2xl font-bold text-center text-[#456A50]">
-          Technische Competenties
+        <h2 class="text-2xl font-bold text-center text-[#456A50] pb-3">
+          Technische Competenties - {{ gebruiker?.voornaam }}
+          {{ gebruiker?.achternaam }}
         </h2>
 
         <div class="flex justify-end mb-4">
@@ -159,6 +160,11 @@ interface Taak {
   naam: string
   technischeCompetenties: TechnischeCompetentie[]
 }
+interface Gebruiker {
+  gebruikerID: number
+  voornaam: string
+  achternaam: string
+}
 
 export default defineComponent({
   name: 'TechnischeCompetentiesPage',
@@ -179,6 +185,7 @@ export default defineComponent({
         { scoreID: number; scoreNaam: string; kleurcode: string }
       >,
       showNVT: false, // Nieuwe data-eigenschap om de NVT-scores te tonen/verbergen
+      gebruiker: null as Gebruiker | null,
     }
   },
   computed: {
@@ -239,6 +246,20 @@ export default defineComponent({
           'Er is een fout opgetreden bij het ophalen van de taken:',
           error,
         )
+      }
+    },
+
+    async fetchWerknemer() {
+      try {
+        const token = localStorage.getItem('access_token')
+
+        const response = await axios.get(
+          `http://localhost:3000/gebruiker/${this.$route.params.id}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+        this.gebruiker = response.data
+      } catch (error) {
+        console.error('Fout bij het ophalen van gebruiker details:', error)
       }
     },
 
@@ -335,6 +356,7 @@ export default defineComponent({
     await this.fetchTaken()
     await this.fetchScores()
     await this.fetchLatestScores()
+    await this.fetchWerknemer()
   },
 })
 </script>
