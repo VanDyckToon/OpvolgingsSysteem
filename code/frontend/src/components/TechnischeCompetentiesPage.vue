@@ -3,55 +3,103 @@
     <HeaderComponent :begeleiderID="begeleiderID" />
     <div class="flex-grow flex justify-center items-center">
       <div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
-        <h2 class="text-2xl font-bold mb-6 text-center text-[#456A50]">
+        <h2 class="text-2xl font-bold text-center text-[#456A50]">
           Technische Competenties
         </h2>
 
-        <ul
-          v-if="technischeCompetenties.length"
-          class="divide-y divide-gray-200"
-        >
+        <div class="flex justify-end mb-4">
+          <!-- Toggle knop om NVT te tonen/verborgen te maken, helemaal rechts en kleur aangepast -->
+          <button
+            class="px-6 py-2 text-white rounded shadow transition duration-300 mb-6"
+            :class="{
+              'bg-[#456A50] hover:bg-[#3a5742]': !showNVT,
+              'bg-[#104116] hover:bg-[#104116]': showNVT,
+            }"
+            @click="toggleShowNVT"
+          >
+            {{ showNVT ? 'Verberg NVT' : 'Toon NVT' }}
+          </button>
+        </div>
+
+        <ul v-if="filteredCompetenties.length" class="divide-y divide-gray-200">
           <li
-            v-for="technischeCompetentie in technischeCompetenties"
-            :key="technischeCompetentie.technischeCompetentieID"
+            v-for="taak in taken"
+            :key="taak.taakID"
             class="py-4 flex items-center justify-between"
           >
-            <!-- Competentie Naam -->
-            <div class="text-[#456A50] font-bold">
-              {{ technischeCompetentie.naam }}
-            </div>
-
-            <!-- Dropdown met mogelijke scores en standaardwaarde -->
-            <div class="flex items-center space-x-4">
-              <select
-                v-model="
-                  selectedScores[technischeCompetentie.technischeCompetentieID]
-                "
-                class="border border-gray-300 p-2 rounded"
-              >
-                <!-- Voeg een standaard 'selecteer' optie toe -->
-                <option disabled value="">Selecteer een score</option>
-                <option
-                  v-for="score in scores"
-                  :key="score.scoreID"
-                  :value="score.scoreNaam"
-                >
-                  {{ score.scoreNaam }}
-                </option>
-              </select>
-
-              <!-- Info Icon met Popup -->
-              <Icon
-                icon="material-symbols:info"
-                class="text-[#456A50] w-8 h-8 cursor-pointer"
-                @click="openPopup(technischeCompetentie)"
-              />
+            <!-- Taak Naam + Technische Competenties op dezelfde lijn -->
+            <div class="flex items-start w-full">
+              <div class="text-[#456A50] font-bold w-1/3 py-2">
+                {{ taak.naam }}
+              </div>
+              <div class="flex-grow">
+                <ul>
+                  <li
+                    v-for="competentie in filteredCompetentiesForTaak(
+                      taak.taakID,
+                    )"
+                    :key="competentie.technischeCompetentieID"
+                    class="py-2 flex items-start"
+                  >
+                    <div class="flex-grow">
+                      {{ competentie.naam }}
+                      <span
+                        v-if="latestScores[competentie.technischeCompetentieID]"
+                        :style="{
+                          color:
+                            latestScores[competentie.technischeCompetentieID]
+                              .kleurcode,
+                        }"
+                        class="ml-2 font-bold"
+                        ><br />
+                        (Laatste score:
+                        {{
+                          latestScores[competentie.technischeCompetentieID]
+                            ?.scoreNaam
+                        }})
+                      </span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                      <select
+                        v-model="
+                          selectedScores[competentie.technischeCompetentieID]
+                        "
+                        class="border border-gray-300 p-2 rounded"
+                      >
+                        <option disabled value="">Selecteer een score</option>
+                        <option
+                          v-for="score in scores"
+                          :key="score.scoreID"
+                          :value="score.scoreID"
+                        >
+                          {{ score.scoreNaam }}
+                        </option>
+                      </select>
+                      <Icon
+                        icon="material-symbols:info"
+                        class="text-[#456A50] w-8 h-8 cursor-pointer"
+                        @click="openPopup(competentie)"
+                      />
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
           </li>
         </ul>
+
         <p v-else class="text-center text-gray-500">
           Geen technische competenties gevonden
         </p>
+
+        <div class="text-center mt-6">
+          <button
+            class="px-6 py-2 text-white bg-[#456A50] rounded shadow hover:bg-[#3a5742] transition duration-300"
+            @click="saveScores"
+          >
+            Opslaan
+          </button>
+        </div>
       </div>
     </div>
 
@@ -88,9 +136,28 @@ interface TechnischeCompetentie {
   beschrijving: string
 }
 
+interface TechnischeCompetentieGebruiker {
+  technischeCompetentie: {
+    technischeCompetentieID: number
+    taakID: number
+  }
+  score: {
+    scoreID: number
+    scoreNaam: string
+    kleurcode: string
+  }
+}
+
 interface Score {
   scoreID: number
   scoreNaam: string
+  kleurcode: string
+}
+
+interface Taak {
+  taakID: number
+  naam: string
+  technischeCompetenties: TechnischeCompetentie[]
 }
 
 export default defineComponent({
@@ -102,35 +169,80 @@ export default defineComponent({
   data() {
     return {
       begeleiderID: this.$route.params.id as string,
-      technischeCompetenties: [] as TechnischeCompetentie[],
+      taken: [] as Taak[],
       scores: [] as Score[],
-      selectedScores: {} as Record<number, string>,
+      selectedScores: {} as Record<number, number | null>, // Gebruiker's geselecteerde scores per technische competentie
       showPopup: false,
       selectedTechnischeCompetentie: null as TechnischeCompetentie | null,
+      latestScores: {} as Record<
+        number,
+        { scoreID: number; scoreNaam: string; kleurcode: string }
+      >,
+      showNVT: false, // Nieuwe data-eigenschap om de NVT-scores te tonen/verbergen
     }
   },
-  async mounted() {
-    await this.fetchTechnischeCompetenties()
-    await this.fetchScores()
+  computed: {
+    // Filter de competenties afhankelijk van de showNVT-status en de taakID
+    filteredCompetenties() {
+      return this.taken.flatMap(taak =>
+        taak.technischeCompetenties.filter(competentie => {
+          // Als showNVT false is, filter de NVT-scores uit
+          if (!this.showNVT) {
+            return (
+              this.latestScores[competentie.technischeCompetentieID]
+                ?.scoreNaam !== 'NVT'
+            )
+          }
+          // Als showNVT true is, toon alles, inclusief NVT
+          return true
+        }),
+      )
+    },
   },
   methods: {
-    async fetchTechnischeCompetenties() {
+    // Haal de competenties voor een specifieke taak op
+    filteredCompetentiesForTaak(taakID: number) {
+      return (
+        this.taken
+          .find(taak => taak.taakID === taakID)
+          ?.technischeCompetenties.filter(competentie => {
+            // Filteren op basis van de NVT-status en de taakID
+            if (!this.showNVT) {
+              return (
+                this.latestScores[competentie.technischeCompetentieID]
+                  ?.scoreNaam !== 'NVT'
+              )
+            }
+            return true
+          }) || []
+      )
+    },
+
+    // Toggle voor het tonen/verbergen van NVT-scores
+    toggleShowNVT() {
+      this.showNVT = !this.showNVT
+    },
+
+    // Haal de taken voor de gebruiker op
+    async fetchTaken() {
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          'http://localhost:3000/technische-competentie',
+          `http://localhost:3000/taak/gebruiker/${this.begeleiderID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
         )
-        this.technischeCompetenties = response.data
+        this.taken = response.data
       } catch (error) {
         console.error(
-          'Er is een fout opgetreden bij het ophalen van de technische competenties:',
+          'Er is een fout opgetreden bij het ophalen van de taken:',
           error,
         )
       }
     },
+
+    // Haal de beschikbare scores op
     async fetchScores() {
       try {
         const token = localStorage.getItem('access_token')
@@ -145,18 +257,84 @@ export default defineComponent({
         )
       }
     },
-    openPopup(technischeCompetentie: TechnischeCompetentie) {
-      this.selectedTechnischeCompetentie = technischeCompetentie
+
+    // Haal de laatste scores op voor de gebruiker
+    async fetchLatestScores() {
+      try {
+        const token = localStorage.getItem('access_token')
+        const response = await axios.get(
+          `http://localhost:3000/technische-competentie-gebruiker/werknemer/${this.begeleiderID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        )
+        response.data.forEach((competentie: TechnischeCompetentieGebruiker) => {
+          this.latestScores[
+            competentie.technischeCompetentie.technischeCompetentieID
+          ] = {
+            scoreID: competentie.score?.scoreID,
+            scoreNaam: competentie.score?.scoreNaam || 'Geen score',
+            kleurcode: competentie.score?.kleurcode || '#000000', // Default color
+          }
+        })
+      } catch (error) {
+        console.error(
+          'Er is een fout opgetreden bij het ophalen van de laatste scores:',
+          error,
+        )
+      }
+    },
+
+    // Sla de geselecteerde scores op
+    async saveScores() {
+      try {
+        const token = localStorage.getItem('access_token')
+        const payload = Object.keys(this.selectedScores).map(
+          technischeCompetentieID => ({
+            datumBeoordeeld: new Date(),
+            gebruiker: { gebruikerID: this.begeleiderID },
+            score: {
+              scoreID: this.selectedScores[parseInt(technischeCompetentieID)],
+            },
+            technischeCompetentie: {
+              technischeCompetentieID: parseInt(technischeCompetentieID),
+            },
+          }),
+        )
+
+        // Verstuur de payload naar de backend om de scores op te slaan
+        await axios.post(
+          'http://localhost:3000/technische-competentie-gebruiker',
+          payload,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        )
+        window.location.reload()
+      } catch (error) {
+        console.error(
+          'Er is een fout opgetreden bij het opslaan van de scores:',
+          error,
+        )
+        alert('Er is een fout opgetreden bij het opslaan van de scores.')
+      }
+    },
+
+    openPopup(competentie: TechnischeCompetentie) {
+      this.selectedTechnischeCompetentie = competentie
       this.showPopup = true
     },
+
     closePopup() {
       this.showPopup = false
       this.selectedTechnischeCompetentie = null
     },
   },
+
+  async mounted() {
+    await this.fetchTaken()
+    await this.fetchScores()
+    await this.fetchLatestScores()
+  },
 })
 </script>
-
-<style scoped>
-/* Voeg hier extra stijlen toe als dat nodig is */
-</style>
