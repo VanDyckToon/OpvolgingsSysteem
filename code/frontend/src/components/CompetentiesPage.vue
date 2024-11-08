@@ -262,7 +262,7 @@ export default defineComponent({
       setInterval(() => {
         this.fetchCompetenties()
         this.fetchScores()
-        this.fetchLatestScoredCompetencies(),
+        this.fetchLatestScoredCompetencies()
       }, 5000) // Poll every 5000 ms (5 seconds)
     },
   },
