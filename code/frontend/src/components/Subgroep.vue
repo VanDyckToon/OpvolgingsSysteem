@@ -199,11 +199,22 @@
     >
       <div class="bg-white p-6 rounded-lg shadow-lg w-2/3">
         <h2 class="text-2xl font-bold mb-4 text-center">
-          Gebruikers in Subgroep
+          {{
+            subgroepen.find(
+              subgroep => subgroep.subgroepID === selectedSubgroepID,
+            )?.subgroepNaam
+          }}
         </h2>
 
         <!-- Begeleider section -->
-        <h3 class="text-xl font-semibold mb-2 text-[#104116]">Begeleiders</h3>
+        <div class="flex items-center mb-4">
+          <h3 class="text-xl font-semibold mb-2 text-[#104116]">Begeleiders</h3>
+          <Icon
+            icon="gridicons:add"
+            width="24"
+            class="ml-4 text-[#104116]"
+          ></Icon>
+        </div>
         <ul
           v-if="
             Array.isArray(gebruikers) &&
@@ -266,7 +277,40 @@
         </p>
 
         <!-- Werknemer section -->
-        <h3 class="text-xl font-semibold mb-2 text-[#104116]">Werknemers</h3>
+        <div class="flex items-center mb-4">
+          <h3 class="text-xl font-semibold mb-2 text-[#104116]">Werknemers</h3>
+        </div>
+        <!-- Dropdown to select werknemer -->
+        <div class="mb-4">
+          <label
+            class="block text-gray-700 font-bold mb-2"
+            for="selectWerknemer"
+          >
+            Selecteer een werknemer die je aan de groep wilt toevoegen:
+          </label>
+          <div class="flex items-center">
+            <select
+              v-model="selectedWerknemerID"
+              id="selectWerknemer"
+              class="rounded-s-full rounded-r-full shadow border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
+            >
+              <option value="" disabled>Selecteer een werknemer</option>
+              <option
+                v-for="werknemer in werknemers"
+                :key="werknemer.gebruikerID"
+                :value="werknemer.gebruikerID"
+              >
+                {{ werknemer.voornaam }} {{ werknemer.achternaam }}
+              </option>
+            </select>
+            <Icon
+              icon="gridicons:add"
+              width="30"
+              class="ml-4 text-[#104116]"
+              @click="addWerknemerToSubgroep"
+            />
+          </div>
+        </div>
         <ul
           v-if="
             Array.isArray(gebruikers) &&
@@ -370,13 +414,30 @@ export default defineComponent({
       editedNaam: '',
       editedGroepnaam: 0,
       gebruikers: [] as Gebruiker[],
+      werknemers: [] as Gebruiker[],
 
       isUserOverviewModalVisible: false,
     }
   },
+  computed: {
+    filteredWerknemers() {
+      return this.werknemers.filter(werknemer => {
+        // Add filtering logic, for example, searching by name:
+        return (
+          werknemer.voornaam
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase()) ||
+          werknemer.achternaam
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase())
+        )
+      })
+    },
+  },
   async mounted() {
     this.fetchSubgroepen() // haalt subgroepen
     this.fetchGroepen()
+    this.fetchAllWerknemers(3)
   },
   methods: {
     openDeleteModal(subgroepID: number, naam: string) {
@@ -460,6 +521,23 @@ export default defineComponent({
       }
     },
 
+    async fetchAllWerknemers(rolID: number) {
+      try {
+        const token = localStorage.getItem('access_token')
+        const response = await axios.get(
+          `http://localhost:3000/gebruiker/rol/${rolID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        )
+        console.log('API Response:', response)
+        this.werknemers = response.data
+      } catch (error) {
+        console.error('Error fetching gebruikers:', error)
+        this.gebruikers = []
+      }
+    },
+
     async addSubgroep() {
       try {
         console.log(
@@ -488,7 +566,37 @@ export default defineComponent({
         console.error('Error adding subgroep:', error)
       }
     },
+    async addWerknemerToSubgroep() {
+      if (this.selectedWerknemerID && this.selectedSubgroepID) {
+        try {
+          const token = localStorage.getItem('access_token')
+          // Call the API to add werknemer to subgroep
+          const response = await axios.patch(
+            `http://localhost:3000/gebruiker/${this.selectedWerknemerID}/addToSubgroep/${this.selectedSubgroepID}`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          )
+          console.log(
+            'Response from adding werknemer to subgroep:',
+            response.data,
+          )
 
+          // Optionally, refresh the list of users after adding
+          await this.fetchGebruikers(this.selectedSubgroepID)
+
+          // Clear the selected werknemer ID
+          this.selectedWerknemerID = ''
+        } catch (error) {
+          console.error('Error adding werknemer to subgroep:', error)
+        }
+      } else {
+        console.error('Werknemer and Subgroep must be selected')
+      }
+    },
     async confirmDelete() {
       try {
         const token = localStorage.getItem('access_token')
