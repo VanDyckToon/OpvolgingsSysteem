@@ -18,28 +18,21 @@ export class TechnischeCompetentieService {
   }
 
   findAll() {
-    return this.technischeCompetentieRepository.find();
+    return this.technischeCompetentieRepository.find({ relations: ['taak', 'taak.groep'] });
   }
 
   findOne(technischeCompetentieID: number) {
-    return this.technischeCompetentieRepository.findOneBy({
-      technischeCompetentieID,
+    return this.technischeCompetentieRepository.findOne({
+      where: { technischeCompetentieID },
+      relations: ['taak', 'taak.groep'],
     });
   }
 
-  update(
-    technischeCompetentieID: number,
-    updateTechnischeCompetentieDto: UpdateTechnischeCompetentieDto,
-  ) {
-    return this.technischeCompetentieRepository.update(
-      technischeCompetentieID,
-      updateTechnischeCompetentieDto,
-    );
+  async update(technischeCompetentieID: number, updateTechnischeCompetentieDto: UpdateTechnischeCompetentieDto) {
+    return this.technischeCompetentieRepository.update(technischeCompetentieID, updateTechnischeCompetentieDto);
   }
 
-  remove(technischeCompetentieID: number) {
-    return this.technischeCompetentieRepository.delete({
-      technischeCompetentieID,
-    });
+  async remove(technischeCompetentieID: number) {
+    return this.technischeCompetentieRepository.delete({ technischeCompetentieID });
   }
 }
