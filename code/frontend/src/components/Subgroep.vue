@@ -197,7 +197,7 @@
       v-if="isUserOverviewModalVisible"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
     >
-      <div class="bg-white p-6 rounded-lg shadow-lg w-2/3">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-3/6">
         <h2 class="text-2xl font-bold mb-4 text-center">
           {{
             subgroepen.find(
@@ -207,25 +207,47 @@
         </h2>
 
         <!-- Begeleider section -->
-        <div class="flex items-center mb-4">
-          <h3 class="text-xl font-semibold mb-2 text-[#104116]">Begeleiders</h3>
-          <Icon
-            icon="gridicons:add"
-            width="24"
-            class="ml-4 text-[#104116]"
-          ></Icon>
+        <div class="mb-4">
+          <label
+            class="block text-gray-700 font-bold mb-2"
+            for="selectGebruiker"
+          >
+            Selecteer een begeleider die je aan de groep wilt toevoegen:
+          </label>
+          <div class="flex items-center">
+            <select
+              v-model="selectedGebruikerID"
+              id="selectGebruiker"
+              class="rounded-s-full rounded-r-full shadow border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
+            >
+              <option value="" disabled>Selecteer een werknemer</option>
+              <option
+                v-for="begeleider in begeleiders"
+                :key="begeleider.gebruikerID"
+                :value="begeleider.gebruikerID"
+              >
+                {{ begeleider.voornaam }} {{ begeleider.achternaam }}
+              </option>
+            </select>
+            <Icon
+              icon="gridicons:add"
+              width="30"
+              class="ml-4 text-[#104116]"
+              @click="addGebruikerToSubgroep"
+            />
+          </div>
         </div>
         <ul
           v-if="
             Array.isArray(gebruikers) &&
             gebruikers.some(
-              gebruiker => gebruiker.rol && gebruiker.rol.rolID === 3,
+              gebruiker => gebruiker.rol && gebruiker.rol.rolID === 2,
             )
           "
         >
           <li
             v-for="gebruiker in gebruikers.filter(
-              gebruiker => gebruiker.rol && gebruiker.rol.rolID !== 3,
+              gebruiker => gebruiker.rol && gebruiker.rol.rolID === 2,
             )"
             :key="gebruiker.gebruikerID"
             class="py-3 px-4 bg-[#ECF3EB] rounded-md shadow-sm mb-2"
@@ -245,14 +267,12 @@
                 class="w-10 h-10 object-cover rounded-full"
               />
 
-              <!-- User information on one line -->
+              <!-- User information -->
               <div class="flex-1 flex items-center space-x-4">
                 <p class="font-bold text-[#456A50]">
                   {{ gebruiker.voornaam }} {{ gebruiker.achternaam }}
                 </p>
-                <p class="text-sm text-gray-600">
-                  {{ gebruiker.email }}
-                </p>
+                <p class="text-sm text-gray-600">{{ gebruiker.email }}</p>
                 <p
                   v-if="gebruiker.telefoonnummer"
                   class="text-sm text-gray-600"
@@ -276,6 +296,8 @@
           Geen begeleiders gevonden
         </p>
 
+        <hr class="my-4" />
+
         <!-- Werknemer section -->
         <div class="flex items-center mb-4">
           <h3 class="text-xl font-semibold mb-2 text-[#104116]">Werknemers</h3>
@@ -284,14 +306,14 @@
         <div class="mb-4">
           <label
             class="block text-gray-700 font-bold mb-2"
-            for="selectWerknemer"
+            for="selectGebruiker"
           >
             Selecteer een werknemer die je aan de groep wilt toevoegen:
           </label>
           <div class="flex items-center">
             <select
-              v-model="selectedWerknemerID"
-              id="selectWerknemer"
+              v-model="selectedGebruikerID"
+              id="selectGebruiker"
               class="rounded-s-full rounded-r-full shadow border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
             >
               <option value="" disabled>Selecteer een werknemer</option>
@@ -307,7 +329,7 @@
               icon="gridicons:add"
               width="30"
               class="ml-4 text-[#104116]"
-              @click="addWerknemerToSubgroep"
+              @click="addGebruikerToSubgroep"
             />
           </div>
         </div>
@@ -315,7 +337,7 @@
           v-if="
             Array.isArray(gebruikers) &&
             gebruikers.some(
-              gebruiker => gebruiker.rol && gebruiker.rol.rolID !== 3,
+              gebruiker => gebruiker.rol && gebruiker.rol.rolID === 3,
             )
           "
         >
@@ -341,14 +363,12 @@
                 class="w-10 h-10 object-cover rounded-full"
               />
 
-              <!-- User information on one line -->
+              <!-- User information -->
               <div class="flex-1 flex items-center space-x-4">
                 <p class="font-bold text-[#456A50]">
                   {{ gebruiker.voornaam }} {{ gebruiker.achternaam }}
                 </p>
-                <p class="text-sm text-gray-600">
-                  {{ gebruiker.email }}
-                </p>
+                <p class="text-sm text-gray-600">{{ gebruiker.email }}</p>
                 <p
                   v-if="gebruiker.telefoonnummer"
                   class="text-sm text-gray-600"
@@ -415,6 +435,7 @@ export default defineComponent({
       editedGroepnaam: 0,
       gebruikers: [] as Gebruiker[],
       werknemers: [] as Gebruiker[],
+      begeleiders: [] as Gebruiker[],
 
       isUserOverviewModalVisible: false,
     }
@@ -438,6 +459,7 @@ export default defineComponent({
     this.fetchSubgroepen() // haalt subgroepen
     this.fetchGroepen()
     this.fetchAllWerknemers(3)
+    this.fetchAllBegeleders(2)
   },
   methods: {
     openDeleteModal(subgroepID: number, naam: string) {
@@ -538,6 +560,22 @@ export default defineComponent({
       }
     },
 
+    async fetchAllBegeleders(rolID: number) {
+      try {
+        const token = localStorage.getItem('access_token')
+        const response = await axios.get(
+          `http://localhost:3000/gebruiker/rol/${rolID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        )
+        this.begeleiders = response.data
+      } catch (error) {
+        console.error('Error fetching gebruikers:', error)
+        this.gebruikers = []
+      }
+    },
+
     async addSubgroep() {
       try {
         console.log(
@@ -566,13 +604,13 @@ export default defineComponent({
         console.error('Error adding subgroep:', error)
       }
     },
-    async addWerknemerToSubgroep() {
-      if (this.selectedWerknemerID && this.selectedSubgroepID) {
+    async addGebruikerToSubgroep() {
+      if (this.selectedGebruikerID && this.selectedSubgroepID) {
         try {
           const token = localStorage.getItem('access_token')
           // Call the API to add werknemer to subgroep
           const response = await axios.patch(
-            `http://localhost:3000/gebruiker/${this.selectedWerknemerID}/addToSubgroep/${this.selectedSubgroepID}`,
+            `http://localhost:3000/gebruiker/${this.selectedGebruikerID}/addToSubgroep/${this.selectedSubgroepID}`,
             {},
             {
               headers: {
@@ -589,7 +627,7 @@ export default defineComponent({
           await this.fetchGebruikers(this.selectedSubgroepID)
 
           // Clear the selected werknemer ID
-          this.selectedWerknemerID = ''
+          this.selectedGebruikerID = ''
         } catch (error) {
           console.error('Error adding werknemer to subgroep:', error)
         }
