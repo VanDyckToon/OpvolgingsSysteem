@@ -220,7 +220,7 @@
               id="selectGebruiker"
               class="rounded-s-full rounded-r-full shadow border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
             >
-              <option value="" disabled>Selecteer een werknemer</option>
+              <option value="" disabled>Selecteer een begeleider</option>
               <option
                 v-for="begeleider in begeleiders"
                 :key="begeleider.gebruikerID"
@@ -272,10 +272,12 @@
                 <p class="font-bold text-[#456A50]">
                   {{ gebruiker.voornaam }} {{ gebruiker.achternaam }}
                 </p>
-                <p class="text-sm text-gray-600">{{ gebruiker.email }}</p>
+                <p class="text-md text-gray-600">
+                  {{ gebruiker.email }}
+                </p>
                 <p
                   v-if="gebruiker.telefoonnummer"
-                  class="text-sm text-gray-600"
+                  class="text-md text-gray-600"
                 >
                   Telefoon: {{ gebruiker.telefoonnummer }}
                 </p>
@@ -368,10 +370,10 @@
                 <p class="font-bold text-[#456A50]">
                   {{ gebruiker.voornaam }} {{ gebruiker.achternaam }}
                 </p>
-                <p class="text-sm text-gray-600">{{ gebruiker.email }}</p>
+                <p class="text-md text-gray-600">{{ gebruiker.email }}</p>
                 <p
                   v-if="gebruiker.telefoonnummer"
-                  class="text-sm text-gray-600"
+                  class="text-md text-gray-600"
                 >
                   Telefoon: {{ gebruiker.telefoonnummer }}
                 </p>
