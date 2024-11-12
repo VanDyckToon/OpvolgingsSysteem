@@ -84,7 +84,7 @@
     <h2 class="text-2xl font-bold mb-4 text-center">Taak Bewerken</h2>
     <div class="mb-4">
       <label class="block text-gray-700 font-bold mb-2" for="editGroepNaam">
-        Selecteer een taak:
+        Selecteer een groep:
       </label>
       <select 
         v-model="editedGroepnaam"
