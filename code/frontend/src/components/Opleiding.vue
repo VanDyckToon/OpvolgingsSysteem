@@ -7,7 +7,75 @@
           Opleidingen Beheren
         </h1>
         <form @submit.prevent="addOpleiding">
-          <!-- Opleiding form here -->
+          <div class="mb-6">
+            <label
+              class="block text-[#456A50] text-xl font-bold mb-2 py-1"
+              for="opleidingNaam"
+            >
+              Opleiding Naam:
+            </label>
+            <input
+              v-model="naam"
+              type="text"
+              id="opleidingNaam"
+              class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
+              placeholder="Vul hier de naam van de opleiding in"
+              required
+            />
+
+            <label
+              class="block text-[#456A50] text-xl font-bold mb-2 py-1"
+              for="internSwitch"
+            >
+              Intern?
+            </label>
+            <div class="flex items-center mb-2">
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="checkbox" v-model="intern" class="sr-only peer" />
+                <div
+                  class="shadow relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#A4C2A8] dark:peer-focus:ring-[#456A50] rounded-full peer dark:bg-[#456A50] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#456A50]"
+                ></div>
+                <span
+                  class="ms-3 text-md font-medium text-gray-900 dark:text-gray-300"
+                  >Ja</span
+                >
+              </label>
+            </div>
+
+            <label
+              class="block text-[#456A50] text-xl font-bold my-2 py-1"
+              for="beginDatum"
+            >
+              Begin datum:
+            </label>
+            <input
+              v-model="datumStart"
+              type="datetime-local"
+              id="datumStart"
+              class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
+              required
+            />
+
+            <label
+              class="block text-[#456A50] text-xl font-bold my-2 py-1"
+              for="eindDatum"
+            >
+              Eind datum:
+            </label>
+            <input
+              v-model="datumEind"
+              type="datetime-local"
+              id="datumEind"
+              class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline"
+          >
+            Toevoegen
+          </button>
         </form>
       </div>
       <div class="col-span-1">
