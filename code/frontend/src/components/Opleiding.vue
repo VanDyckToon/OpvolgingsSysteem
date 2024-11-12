@@ -119,6 +119,14 @@
                 class="cursor-pointer w-8 h-8"
                 @click="openUserModal(opleiding.opleidingID, opleiding.naam)"
               />
+              <button>
+                <Icon
+                  icon="mdi:file-export"
+                  class="text-[#104116] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
+                  @click="exportOpleidingData(opleiding.opleidingID)"
+                />
+              </button>
+
               <Icon
                 icon="material-symbols:edit"
                 class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
@@ -593,7 +601,6 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         if (this.selectedGebruikerID && this.selectedOpleidingID) {
-          // Prepare the data for the POST request
           const data = {
             opleiding: {
               opleidingID: this.selectedOpleidingID,
@@ -603,12 +610,22 @@ export default defineComponent({
             },
           }
 
-          // Make the POST request
+          const response = await axios.get(
+            `http://localhost:3000/opleiding-gebruiker/check/${this.selectedOpleidingID}/${this.selectedGebruikerID}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          )
+
+          if (response.data.exists) {
+            alert('De gebruiker maakt al deel uit van deze opleiding.')
+            return
+          }
+
           await axios.post('http://localhost:3000/opleiding-gebruiker', data, {
             headers: { Authorization: `Bearer ${token}` },
           })
 
-          // Refresh the users for the current opleiding
           this.fetchUsersForOpleiding(this.selectedOpleidingID)
         } else {
           console.log('Geen gebruiker of opleiding geselecteerd')
