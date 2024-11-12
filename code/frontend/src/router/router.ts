@@ -16,6 +16,7 @@ import Taak from '@/components/Taak.vue'
 import Opleiding from '@/components/Opleiding.vue'
 import Competentie from '@/components/Competentie.vue'
 import TechnischeCompetentie from '@/components/TechnischeCompetentie.vue'
+import Gebruiker from '@/components/Gebruiker.vue'
 
 const routes = [
   {
@@ -97,6 +98,11 @@ const routes = [
     path: '/technischeCompetentie',
     name: 'TechnischeCompetentie',
     component: TechnischeCompetentie,
+  },
+  {
+    path: '/gebruiker',
+    name: 'Gebruiker',
+    component: Gebruiker,
   },
 ]
 

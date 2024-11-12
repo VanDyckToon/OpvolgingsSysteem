@@ -4,7 +4,7 @@
       <img
         src="../assets/logo-de-sprong.svg"
         alt="Logo"
-        class="w-44 h-44 ml-10"
+        class="w-32 h-32 ml-10"
       />
       <div class="flex space-x-4 mr-10">
         <router-link :to="`/begeleider/${gebruikerID}`">
