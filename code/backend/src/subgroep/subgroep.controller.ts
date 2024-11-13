@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { SubgroepService } from './subgroep.service';
 import { CreateSubgroepDto } from './dto/create-subgroep.dto';
 import { UpdateSubgroepDto } from './dto/update-subgroep.dto';
+import { Gebruiker } from '../gebruiker/entities/gebruiker.entity';
 
 @Controller('subgroep')
 export class SubgroepController {
@@ -23,7 +32,10 @@ export class SubgroepController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSubgroepDto: UpdateSubgroepDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateSubgroepDto: UpdateSubgroepDto,
+  ) {
     return this.subgroepService.update(+id, updateSubgroepDto);
   }
 
@@ -31,4 +43,13 @@ export class SubgroepController {
   remove(@Param('id') id: string) {
     return this.subgroepService.remove(+id);
   }
+
+  @Get(':id/gebruikers')
+  async getGebruikersBySubgroep(
+    @Param('id') subgroepID: number,
+  ): Promise<Gebruiker[]> {
+    return this.subgroepService.getGebruikersBySubgroep(subgroepID);
+  }
+
+  
 }

@@ -4,6 +4,7 @@ import { UpdateSubgroepDto } from './dto/update-subgroep.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Subgroep } from './entities/subgroep.entity';
 import { Repository } from 'typeorm';
+import { Gebruiker } from '../gebruiker/entities/gebruiker.entity';
 
 @Injectable()
 export class SubgroepService {
@@ -34,5 +35,17 @@ export class SubgroepService {
 
   async remove(subgroepID: number) {
     return this.subgroepRepository.delete({ subgroepID });
+  }
+  async getGebruikersBySubgroep(subgroepID: number): Promise<Gebruiker[]> {
+    const subgroep = await this.subgroepRepository.findOne({
+      where: { subgroepID },
+      relations: ['gebruikers', 'gebruikers.rol'],
+    });
+
+    if (!subgroep) {
+      throw new Error(`Subgroep with ID ${subgroepID} not found`);
+    }
+
+    return subgroep.gebruikers;
   }
 }
