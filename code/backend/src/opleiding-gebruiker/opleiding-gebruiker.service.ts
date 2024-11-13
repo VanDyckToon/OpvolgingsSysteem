@@ -54,6 +54,14 @@ export class OpleidingGebruikerService {
     return opleidingGebruikers.map((og) => og.gebruiker);
   }
 
+  async getOpleidingenByGebruiker(gebruikerID: number): Promise<Opleiding[]> {
+    const gebruikerOpleiding = await this.opleidingGebruikerRepository.find({
+      where: { gebruiker: { gebruikerID } },
+      relations: ['opleiding'],
+    });
+    return gebruikerOpleiding.map((go) => go.opleiding);
+  }
+
   async removeByOpleidingAndGebruiker(
     opleidingID: number,
     gebruikerID: number,
