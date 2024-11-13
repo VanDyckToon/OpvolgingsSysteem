@@ -382,6 +382,8 @@ import axios from 'axios'
 import { defineComponent } from 'vue'
 import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
+import { jsPDF } from 'jspdf'
+import 'jspdf-autotable'
 
 export default defineComponent({
   name: 'Opleiding',
@@ -423,7 +425,139 @@ export default defineComponent({
       this.selectedOpleidingNaam = naam
       this.isDeleteModalVisible = true
     },
+    async exportOpleidingData(opleidingID: number) {
+      try {
+        const token = localStorage.getItem('access_token')
 
+        // Haal de gebruikers voor de geselecteerde opleiding op
+        const response = await axios.get(
+          `http://localhost:3000/opleiding-gebruiker/opleiding/${opleidingID}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+
+        const gebruikers = response.data
+
+        if (gebruikers.length === 0) {
+          alert('Er zijn geen deelnemers voor deze opleiding.')
+          return
+        }
+
+        // Haal de details van de opleiding op
+        const opleidingResponse = await axios.get(
+          `http://localhost:3000/opleiding/${opleidingID}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+        const opleidingNaam = opleidingResponse.data.naam
+        const datumStart = new Date(opleidingResponse.data.datumStart)
+        const datumEind = new Date(opleidingResponse.data.datumEind)
+
+        // Bereken het aantal dagen dat de opleiding duurt
+        const aantalDagen =
+          datumStart <= datumEind
+            ? Math.floor(
+                (datumEind.getTime() - datumStart.getTime()) /
+                  (1000 * 60 * 60 * 24),
+              ) + 1
+            : 1
+
+        // Genereer kolomnamen voor elke dag
+        const tableColumn = ['Deelnemers']
+        for (let i = 0; i < aantalDagen; i++) {
+          const dagDatum = new Date(datumStart)
+          dagDatum.setDate(dagDatum.getDate() + i)
+          tableColumn.push(`Handtekening (${this.formatDatum(dagDatum)})`)
+        }
+
+        // Genereer rijen voor deelnemers
+        const tableData = gebruikers.map((gebruiker: any) => {
+          const row = [`${gebruiker.voornaam} ${gebruiker.achternaam}`]
+          for (let i = 0; i < aantalDagen; i++) {
+            row.push('') // Lege kolom voor handtekening
+          }
+          return row
+        })
+
+        // Maak een nieuwe PDF aan in liggend formaat
+        const doc = new jsPDF('landscape')
+
+        // Voeg de titel (naam van de opleiding) toe
+        doc.setFontSize(18)
+        doc.text('Opleiding: ' + opleidingNaam, 20, 20)
+        doc.text('Aanwezigheidslijst', 20, 30)
+
+        // Voeg de start- en einddatum toe onder de titel
+        const datumStartFormatted = this.formatDatum(datumStart)
+        const datumEindFormatted = this.formatDatum(datumEind)
+        doc.setFontSize(12)
+        doc.text(
+          `Startdatum: ${datumStartFormatted} - Einddatum: ${datumEindFormatted}`,
+          20,
+          40,
+        )
+
+        let startY = 50
+
+        // Splits de tabel in meerdere pagina's, 3 dagen per pagina
+        const daysPerPage = 3
+        let currentPage = 1
+
+        for (let i = 0; i < aantalDagen; i += daysPerPage) {
+          const daysSubset = tableColumn
+            .slice(0, 1)
+            .concat(
+              tableColumn.slice(
+                i + 1,
+                Math.min(i + daysPerPage + 1, tableColumn.length),
+              ),
+            )
+
+          const dataSubset = tableData.map(row =>
+            row
+              .slice(0, 1)
+              .concat(
+                row.slice(i + 1, Math.min(i + daysPerPage + 1, row.length)),
+              ),
+          )
+
+          // Voeg de tabel toe met ondersteuning voor meerdere pagina's
+          doc.autoTable({
+            startY: startY,
+            head: [daysSubset],
+            body: dataSubset,
+            theme: 'grid',
+            styles: {
+              fontSize: 12,
+            },
+            columnStyles: {
+              0: { cellWidth: 'auto' },
+              ...Array(daysSubset.length - 1)
+                .fill(null)
+                .reduce((acc, _, index) => {
+                  acc[index + 1] = { cellWidth: 60 } // Stel kolombreedte in voor handtekeningenkolommen
+                  return acc
+                }, {}),
+            },
+            margin: { top: 10 },
+            pageBreak: 'auto', // Voeg automatisch een nieuwe pagina toe bij overflow
+          })
+
+          // Als er meer dagen zijn, maak een nieuwe pagina aan
+          if (i + daysPerPage < aantalDagen) {
+            doc.addPage('landscape')
+            startY = 20 // Reset startY voor de volgende pagina
+            currentPage++
+          }
+        }
+
+        // Genereer de PDF en bied het aan voor download
+        doc.save(`${opleidingNaam}_aanwezigheidslijst.pdf`)
+      } catch (error) {
+        console.error(
+          'Er is een fout opgetreden bij het exporteren van de PDF:',
+          error,
+        )
+      }
+    },
     closeDeleteModal() {
       this.isDeleteModalVisible = false
     },
