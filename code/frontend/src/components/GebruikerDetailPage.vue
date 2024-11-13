@@ -36,7 +36,17 @@
                   Extra opmerkingen
                 </h2>
                 <div class="flex flex-col text-[#104116] rounded-md">
-                  <p class="font-bold">{{ gebruiker.extraOpmerking }}</p>
+                  <textarea
+                    v-model="gebruiker.extraOpmerking"
+                    class="border p-2 rounded"
+                    placeholder="Voer extra opmerkingen in"
+                  ></textarea>
+                  <button
+                    @click="updateExtraOpmerking"
+                    class="mt-2 bg-[#104116] text-white px-4 py-2 rounded text-lg w-32"
+                  >
+                    Opslaan
+                  </button>
                 </div>
               </div>
             </div>
@@ -91,7 +101,7 @@ export default defineComponent({
   data() {
     return {
       gebruiker: null as Gebruiker | null,
-      begeleiderID: this.$route.params.id as string, // Retrieve the begeleiderID from route parameters
+      begeleiderID: this.$route.params.id as string,
     }
   },
   async mounted() {
@@ -101,7 +111,6 @@ export default defineComponent({
     async fetchGebruikerDetails() {
       try {
         const token = localStorage.getItem('access_token')
-
         const response = await axios.get(
           `http://localhost:3000/gebruiker/${this.$route.params.id}`,
           { headers: { Authorization: `Bearer ${token}` } },
@@ -109,6 +118,22 @@ export default defineComponent({
         this.gebruiker = response.data
       } catch (error) {
         console.error('Fout bij het ophalen van gebruiker details:', error)
+      }
+    },
+    async updateExtraOpmerking() {
+      if (this.gebruiker) {
+        try {
+          const token = localStorage.getItem('access_token')
+          await axios.patch(
+            `http://localhost:3000/gebruiker/${this.$route.params.id}`,
+            { extraOpmerking: this.gebruiker.extraOpmerking },
+            { headers: { Authorization: `Bearer ${token}` } },
+          )
+          alert('Extra opmerking bijgewerkt!')
+        } catch (error) {
+          console.error('Fout bij het bijwerken van de extra opmerking:', error)
+          alert('Er is een fout opgetreden bij het bijwerken.')
+        }
       }
     },
   },
