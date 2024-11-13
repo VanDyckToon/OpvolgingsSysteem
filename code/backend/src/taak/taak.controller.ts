@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TaakService } from './taak.service';
 import { CreateTaakDto } from './dto/create-taak.dto';
 import { UpdateTaakDto } from './dto/update-taak.dto';
+import { Taak } from './entities/taak.entity';
 
 @Controller('taak')
 export class TaakController {
@@ -30,5 +39,12 @@ export class TaakController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.taakService.remove(+id);
+  }
+
+  @Get('gebruiker/:id')
+  async getTaakVoorGebruiker(
+    @Param('id') gebruikerID: number,
+  ): Promise<Taak[]> {
+    return this.taakService.getTakenVoorGebruiker(gebruikerID);
   }
 }
