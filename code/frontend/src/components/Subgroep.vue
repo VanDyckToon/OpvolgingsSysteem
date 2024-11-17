@@ -680,6 +680,10 @@ export default defineComponent({
       updatedGroepID: number,
     ) {
       try {
+        if (!updatedNaam.trim()) {
+          alert('Subgroep naam mag niet leeg zijn')
+          return
+        }
         const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/subgroep/${subgroepID}`,

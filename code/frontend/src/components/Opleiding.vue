@@ -684,6 +684,10 @@ export default defineComponent({
       updatedDatumEind: Date,
     ) {
       try {
+        if (!updatedNaam.trim()) {
+          alert('Opleidingnaam mag niet leeg zijn.')
+          return
+        }
         const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/opleiding/${opleidingID}`,
@@ -771,12 +775,14 @@ export default defineComponent({
     async fetchGebruikers() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/gebruiker', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        this.gebruikers = response.data.filter(
-          gebruiker => gebruiker.rolID !== 1,
+        const response = await axios.get(
+          'http://localhost:3000/gebruiker/gebruikersZonderAdmin',
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
         )
+        console.log(response.data)
+        this.gebruikers = response.data
       } catch (error) {
         console.log('Error fetching gebruikers', error)
       }

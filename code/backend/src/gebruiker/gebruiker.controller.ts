@@ -26,6 +26,11 @@ export class GebruikerController {
     return this.gebruikerService.findAll();
   }
 
+  @Get('gebruikersZonderAdmin')
+  findAllWithoutAdmin() {
+    return this.gebruikerService.findAllWithoutAdmin();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.gebruikerService.findOne(+id);

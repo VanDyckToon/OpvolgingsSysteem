@@ -295,6 +295,10 @@ export default defineComponent({
       kleur: string,
     ) {
       try {
+        if (!naam.trim() || !waarde.trim()) {
+          alert('Score naam of waarde mag niet leeg zijn.')
+          return
+        }
         const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/score/${scoreID}`,
