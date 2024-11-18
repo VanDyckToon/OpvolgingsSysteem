@@ -16,10 +16,10 @@
                             type="text"
                             id="voornaam"
                             class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                            placeholder="Vul hier de naam van de taak in"
+                            placeholder="Vul hier de voornaam in"
                             required
                         /> 
-                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="taakName">
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
                             Telefoonnummer:
                         </label>
                         <input
@@ -28,20 +28,26 @@
                             id="telefoonnummer"
                             pattern="\+[0-9]{11}"
                             class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                            placeholder="Vul hier de naam van de taak in"
+                            placeholder="Vul hier het telefoonnummer in"
                             required
                         />
-                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="taakName">
-                            Wachtwoord:
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="subgroepName">
+                        Selecteer een rol:
                         </label>
-                        <input
-                            v-model="wachtwoord"
-                            type="password"
-                            id="wachtwoord"
-                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                            placeholder="Vul hier de naam van de taak in"
-                            required
-                        />
+                        <select 
+                        v-model="selectedRolID"
+                        class="rounded-s-full rounded-r-full shadow border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                        required
+                        >
+                        <option disabled selected value="">Selecteer een rol</option>
+                        <option
+                            v-for="rol in rolen"
+                            :key="rol.rolID"
+                            :value="rol.rolID"
+                        >
+                            {{ rol.naam }}
+                        </option>
+                        </select>
                         <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="subgroepName">
                             Selecteer een groep:
                         </label>
@@ -59,18 +65,18 @@
                             {{ subgroep.subgroepNaam }}
                         </option>
                         </select>
-                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="taakName">
-                            Straat:
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
+                            Huisnummer:
                         </label>
                         <input
-                            v-model="straat"
+                            v-model="huisNummer"
                             type="text"
-                            id="straat"
+                            id="huisNummer"
                             class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                            placeholder="Vul hier de naam van de taak in"
+                            placeholder="Vul hier het huisnummer in"
                             required
                         />
-                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="taakName">
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
                             Postcode:
                         </label>
                         <input
@@ -78,10 +84,10 @@
                             type="text"
                             id="postcode"
                             class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                            placeholder="Vul hier de naam van de taak in"
+                            placeholder="Vul hier de postcode in"
                             required
                         />
-                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="taakName">
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
                             ICE Naam:
                         </label>
                         <input
@@ -89,7 +95,7 @@
                             type="text"
                             id="ICENaam"
                             class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                            placeholder="Vul hier de naam van de taak in"
+                            placeholder="Vul hier de naam van de ICE persoon in"
                             required
                         />
                     </div>
@@ -102,10 +108,10 @@
                             type="text"
                             id="achternaam"
                             class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                            placeholder="Vul hier de naam van de taak in"
+                            placeholder="Vul hier de achternaam in"
                             required
                         />
-                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="taakName">
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
                             E-mail:
                         </label>
                         <input
@@ -113,26 +119,21 @@
                             type="email"
                             id="email"
                             class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                            placeholder="Vul hier de naam van de taak in"
+                            placeholder="Vul hier het e-mail adres in"
                             required
                         />
-                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="subgroepName">
-                        Selecteer een roll:
+                        <label v-if="selectedRolID && isNietWerknemer(selectedRolID)" class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
+                            Wachtwoord:
                         </label>
-                        <select 
-                        v-model="selectedRolID"
-                        class="rounded-s-full rounded-r-full shadow border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                        required
-                        >
-                        <option disabled selected value="">Selecteer een roll</option>
-                        <option
-                            v-for="rol in rolen"
-                            :key="rol.rolID"
-                            :value="rol.rolID"
-                        >
-                            {{ rol.naam }}
-                        </option>
-                        </select>
+                        <input
+                            v-if="selectedRolID && isNietWerknemer(selectedRolID)"
+                            v-model="wachtwoord"
+                            type="password"
+                            id="wachtwoord"
+                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            placeholder="Vul hier het wachtwoord in"
+                            required
+                        />
                         <label v-if="selectedRolID && isWerknemer(selectedRolID)" class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="begeleiderName">
                         Selecteer een begeleider:
                         </label>
@@ -151,18 +152,18 @@
                                 {{ begeleider.voornaam }} {{ begeleider.achternaam }}
                             </option>
                         </select>
-                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="taakName">
-                            Huisnummer:
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
+                            Straat:
                         </label>
                         <input
-                            v-model="huisNummer"
+                            v-model="straat"
                             type="text"
-                            id="huisNummer"
+                            id="straat"
                             class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                            placeholder="Vul hier de naam van de taak in"
+                            placeholder="Vul hier de straat in"
                             required
                         />
-                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="taakName">
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
                             Woonplaats:
                         </label>
                         <input
@@ -170,10 +171,10 @@
                             type="text"
                             id="woonplaats"
                             class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                            placeholder="Vul hier de naam van de taak in"
+                            placeholder="Vul hier de woonplaats in"
                             required
                         />
-                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="taakName">
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
                             ICE Telefoonnummer:
                         </label>
                         <input
@@ -182,7 +183,7 @@
                             id="ICETelefoonnummer"
                             pattern="\+[0-9]{11}"
                             class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                            placeholder="Vul hier de naam van de taak in"
+                            placeholder="Vul hier het telefoonnummer van de ICE persoon"
                             required
                         />   
                     </div>
@@ -195,7 +196,7 @@
                 v-model="extraOpmerking"
                 class="shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
                 rows="4"
-                placeholder="Typ hier de technische competentie beschrijving"
+                placeholder="Typ hier een extra opmerking"
                 ></textarea>
               </div> 
             </div>  
@@ -208,7 +209,7 @@
           </form>
         </div>
         <div class="col-span-1">
-          <img src="../assets/taak-icoon.svg" alt="Image" class="h-32 w-auto mb-2 object-contain m-auto place-content-center">
+          <img src="../assets/gebruiker-icoon.svg" alt="Image" class="h-32 w-auto mb-2 object-contain m-auto place-content-center">
         </div>
       </div>
       <div class="flex-grow flex justify-center items-center mb-16 mt-8">
@@ -227,7 +228,7 @@
                 <Icon
                   icon="material-symbols:edit"
                   class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
-                  @click="openEditModal(taak.taakID, taak.naam, taak.groep?.groepID)"
+                  @click="openEditModal(gebruiker.gebruikerID, gebruiker.voornaam, gebruiker.achternaam, gebruiker.telefoonnummer, gebruiker.email, gebruiker.wachtwoord, gebruiker.straat, gebruiker.huisNummer, gebruiker.postcode, gebruiker.woonplaats, gebruiker.ICENaam, gebruiker.ICETelefoonnummer, gebruiker.extraOpmerking, gebruiker.begeleider?.gebruikerID, gebruiker.rol?.rolID, gebruiker.subgroep?.subgroepID)"
                 />
                 <Icon
                   icon="mynaui:trash-solid"
@@ -241,43 +242,205 @@
         </div>
       </div>
 
-      <!-- Modal component for editing the taak -->
+      <!-- Modal component for editing the gebruiker -->
 <div v-if="isEditModalVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
   <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
-    <h2 class="text-2xl font-bold mb-4 text-center">Taak Bewerken</h2>
-    <div class="mb-4">
-      <label class="block text-gray-700 font-bold mb-2" for="editGroepNaam">
-        Selecteer een groep:
-      </label>
-      <select 
-        v-model="editedGroepnaam"
-        class="rounded-s-full rounded-r-full shadow border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
-        required
-      >
-        <option value="" disabled>Selecteer een groep</option>
-        <option
-          v-for="groep in groepen"
-          :key="groep.groepID"
-          :value="groep.groepID"
-        >
-          {{ groep.naam }}
-        </option>
-      </select>
-    </div>
-    <div class="mb-4">
-      <label class="block text-gray-700 font-bold mb-2" for="editNaam">
-        Nieuwe taak naam:
-      </label>
-      <input
-        v-model="editedNaam" 
-        type="text"
-        id="editNaam"
-        class="w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:shadow-outline"
-      />
-    </div>
+    <h2 class="text-2xl font-bold mb-4 text-center">Gebruiker Bewerken</h2>
+    <div class="mb-6">
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1" for="gebruikerVoorname">
+                        Voornaam:
+                        </label>
+                        <input
+                            v-model="editedNaam"
+                            type="text"
+                            id="voornaam"
+                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            placeholder="Vul hier de voornaam in"
+                            required
+                        /> 
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
+                            Telefoonnummer:
+                        </label>
+                        <input
+                            v-model="editedTelefoonnummer"
+                            type="text"
+                            id="telefoonnummer"
+                            pattern="\+[0-9]{11}"
+                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            placeholder="Vul hier het telefoonnummer in"
+                            required
+                        />
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="rolName">
+                        Selecteer een rol:
+                        </label>
+                        <select 
+                        v-model="editedRolID"
+                        class="rounded-s-full rounded-r-full shadow border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                        required
+                        >
+                        <option
+                            v-for="rol in rolen"
+                            :key="rol.rolID"
+                            :value="rol.rolID"
+                        >
+                            {{ rol.naam }}
+                        </option>
+                        </select>
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="subgroepName">
+                            Selecteer een groep:
+                        </label>
+                        <select 
+                        v-model="editedSubgroepID"
+                        class="rounded-s-full rounded-r-full shadow border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                        required
+                        >
+                        <option
+                            v-for="subgroep in subgroepen"
+                            :key="subgroep.subgroepID"
+                            :value="subgroep.subgroepID"
+                        >
+                            {{ subgroep.subgroepNaam }}
+                        </option>
+                        </select>
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
+                            Huisnummer:
+                        </label>
+                        <input
+                            v-model="editedHuisNummer"
+                            type="text"
+                            id="huisNummer"
+                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            placeholder="Vul hier het huisnummer in"
+                            required
+                        />
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
+                            Postcode:
+                        </label>
+                        <input
+                            v-model="editedPostcode"
+                            type="text"
+                            id="postcode"
+                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            placeholder="Vul hier de postcode in"
+                            required
+                        />
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
+                            ICE Naam:
+                        </label>
+                        <input
+                            v-model="editedICENaam"
+                            type="text"
+                            id="ICENaam"
+                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            placeholder="Vul hier de naam van de ICE persoon in"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1" for="GebruikerAchtername">
+                            Achternaam:
+                        </label>
+                        <input
+                            v-model="editedAchternaam"
+                            type="text"
+                            id="achternaam"
+                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            placeholder="Vul hier de achternaam in"
+                            required
+                        />
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
+                            E-mail:
+                        </label>
+                        <input
+                            v-model="editedEmail"
+                            type="email"
+                            id="email"
+                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            placeholder="Vul hier het e-mail adres in"
+                            required
+                        />
+                        <label v-if="editedRolID && isNietWerknemer(editedRolID)" class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
+                            Wachtwoord:
+                        </label>
+                        <input
+                            v-if="editedRolID && isNietWerknemer(editedRolID)"
+                            v-model="editedWachtwoord"
+                            type="password"
+                            id="wachtwoord"
+                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            placeholder="Vul hier het wachtwoord in"
+                            required
+                        />
+                        <label v-if="editedRolID && isWerknemer(editedRolID)" class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="begeleiderName">
+                        Selecteer een begeleider:
+                        </label>
+                        <select 
+                            v-if="editedRolID && isWerknemer(editedRolID)"
+                            v-model="editedBegeleiderID"
+                            class="rounded-s-full rounded-r-full shadow border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            required
+                            >
+                            <option
+                                v-for="begeleider in filteredBegeleiders"
+                                :key="begeleider.gebruikerID"
+                                :value="begeleider.gebruikerID"
+                            >
+                                {{ begeleider.voornaam }} {{ begeleider.achternaam }}
+                            </option>
+                        </select>
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
+                            Straat:
+                        </label>
+                        <input
+                            v-model="editedStraat"
+                            type="text"
+                            id="straat"
+                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            placeholder="Vul hier de straat in"
+                            required
+                        />
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
+                            Woonplaats:
+                        </label>
+                        <input
+                            v-model="editedWoonplaats"
+                            type="text"
+                            id="woonplaats"
+                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            placeholder="Vul hier de woonplaats in"
+                            required
+                        />
+                        <label class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2" for="gebruikerName">
+                            ICE Telefoonnummer:
+                        </label>
+                        <input
+                            v-model="editedICETelefoonnummer"
+                            type="text"
+                            id="ICETelefoonnummer"
+                            pattern="\+[0-9]{11}"
+                            class="rounded-s-full rounded-r-full shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                            placeholder="Vul hier het telefoonnummer in van de ICE persoon"
+                            required
+                        />   
+                    </div>
+                </div>
+              <div class="grid grid-cols-1 gap-4 mb-6">
+                <label class="block text-[#456A50] text-xl font-bold mb-2 py-1" for="technischeCompetentieName">
+                    Extra Opmerking:
+                </label>
+                <textarea
+                v-model="editedExtraOpmerking"
+                class="shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
+                rows="4"
+                placeholder="Typ hier de technische competentie beschrijving"
+                ></textarea>
+              </div> 
+            </div>
     <div class="flex justify-end space-x-4">
       <button @click="closeModal" class="bg-gray-500 text-white px-4 py-2 rounded">Annuleer</button>
-      <button @click="updateTaak(selectedTaakID, editedNaam, editedGroepnaam); closeModal()" class="bg-[#456A50] hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white px-4 py-2 rounded">Bijwerken</button>
+      <button @click="updateGebruiker(selectedGebruikerID, editedNaam, editedAchternaam, editedTelefoonnummer, editedEmail, editedWachtwoord, editedStraat, editedHuisNummer, editedPostcode, editedWoonplaats, editedICENaam, editedICETelefoonnummer, editedExtraOpmerking, editedBegeleiderID, editedRolID, editedSubgroepID); closeModal()" class="bg-[#456A50] hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white px-4 py-2 rounded">Bijwerken</button>
     </div>
   </div>
 </div>
@@ -302,6 +465,7 @@
   import { defineComponent } from 'vue'
   import { Icon } from '@iconify/vue'
   import HeaderComponent from '../components/Header.vue'
+  import { isEmptyBindingElement } from 'typescript'
   
   interface Subgroep {
     subgroepID: number
@@ -315,9 +479,21 @@
 
   interface Gebruiker {
     gebruikerID: number;
-    naam: string;
+    voornaam: string;
     achternaam: string;
+    telefoonnummer: string;
+    email: string;
+    wachtwoord: string;
+    straat: string;
+    huisNummer: string;
+    postcode: string;
+    woonplaats: string;
+    ICENaam: string;
+    ICETelefoonnummer: string;
+    extraOpmerking: string;
     rolID: number;
+    subgroepID: number;
+    begeleiderID: number;
   }
 
   export default defineComponent({
@@ -343,7 +519,8 @@
         woonplaats: '',
         ICENaam: '',
         ICETelefoonnummer: '',
-        extraOpmerking: '', 
+        extraOpmerking: '',
+        begeleiderID: 0, 
         isEditModalVisible: false, 
         isDeleteModalVisible: false,
         selectedGebruikerID: 0,
@@ -352,7 +529,20 @@
         selectedSubgroepID: 0,
         selectedVoornaam: '',
         editedNaam: '',
-        editedGroepnaam: 0,
+        editedAchternaam: '',
+        editedTelefoonnummer: '',
+        editedEmail: '',
+        editedWachtwoord: '',
+        editedStraat: '',
+        editedHuisNummer: '',
+        editedPostcode: '',
+        editedWoonplaats: '',
+        editedICENaam: '',
+        editedICETelefoonnummer: '',
+        editedExtraOpmerking: '',
+        editedRolID: 0,
+        editedBegeleiderID: 0,
+        editedSubgroep: 0,
       }
     },
     async mounted() {
@@ -364,6 +554,7 @@
     computed: {
         filteredBegeleiders() {
     return this.gebruikers.filter(gebruiker => gebruiker.rol.rolID === 2);
+    
   }
     },
     methods: {
@@ -378,6 +569,11 @@
     isWerknemer(selectedRolID) {
     const rol = this.rolen.find(rol => rol.rolID === selectedRolID);
     return rol && rol.naam === 'Werknemer';
+  },
+
+  isNietWerknemer(selectedRolID) {
+    const rol = this.rolen.find(rol => rol.rolID === selectedRolID);
+    return rol && rol.naam !== 'Werknemer';
   },
 
     closeDeleteModal() {
@@ -459,6 +655,7 @@ async addGebruiker() {
       ICETelefoonnummer: this.ICETelefoonnummer,
       extraOpmerking: this.extraOpmerking,
       rol: { rolID: this.selectedRolID },
+      gebruiker: { begeleiderID: this.selectedBegeleiderID },
       subgroep: { subgroepID: this.selectedSubgroepID },
     };
 
@@ -509,7 +706,7 @@ async addGebruiker() {
         await this.deleteGebruiker(this.selectedGebruikerID);
         this.isDeleteModalVisible = false; // Close the modal after confirmation
       } catch (error) {
-        console.error('Error deleting taak:', error);
+        console.error('Error deleting gebruiker:', error);
       }
     },
 
@@ -525,20 +722,55 @@ async addGebruiker() {
       }
     },
   
-    openEditModal(taakID: number, naam: string, groepID: number) {
-  this.selectedTaakID = taakID; 
-  this.editedNaam = naam; 
-  this.editedGroepnaam = groepID; // Set the current group ID (assuming you want to show the group ID in the dropdown)
-  this.isEditModalVisible = true; // Show the modal
+    openEditModal(gebruikerID, voornaam, achternaam, telefoonnummer, email, wachtwoord, straat, huisNummer, postcode, woonplaats, ICENaam, ICETelefoonnummer, extraOpmerking, begeleiderID, rolID, subgroepID) {
+  // Set the selected values
+  this.selectedGebruikerID = gebruikerID;
+  this.editedNaam = voornaam;
+  this.editedAchternaam = achternaam;
+  this.editedTelefoonnummer = telefoonnummer;
+  this.editedEmail = email;
+  this.editedWachtwoord = wachtwoord;
+  this.editedStraat = straat;
+  this.editedHuisNummer = huisNummer;
+  this.editedPostcode = postcode;
+  this.editedWoonplaats = woonplaats;
+  this.editedICENaam = ICENaam;
+  this.editedICETelefoonnummer = ICETelefoonnummer;
+  this.editedExtraOpmerking = extraOpmerking;
+  this.editedBegeleiderID = begeleiderID;
+  this.editedRolID = rolID;
+  this.editedSubgroepID = subgroepID;
+
+  // Make the modal visible
+  this.isEditModalVisible = true;
+
+  console.log('Selected Gebruiker:', gebruiker);
+console.log('Begeleider Object:', gebruiker.begeleider);
+
+  console.log('BegeleiderID:', this.editedBegeleiderID);
 },
+
   
-async updateTaak(taakID: number, updatedNaam: string, updatedGroepID: number) {
+async updateGebruiker(gebruikerID: number, updatedVoornaam: string, updatedAchternaam: string, updatedTelefoonnummer: string, updatedEmail: string, updatedWachtwoord: string, updatedStraat: string, updatedHuisNummer: string, updatedPostcode: string, updatedWoonplaats: string, updatedICENaam: string, updatedICETelefoonnummer: string, updatedExtraOpmerking: string, updatedRolID: number, updatedSubgroepID: number, updatedBegeleiderID: number) {
   try {
     const token = localStorage.getItem('access_token');
     await axios.patch(`http://localhost:3000/gebruiker/${gebruikerID}`, 
       { 
-        naam: updatedNaam, 
-        groep: { groepID: updatedGroepID } // Update the group ID as well
+        voornaam: updatedVoornaam,
+        achternaam: updatedAchternaam,
+        telefoonnummer: updatedTelefoonnummer ,
+        email: updatedEmail,
+        wachtwoord: updatedWachtwoord,
+        straat: updatedStraat,
+        huisNummer: updatedHuisNummer,
+        postcode: updatedPostcode,
+        woonplaats: updatedWoonplaats,
+        ICENaam: updatedICENaam,
+        ICETelefoonnummer: updatedICETelefoonnummer,
+        extraOpmerking: updatedExtraOpmerking,
+        rol: { rolID: updatedRolID },
+        subgroep: { subgroepID: updatedSubgroepID },
+        begeleider: { begeleiderID: updatedBegeleiderID },
       }, 
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -546,7 +778,7 @@ async updateTaak(taakID: number, updatedNaam: string, updatedGroepID: number) {
     this.isEditModalVisible = false; // Close the modal
     await this.fetchGebruikers(); // Refresh the list after updating
   } catch (error) {
-    console.error('Error updating taak:', error.response ? error.response.data : error);
+    console.error('Error updating gebruiker:', error.response ? error.response.data : error);
   }
 },
 
