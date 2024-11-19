@@ -29,8 +29,8 @@ export class GebruikerService {
       }
     } else {
       data.wachtwoord = null;
-      data.email = null;
-    }
+      //data.email = null;
+    } 
 
     const gebruiker = await this.gebruikerRepository.save(data);
     return gebruiker;
@@ -38,7 +38,7 @@ export class GebruikerService {
 
   findAll() {
     return this.gebruikerRepository.find({
-      relations: ['rol', 'opleidingGebruikers', 'subgroep'],
+      relations: ['rol', 'opleidingGebruikers', 'subgroep', 'begeleider'],
     });
   }
 
@@ -49,7 +49,7 @@ export class GebruikerService {
     });
   }
 
-  update(gebruikerID: number, updateGebruikerDto: UpdateGebruikerDto) {
+  async update(gebruikerID: number, updateGebruikerDto: UpdateGebruikerDto) {
     return this.gebruikerRepository.update(gebruikerID, updateGebruikerDto);
   }
 
