@@ -16,7 +16,7 @@ export class OpleidingService {
   }
 
   findAll() {
-    return this.opleidingRepository.find();
+    return this.opleidingRepository.find({});
   }
 
   findOne(opleidingID: number) {

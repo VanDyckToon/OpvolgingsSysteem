@@ -4,12 +4,15 @@ import { UpdateTaakDto } from './dto/update-taak.dto';
 import { Repository } from 'typeorm';
 import { Taak } from './entities/taak.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Gebruiker } from '../gebruiker/entities/gebruiker.entity';
 
 @Injectable()
 export class TaakService {
   constructor(
     @InjectRepository(Taak)
     private readonly taakRepository: Repository<Taak>,
+    @InjectRepository(Gebruiker)
+    private readonly gebruikerRepository: Repository<Gebruiker>,
   ) {}
 
   async create(createTaakDto: CreateTaakDto) {
@@ -33,5 +36,22 @@ export class TaakService {
 
   async remove(taakID: number) {
     return this.taakRepository.delete({ taakID });
+  }
+
+  async getTakenVoorGebruiker(gebruikerID: number): Promise<Taak[]> {
+    const gebruiker = await this.gebruikerRepository.findOne({
+      where: { gebruikerID: gebruikerID },
+      relations: ['subgroep', 'subgroep.groep'],
+    });
+    if (!gebruiker) {
+      throw new Error('Gebruiker not found');
+    }
+    const groepID = gebruiker.subgroep.groep.groepID;
+
+    const taken = await this.taakRepository.find({
+      where: { groep: { groepID: groepID } },
+      relations: ['groep', 'technischeCompetenties'],
+    });
+    return taken;
   }
 }

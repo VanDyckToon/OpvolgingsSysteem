@@ -57,4 +57,21 @@ export class GebruikerController {
   ): Promise<Gebruiker[]> {
     return this.gebruikerService.getAllGebruikersVanBegeleider(begeleiderID);
   }
+
+  @Get(':id/subgroep')
+  async getSubgroep(@Param('id') id: string) {
+    return this.gebruikerService.getSubgroepByGebruikerID(+id);
+  }
+
+  @Patch(':gebruikerID/removeFromSubgroep')
+  async removeFromSubgroep(@Param('gebruikerID') gebruikerID: number) {
+    return this.gebruikerService.removeFromSubgroep(gebruikerID);
+  }
+  @Patch(':gebruikerID/addToSubgroep/:subgroepID')
+  async addToSubgroep(
+    @Param('gebruikerID') gebruikerID: number,
+    @Param('subgroepID') subgroepID: number,
+  ) {
+    return this.gebruikerService.addToSubgroep(gebruikerID, subgroepID);
+  }
 }

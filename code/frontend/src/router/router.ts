@@ -17,6 +17,8 @@ import Opleiding from '@/components/Opleiding.vue'
 import Competentie from '@/components/Competentie.vue'
 import TechnischeCompetentie from '@/components/TechnischeCompetentie.vue'
 import Gebruiker from '@/components/Gebruiker.vue'
+import OpleidingGebruikerPage from '@/components/OpleidingGebruikerPage.vue'
+
 
 const routes = [
   {
@@ -73,6 +75,11 @@ const routes = [
     path: '/technischeCompetenties/:id',
     name: 'TechnischeCompetentiesPage',
     component: TechnischeCompetentiesPage,
+  },
+  {
+    path: '/opleidingGebruiker/:id',
+    name: 'OpleidingGebruikerPage',
+    component: OpleidingGebruikerPage,
   },
   {
     path: '/subgroep',

@@ -9,17 +9,30 @@
       <div class="flex space-x-4 mr-10">
         <router-link :to="`/begeleider/${gebruikerID}`">
           <!-- Use :to binding -->
-          <img src="../assets/home.svg" alt="home" class="h-10 w-auto object-contain color-[#101234]">
+          <img
+            src="../assets/home.svg"
+            alt="home"
+            class="h-10 w-auto object-contain color-[#101234]"
+          />
         </router-link>
 
         <!-- Conditionally render the settings icon based on rolID -->
 
         <router-link v-if="rolID == '1'" :to="`/adminpanel`">
-          <img src="../assets/settings.svg" alt="settings" class="h-10 w-auto object-contain color-[#101234]">
+          <img
+            src="../assets/settings.svg"
+            alt="settings"
+            class="h-10 w-auto object-contain color-[#101234]"
+          />
         </router-link>
-        
+
         <button>
-          <img src="../assets/exit.svg" alt="exit" class="h-10 w-auto object-contain color-[#101234]" @click="logout">
+          <img
+            src="../assets/exit.svg"
+            alt="exit"
+            class="h-10 w-auto object-contain color-[#101234]"
+            @click="logout"
+          />
         </button>
       </div>
     </div>
@@ -57,7 +70,7 @@ export default defineComponent({
       } catch (error) {
         console.error('Error decoding token:', error)
       }
-    } 
+    }
   },
   setup() {
     const router = useRouter()

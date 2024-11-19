@@ -52,16 +52,44 @@
             <!-- Icons Section -->
             <div class="flex space-x-4">
               <button>
-              <img src="../assets/competentiester.svg" alt="competentiester" class="h-8 w-auto object-contain color-[#101234]" @click="goToCompetenties(gebruiker.gebruikerID)">
+                <img
+                  src="../assets/competentiester.svg"
+                  alt="competentiester"
+                  class="h-8 w-auto object-contain color-[#101234]"
+                  @click="goToCompetenties(gebruiker.gebruikerID)"
+                />
               </button>
               <button>
-              <img src="../assets/technischecompententie.svg" alt="technischecompententie" class="h-8 w-auto object-contain color-[#101234]" @click="goToTechnischeCompetenties(gebruiker.gebruikerID)">
+                <img
+                  src="../assets/technischecompententie.svg"
+                  alt="technischecompententie"
+                  class="h-8 w-auto object-contain color-[#101234]"
+                  @click="goToTechnischeCompetenties(gebruiker.gebruikerID)"
+                />
               </button>
               <button>
-              <img src="../assets/more.svg" alt="more" class="h-8 w-auto object-contain color-[#101234]" @click="goToDetails(gebruiker.gebruikerID)">
+                <img
+                  src="../assets/more.svg"
+                  alt="more"
+                  class="h-8 w-auto object-contain color-[#101234]"
+                  @click="goToDetails(gebruiker.gebruikerID)"
+                />
               </button>
               <button>
-              <img src="../assets/comment.svg" alt="comment" class="h-8 w-auto object-contain color-[#101234]" @click="goToOpmerkingen(gebruiker.gebruikerID)">
+                <img
+                  src="../assets/opleiding-icoon.svg"
+                  alt="comment"
+                  class="h-8 w-auto object-contain color-[#101234]"
+                  @click="goToOpleidingen(gebruiker.gebruikerID)"
+                />
+              </button>
+              <button>
+                <img
+                  src="../assets/comment.svg"
+                  alt="comment"
+                  class="h-8 w-auto object-contain color-[#101234]"
+                  @click="goToOpmerkingen(gebruiker.gebruikerID)"
+                />
               </button>
             </div>
           </li>
@@ -175,6 +203,12 @@ export default defineComponent({
     goToTechnischeCompetenties(gebruikerID: number) {
       this.$router.push({
         name: 'TechnischeCompetentiesPage',
+        params: { id: gebruikerID, begeleiderID: this.begeleiderID },
+      })
+    },
+    goToOpleidingen(gebruikerID: number) {
+      this.$router.push({
+        name: 'OpleidingGebruikerPage',
         params: { id: gebruikerID, begeleiderID: this.begeleiderID },
       })
     },
