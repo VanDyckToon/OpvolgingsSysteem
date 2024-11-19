@@ -256,13 +256,13 @@
               <!-- User profile picture -->
               <img
                 v-if="gebruiker.foto"
-                :src="`/src/assets/${gebruiker.foto}.jpg`"
+                :src="`/assets/${gebruiker.foto}.jpg`"
                 alt="Profile picture"
                 class="w-10 h-10 object-cover rounded-full"
               />
               <img
                 v-else
-                :src="`/src/assets/no_image_available.jpg`"
+                :src="`/assets/no_image_available.jpg`"
                 alt="No picture available"
                 class="w-10 h-10 object-cover rounded-full"
               />
@@ -354,13 +354,13 @@
               <!-- User profile picture -->
               <img
                 v-if="gebruiker.foto"
-                :src="`/src/assets/${gebruiker.foto}.jpg`"
+                :src="`/assets/${gebruiker.foto}.jpg`"
                 alt="Profile picture"
                 class="w-10 h-10 object-cover rounded-full"
               />
               <img
                 v-else
-                :src="`/src/assets/no_image_available.jpg`"
+                :src="`/assets/no_image_available.jpg`"
                 alt="No picture available"
                 class="w-10 h-10 object-cover rounded-full"
               />
