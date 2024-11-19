@@ -31,7 +31,6 @@ export class GebruikerService {
       data.wachtwoord = null;
       data.email = null;
     }
-
     const gebruiker = await this.gebruikerRepository.save(data);
     return gebruiker;
   }

@@ -17,7 +17,7 @@ export class GebruikerController {
   constructor(private readonly gebruikerService: GebruikerService) {}
 
   @Post()
-  createGebruiker(@Body() createGebruikerDto: CreateGebruikerDto) {
+  async createGebruiker(@Body() createGebruikerDto: CreateGebruikerDto) {
     return this.gebruikerService.createGebruiker(createGebruikerDto);
   }
 
