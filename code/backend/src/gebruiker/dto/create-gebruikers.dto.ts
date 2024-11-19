@@ -29,8 +29,8 @@ export class CreateGebruikerDto {
   @ApiProperty()
   wachtwoord: string;
 
-  @ApiProperty()
-  subgroep: Subgroep;
+  @ApiProperty({ default: null })
+  subgroep: Subgroep = null;
 
   @ApiProperty({ default: null })
   straat: string = null;

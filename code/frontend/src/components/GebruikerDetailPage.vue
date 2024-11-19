@@ -23,11 +23,11 @@
                   Contact gegevens
                 </h2>
                 <div class="flex flex-col text-[#104116] rounded-md">
-                  <p class="font-bold">GSM: {{ gebruiker.telefoonnummer }}</p>
-                  <p class="font-bold">E-mailadres: {{ gebruiker.email }}</p>
+                  <p class="font-bold">GSM: <a href="tel:{{ gebruiker.telefoonnummer }}" class="text-[#62825D] underline">{{ gebruiker.telefoonnummer }}</a></p>
+                  <p class="font-bold">E-mailadres: <a href="mailto:{{ gebruiker.email }}" class="text-[#62825D] underline">{{ gebruiker.email }}</a></p>
                   <p class="font-bold text-[#C72C41]">
                     ICE: {{ gebruiker.ICENaam }} -
-                    {{ gebruiker.ICETelefoonnummer }}
+                    <a href="tel:{{ gebruiker.ICETelefoonnummer }}" class="underline">{{ gebruiker.ICETelefoonnummer }}</a>
                   </p>
                 </div>
               </div>
