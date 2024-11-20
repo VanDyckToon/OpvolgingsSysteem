@@ -17,6 +17,7 @@
     "@iconify/vue": "^4.1.2",
     "axios": "^1.7.7",
     "docxtemplater": "^3.52.0",
+    "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
     "jszip": "^3.10.1",

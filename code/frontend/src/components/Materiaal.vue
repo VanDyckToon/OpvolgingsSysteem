@@ -85,6 +85,7 @@
       <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
         <h2 class="text-2xl font-bold mb-4 text-center">Materiaal Bewerken</h2>
         <div class="mb-4">
+          <label class="block text-gray-700 font-bold mb-2" for="editNaam" req>
           <label class="block text-gray-700 font-bold mb-2" for="editNaam">
             Nieuwe Materiaal Beschrijving:
           </label>
@@ -254,6 +255,10 @@ export default defineComponent({
 
     async updateMateriaal(materiaalID: number, updatedBeschrijving: string) {
       try {
+        if (!updatedBeschrijving.trim()) {
+          alert('De beschrijving mag niet leeg zijn.')
+          return
+        }
         const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/materiaal/${materiaalID}`,
@@ -263,6 +268,10 @@ export default defineComponent({
         this.isEditModalVisible = false
         this.fetchMaterialen() // Refresh the list after the update
       } catch (error) {
+        console.error(
+          'Error updating materiaal:',
+          error.response ? error.response.data : error,
+        )
         console.error('Error updating meteriaal', error)
       }
     },

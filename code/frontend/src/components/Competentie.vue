@@ -33,6 +33,7 @@
               class="shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
               rows="4"
               placeholder="Typ hier de competentie beschrijving"
+              required
             ></textarea>
           </div>
           <button
@@ -189,11 +190,13 @@ import { defineComponent } from 'vue'
 import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
+
 interface Competentie {
   competentieID: number
   naam: string
   beschrijving: string
 }
+
 
 export default defineComponent({
   name: 'Competentie',
@@ -267,6 +270,7 @@ export default defineComponent({
 
     async confirmDelete() {
       try {
+        const token = localStorage.getItem('access_token')
         await this.deleteCompetentie(this.selectedCompetentieID)
         this.isDeleteModalVisible = false // Close the modal after confirmation
       } catch (error) {
@@ -305,6 +309,42 @@ export default defineComponent({
       updatedBeschrijving: string,
     ) {
       try {
+        if (!updatedNaam.trim() || !updatedBeschrijving.trim()) {
+          alert('Competentie naam of beschrijving mogen niet leeg zijn.')
+          return
+        }
+        const token = localStorage.getItem('access_token')
+        await axios.patch(
+          `http://localhost:3000/competentie/${competentieID}`,
+          { naam: updatedNaam, beschrijving: updatedBeschrijving },
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+        this.isEditModalVisible = false
+        this.fetchCompetenties()
+      } catch (error) {
+        console.error(
+          'Error updating competentie:',
+          error.response ? error.response.data : error,
+        )
+      }
+    },
+
+      }
+    },
+
+    openEditModal(competentieID: number, naam: string, beschrijving: string) {
+      this.selectedCompetentieID = competentieID
+      this.editedNaam = naam
+      this.editedBeschrijving = beschrijving
+      this.isEditModalVisible = true
+    },
+
+    async updateCompetentie(
+      competentieID: number,
+      updatedNaam: string,
+      updatedBeschrijving: string,
+    ) {
+      try {
         const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/competentie/${competentieID}`,
@@ -321,7 +361,6 @@ export default defineComponent({
         }
       }
     },
-
     closeModal() {
       this.isEditModalVisible = false
     },

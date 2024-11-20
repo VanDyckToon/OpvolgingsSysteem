@@ -74,6 +74,7 @@
               class="shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-6/12"
               rows="4"
               placeholder="Typ hier de technische competentie beschrijving"
+              required
             ></textarea>
           </div>
           <button
@@ -239,6 +240,7 @@
                 editedNaam,
                 editedBeschrijving,
                 editedTaakID,
+                editedGroepID,
               ),
                 closeModal()
             "
@@ -287,11 +289,13 @@ import HeaderComponent from '../components/Header.vue'
 
 interface Groep {
   groepID: number
+  groepNaam: string
   naam: string
 }
 
 interface Taak {
   taakID: number
+  taakNaam: string
   naam: string
   groep: Groep
 }
@@ -474,6 +478,8 @@ export default defineComponent({
 
         this.naam = ''
         this.beschrijving = ''
+        this.selectedTaakID = ''
+        this.selectedGroepID = ''
         this.selectedTaakID = 0
         this.selectedGroepID = 0
 
@@ -535,6 +541,12 @@ export default defineComponent({
       updatedTaakID: number,
     ) {
       try {
+        if (!updatedNaam.trim() || !updatedBeschrijving.trim()) {
+          alert(
+            'Technische competentie naam of beschrijving mag niet leeg zijn.',
+          )
+          return
+        }
         const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/technische-competentie/${technischeCompetentieID}`,
