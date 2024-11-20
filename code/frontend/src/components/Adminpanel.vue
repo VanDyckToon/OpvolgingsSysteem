@@ -5,8 +5,7 @@
         <h1 class="text-[#104116] text-4xl font-extrabold text-center pt-4">Admin Paneel</h1>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 pt-8 pb-2 px-16">
-        <router-link :to="`
-        `">
+        <router-link :to="`/gebruiker`">
         <button class="w-full h-48 flex flex-col items-center justify-center font-bold text-[#104116] text-2xl bg-white shadow-xl rounded overflow-hidden transition-transform duration-500 hover:scale-110">
             <img src="../assets/gebruiker-icoon.svg" alt="Image" class="h-16 w-auto mb-2 object-contain">
             <span class="text-center px-1">Gebruikers Beheren</span>
