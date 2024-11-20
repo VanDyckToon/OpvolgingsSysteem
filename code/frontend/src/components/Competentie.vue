@@ -57,7 +57,13 @@
         <h2 class="text-3xl font-bold mb-6 text-center text-[#456A50]">
           Competenties
         </h2>
-        <div class="max-h-80 overflow-y-auto">
+        <div class="max-h-80 overflow-y-auto [&::-webkit-scrollbar]:w-2
+  [&::-webkit-scrollbar-track]:rounded-full
+  [&::-webkit-scrollbar-track]:bg-gray-100
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-[#456A50]
+  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
           <ul v-if="competenties.length" class="divide-y divide-gray-200">
             <li
               v-for="competentie in competenties"
