@@ -17,6 +17,13 @@
           />
         </div>
 
+        <div class="max-h-80 overflow-y-auto [&::-webkit-scrollbar]:w-2
+  [&::-webkit-scrollbar-track]:rounded-full
+  [&::-webkit-scrollbar-track]:bg-gray-100
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-[#456A50]
+  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
         <ul v-if="filteredGebruikers.length" class="divide-y divide-gray-200">
           <li
             v-for="gebruiker in filteredGebruikers"
@@ -95,6 +102,7 @@
         </ul>
         <p v-else class="text-center text-gray-500">Geen gebruikers gevonden</p>
       </div>
+    </div>
     </div>
   </div>
 </template>
