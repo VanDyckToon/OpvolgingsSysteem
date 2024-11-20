@@ -144,6 +144,7 @@ interface Groep {
   groepID: number
   naam: string
 }
+
 export default defineComponent({
   name: 'Groep',
   components: {
@@ -231,37 +232,6 @@ export default defineComponent({
           'Er is een fout opgetreden bij het verwijderen van de groep:',
           error,
         )
-      }
-    },
-
-    openEditModal(groepID: number, naam: string) {
-      // Kiest de juiste rol voor het aan te passen
-      this.selectedGroepID = groepID
-      this.editedNaam = naam
-      this.isEditModalVisible = true // Laat de Modal zien
-    },
-
-    async updateGroep(groepID: number, updatedNaam: string) {
-      try {
-        if (!updatedNaam.trim()) {
-          alert('Groepsnaam mag niet leeg zijn.')
-          return
-        }
-        const token = localStorage.getItem('access_token')
-        await axios.patch(
-          `http://localhost:3000/groep/${groepID}`,
-          { naam: updatedNaam },
-          { headers: { Authorization: `Bearer ${token}` } },
-        )
-        this.isEditModalVisible = false
-        this.fetchGroepen() // Laad de lijst opnieuw na het updaten
-      } catch (error) {
-        console.error(
-          'Error updating groep:',
-          error.response ? error.response.data : error,
-        )
-      }
-    },
       }
     },
 

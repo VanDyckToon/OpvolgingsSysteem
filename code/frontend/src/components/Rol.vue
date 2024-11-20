@@ -244,10 +244,6 @@ export default defineComponent({
 
     async updateRol(rolID: number, updatedNaam: string) {
       try {
-        if (!updatedNaam.trim()) {
-          alert('Rolnaam mag niet leeg zijn.')
-          return
-        }
         const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/rol/${rolID}`,
@@ -257,10 +253,6 @@ export default defineComponent({
         this.isEditModalVisible = false
         this.fetchRolen() // Laad de lijst opnieuw na het updaten
       } catch (error) {
-        console.error(
-          'Error updating rol:',
-          error.response ? error.response.data : error,
-        )
         console.error('Error updating rol:', error)
       }
     },
