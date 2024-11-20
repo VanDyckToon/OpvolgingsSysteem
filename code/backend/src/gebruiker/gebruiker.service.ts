@@ -30,7 +30,7 @@ export class GebruikerService {
     } else {
       data.wachtwoord = null;
       //data.email = null;
-    } 
+    }
 
     const gebruiker = await this.gebruikerRepository.save(data);
     return gebruiker;
@@ -120,16 +120,86 @@ export class GebruikerService {
     const gebruiker = await this.gebruikerRepository.findOne({
       where: { gebruikerID },
     });
+
     if (!gebruiker) {
       throw new Error('Gebruiker not found');
     }
+
     const subgroep = await this.subgroepRepository.findOne({
       where: { subgroepID },
     });
+
     if (!subgroep) {
       throw new Error('Subgroep not found');
     }
+
+    // Update subgroep of the gebruiker
     gebruiker.subgroep = subgroep;
-    return this.gebruikerRepository.save(gebruiker);
+
+    // If a new begeleider is assigned to the subgroep, update all users' begeleider
+    if (gebruiker.begeleider) {
+      gebruiker.begeleider = gebruiker.begeleider;
+    }
+
+    // Save the gebruiker with the updated subgroep and begeleider
+    await this.gebruikerRepository.save(gebruiker);
+
+    // If it's a werknemer, update all other werknemers' begeleider in the same subgroep
+    if (gebruiker.rol?.rolID === 3) {
+      // Assuming 3 is the ID for werknemers
+      await this.updateWerknemersBegeleider(
+        subgroepID,
+        gebruiker.begeleider.gebruikerID,
+      );
+    }
+
+    return gebruiker;
+  }
+
+  async updateWerknemersBegeleider(
+    subgroepID: number,
+    begeleiderID: number,
+  ): Promise<void> {
+    const werknemers = await this.gebruikerRepository.find({
+      where: { subgroep: { subgroepID }, rol: { rolID: 3 } }, // Assuming 3 is the ID for werknemers
+    });
+
+    const begeleider = await this.gebruikerRepository.findOne({
+      where: { gebruikerID: begeleiderID },
+    });
+
+    if (!begeleider) {
+      throw new Error('Begeleider not found');
+    }
+
+    for (const werknemer of werknemers) {
+      werknemer.begeleider = begeleider;
+      await this.gebruikerRepository.save(werknemer);
+    }
+  }
+
+  async assignBegeleiderToWerknemer(
+    werknemerID: number,
+    begeleiderID: number,
+  ): Promise<Gebruiker> {
+    const werknemer = await this.gebruikerRepository.findOne({
+      where: { gebruikerID: werknemerID },
+    });
+
+    if (!werknemer) {
+      throw new Error('Werknemer not found');
+    }
+
+    const begeleider = await this.gebruikerRepository.findOne({
+      where: { gebruikerID: begeleiderID },
+    });
+
+    if (!begeleider) {
+      throw new Error('Begeleider not found');
+    }
+
+    // Set the "begeleider" property, not "begeleiderID"
+    werknemer.begeleider = begeleider;
+    return this.gebruikerRepository.save(werknemer);
   }
 }
