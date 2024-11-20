@@ -268,18 +268,6 @@ export default defineComponent({
       }
     },
 
-        const response = await axios.get('http://localhost:3000/taak', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        this.taken = response.data.sort((a: Taak, b: Taak) =>
-          a.naam.localeCompare(b.naam),
-        )
-      } catch (error) {
-        console.error(
-          'Er is een fout opgetreden bij het ophalen van de taken:',
-          error,
-        )
-      }
     },
     async fetchGroepen() {
       try {
@@ -312,28 +300,12 @@ export default defineComponent({
           { naam: this.naam, groep: { groepID: this.selectedGroepID } },
           { headers: { Authorization: `Bearer ${token}` } },
         )
-
-    async addTaak() {
-      try {
-        console.log(
-          'Adding taak with name:',
-          this.naam,
-          'and group ID:',
-          this.selectedGroepID,
-        )
-        const token = localStorage.getItem('access_token')
-        const response = await axios.post(
-          'http://localhost:3000/taak',
-          { naam: this.naam, groep: { groepID: this.selectedGroepID } },
-          { headers: { Authorization: `Bearer ${token}` } },
-        )
-
         // Optional: Check the response for success
         console.log('Response from addTaak:', response.data)
 
         // Clear the input fields
         this.naam = ''
-        this.selectedGroepID = '' // Reset selected group
+        this.selectedGroepID = 0 // Reset selected group
         this.selectedGroepID = 0 // Reset selected group
 
         await this.fetchTaken()

@@ -795,11 +795,6 @@ export default defineComponent({
     async fetchGebruikers() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get(
-          'http://localhost:3000/gebruiker/gebruikersZonderAdmin',
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
         const response = await axios.get('http://localhost:3000/gebruiker', {
           headers: { Authorization: `Bearer ${token}` },
         })
