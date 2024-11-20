@@ -3,7 +3,7 @@ import { CreateGebruikerDto } from './dto/create-gebruikers.dto';
 import { UpdateGebruikerDto } from './dto/update-gebruiker.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gebruiker } from './entities/gebruiker.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Subgroep } from '../subgroep/entities/subgroep.entity';
 
@@ -39,6 +39,17 @@ export class GebruikerService {
   findAll() {
     return this.gebruikerRepository.find({
       relations: ['rol', 'opleidingGebruikers', 'subgroep', 'begeleider'],
+    });
+  }
+
+  findAllWithoutAdmin() {
+    return this.gebruikerRepository.find({
+      relations: ['rol', 'opleidingGebruikers', 'subgroep'],
+      where: {
+        rol: {
+          rolID: Not(1),
+        },
+      },
     });
   }
 

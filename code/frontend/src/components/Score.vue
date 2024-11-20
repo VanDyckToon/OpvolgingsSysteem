@@ -213,6 +213,13 @@ import ColorPicker from 'primevue/colorpicker'
 import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
+interface Score {
+  scoreID: number
+  scoreNaam: string
+  waarde: string
+  kleurcode: string
+}
+
 export default defineComponent({
   name: 'Score',
   components: {
@@ -295,6 +302,10 @@ export default defineComponent({
       kleur: string,
     ) {
       try {
+        if (!naam.trim() || !waarde.trim()) {
+          alert('Score naam of waarde mag niet leeg zijn.')
+          return
+        }
         const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/score/${scoreID}`,

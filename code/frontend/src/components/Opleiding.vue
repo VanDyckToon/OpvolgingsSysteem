@@ -205,13 +205,13 @@
               <!-- User profile picture -->
               <img
                 v-if="gebruiker.foto"
-                :src="`/src/assets/${gebruiker.foto}.jpg`"
+                :src="`/assets/${gebruiker.foto}.jpg`"
                 alt="Profile picture"
                 class="w-10 h-10 object-cover rounded-full"
               />
               <img
                 v-else
-                :src="`/src/assets/no_image_available.jpg`"
+                :src="`/assets/no_image_available.jpg`"
                 alt="No picture available"
                 class="w-10 h-10 object-cover rounded-full"
               />
@@ -336,8 +336,8 @@
                 selectedOpleidingID,
                 editedNaam,
                 editedIntern,
-                editedDatumStart,
-                editedDatumEind,
+                new Date(editedDatumStart),
+                new Date(editedDatumEind),
               ),
                 closeModal()
             "
@@ -385,6 +385,23 @@ import HeaderComponent from '../components/Header.vue'
 import { jsPDF } from 'jspdf'
 import 'jspdf-autotable'
 
+interface Opleiding {
+  opleidingID: number
+  naam: string
+  intern: boolean
+  datumStart: Date
+  datumEind: Date
+}
+
+interface Gebruiker {
+  gebruikerID: number
+  voornaam: string
+  achternaam: string
+  email: string
+  opleidingID: number
+  foto: string
+}
+
 export default defineComponent({
   name: 'Opleiding',
   components: {
@@ -406,9 +423,9 @@ export default defineComponent({
       SelectedDatumStart: '',
       SelectedDatumEind: '',
       editedNaam: '',
-      editedIntern: '',
+      editedIntern: false,
       editedDatumStart: '',
-      EditedDatumEind: '',
+      editedDatumEind: '',
       gebruikers: [] as Gebruiker[],
       selectedOpleidingGebruikers: [] as Gebruiker[],
       isUserOverviewModalVisible: false,
@@ -469,7 +486,7 @@ export default defineComponent({
         }
 
         // Genereer rijen voor deelnemers
-        const tableData = gebruikers.map((gebruiker: any) => {
+        const tableData = gebruikers.map((gebruiker: Gebruiker) => {
           const row = [`${gebruiker.voornaam} ${gebruiker.achternaam}`]
           for (let i = 0; i < aantalDagen; i++) {
             row.push('') // Lege kolom voor handtekening
@@ -511,7 +528,7 @@ export default defineComponent({
               ),
             )
 
-          const dataSubset = tableData.map(row =>
+          const dataSubset = tableData.map((row: string[]) =>
             row
               .slice(0, 1)
               .concat(
@@ -546,6 +563,12 @@ export default defineComponent({
             doc.addPage('landscape')
             startY = 20 // Reset startY voor de volgende pagina
             currentPage++
+            // Add page number to the footer
+            doc.text(
+              `Page ${currentPage}`,
+              10,
+              doc.internal.pageSize.height - 10,
+            )
           }
         }
 
@@ -594,7 +617,7 @@ export default defineComponent({
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.naam = ''
-        this.intern = ''
+        this.intern = false
         this.datumStart = ''
         this.datumEind = ''
         this.fetchOpleidingen()
@@ -643,7 +666,7 @@ export default defineComponent({
       this.isEditModalVisible = true
     },
 
-    formatForDateTimeLocal(date) {
+    formatForDateTimeLocal(date: Date) {
       const d = new Date(date)
       const year = d.getFullYear()
       const month = String(d.getMonth() + 1).padStart(2, '0')
@@ -653,7 +676,7 @@ export default defineComponent({
       return `${year}-${month}-${day}T${hours}:${minutes}`
     },
 
-    formatDate(date) {
+    formatDate(date: Date) {
       const d = new Date(date)
       const year = d.getFullYear()
       const month = String(d.getMonth() + 1).padStart(2, '0')
@@ -661,7 +684,7 @@ export default defineComponent({
       return `${year}-${month}-${day}`
     },
 
-    formatDatum(date) {
+    formatDatum(date: Date) {
       const d = new Date(date)
       const year = d.getFullYear()
       const month = String(d.getMonth() + 1).padStart(2, '0')
@@ -669,7 +692,7 @@ export default defineComponent({
       return `${day}/${month}/${year}`
     },
 
-    formatUur(date) {
+    formatUur(date: Date) {
       const d = new Date(date)
       const hours = String(d.getHours()).padStart(2, '0')
       const minutes = String(d.getMinutes()).padStart(2, '0')
@@ -684,6 +707,10 @@ export default defineComponent({
       updatedDatumEind: Date,
     ) {
       try {
+        if (!updatedNaam.trim()) {
+          alert('Opleidingnaam mag niet leeg zijn.')
+          return
+        }
         const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/opleiding/${opleidingID}`,
@@ -698,10 +725,7 @@ export default defineComponent({
         this.isEditModalVisible = false
         this.fetchOpleidingen()
       } catch (error) {
-        console.error(
-          'Error updating opleiding:',
-          error.response ? error.response.data : error,
-        )
+        console.error('Error updating opleiding', error)
       }
     },
 
@@ -775,8 +799,10 @@ export default defineComponent({
           headers: { Authorization: `Bearer ${token}` },
         })
         this.gebruikers = response.data.filter(
-          gebruiker => gebruiker.rolID !== 1,
+          (gebruiker: { rolID: number }) => gebruiker.rolID !== 1,
         )
+        console.log(response.data)
+        this.gebruikers = response.data
       } catch (error) {
         console.log('Error fetching gebruikers', error)
       }
