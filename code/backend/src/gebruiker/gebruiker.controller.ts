@@ -77,6 +77,46 @@ export class GebruikerController {
     @Param('gebruikerID') gebruikerID: number,
     @Param('subgroepID') subgroepID: number,
   ) {
-    return this.gebruikerService.addToSubgroep(gebruikerID, subgroepID);
+    const gebruiker = await this.gebruikerService.addToSubgroep(
+      gebruikerID,
+      subgroepID,
+    );
+
+    // If the gebruiker is a begeleider, update all werknemers in the subgroep
+    if (gebruiker.rol?.rolID === 2) {
+      // Update all werknemers to have this new begeleider
+      await this.gebruikerService.updateWerknemersBegeleider(
+        subgroepID,
+        gebruiker.gebruikerID,
+      );
+    }
+
+    return { message: 'Gebruiker added to subgroep successfully' };
+  }
+
+  // Endpoint to update all werknemers' begeleiderID when a new begeleider is added
+  @Patch('subgroep/:subgroepID/updateBegeleider/:begeleiderID')
+  async updateBegeleiderForWerknemers(
+    @Param('subgroepID') subgroepID: number,
+    @Param('begeleiderID') begeleiderID: number,
+  ) {
+    await this.gebruikerService.updateWerknemersBegeleider(
+      subgroepID,
+      begeleiderID,
+    );
+    return { message: 'Begeleider updated for all werknemers in subgroep' };
+  }
+
+  // Endpoint to assign a specific begeleider to a werknemer
+  @Patch('werknemer/:werknemerID/assignBegeleider/:begeleiderID')
+  async assignBegeleider(
+    @Param('werknemerID') werknemerID: number,
+    @Param('begeleiderID') begeleiderID: number,
+  ) {
+    const werknemer = await this.gebruikerService.assignBegeleiderToWerknemer(
+      werknemerID,
+      begeleiderID,
+    );
+    return werknemer;
   }
 }

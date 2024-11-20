@@ -1091,7 +1091,6 @@ export default defineComponent({
           },
           { headers: { Authorization: `Bearer ${token}` } },
         )
-
         this.isEditModalVisible = false // Close the modal
         await this.fetchGebruikers() // Refresh the list after updating
       } catch (error) {
