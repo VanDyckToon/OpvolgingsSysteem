@@ -768,6 +768,32 @@ export default defineComponent({
         )
       }
     },
+    async updateSubgroep(
+      subgroepID: number,
+      updatedNaam: string,
+      updatedGroepID: number,
+    ) {
+      try {
+        if (!updatedNaam.trim()) {
+          alert('Subgroep naam mag niet leeg zijn')
+          return
+        }
+        const token = localStorage.getItem('access_token')
+        await axios.patch(
+          `http://localhost:3000/subgroep/${subgroepID}`,
+          {
+            subgroepNaam: updatedNaam, // Assuming your API expects 'subgroepNaam' as the key
+            groep: { groepID: updatedGroepID }, // Update the group ID as well
+          },
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+
+        this.isEditModalVisible = false // Close the modal
+        await this.fetchSubgroepen() // Refresh the list after updating
+      } catch (error) {
+        console.error('Error updating subgroep:', error)
+      }
+    },
 
     closeModal() {
       this.isEditModalVisible = false // Sluit de modal zonder up te daten
