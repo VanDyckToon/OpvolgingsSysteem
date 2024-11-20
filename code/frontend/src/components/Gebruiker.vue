@@ -818,7 +818,6 @@ export default defineComponent({
   },
   methods: {
     openDeleteModal(gebruikerID: number, voornaam: string, achternaam: string) {
-      // Zet de geselecteerde rol en laat de delete modal zien
       this.selectedGebruikerID = gebruikerID
       this.selectedGebruikerVoornaam = voornaam
       this.selectedGebruikerAchternaam = achternaam
