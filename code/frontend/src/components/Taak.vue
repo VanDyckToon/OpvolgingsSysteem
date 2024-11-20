@@ -187,7 +187,6 @@ import HeaderComponent from '../components/Header.vue'
 
 interface Groep {
   groepID: number
-  groepNaam: string
   naam: string
 }
 
@@ -268,24 +267,6 @@ export default defineComponent({
       }
     },
 
-    },
-    async fetchGroepen() {
-      try {
-        const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/groep', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        this.groepen = response.data.sort((a: Groep, b: Groep) =>
-          a.naam.localeCompare(b.naam),
-        )
-      } catch (error) {
-        console.error(
-          'Er is een fout opgetreden bij het ophalen van de groepen:',
-          error,
-        )
-      }
-    },
-
     async addTaak() {
       try {
         console.log(
@@ -300,12 +281,12 @@ export default defineComponent({
           { naam: this.naam, groep: { groepID: this.selectedGroepID } },
           { headers: { Authorization: `Bearer ${token}` } },
         )
+
         // Optional: Check the response for success
         console.log('Response from addTaak:', response.data)
 
         // Clear the input fields
         this.naam = ''
-        this.selectedGroepID = 0 // Reset selected group
         this.selectedGroepID = 0 // Reset selected group
 
         await this.fetchTaken()
@@ -352,10 +333,6 @@ export default defineComponent({
       updatedGroepID: number,
     ) {
       try {
-        if (!updatedNaam.trim()) {
-          alert('Taaknaam mag niet leeg zijn.')
-          return
-        }
         const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/taak/${taakID}`,
@@ -369,10 +346,6 @@ export default defineComponent({
         this.isEditModalVisible = false // Close the modal
         await this.fetchTaken() // Refresh the list after updating
       } catch (error) {
-        console.error(
-          'Error updating taak:',
-          error.response ? error.response.data : error,
-        )
         console.error('Error updating taak:', error)
       }
     },
