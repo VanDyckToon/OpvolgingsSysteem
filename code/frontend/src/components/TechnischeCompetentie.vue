@@ -290,11 +290,22 @@ import HeaderComponent from '../components/Header.vue'
 interface Groep {
   groepID: number
   groepNaam: string
+  naam: string
 }
 
 interface Taak {
   taakID: number
   taakNaam: string
+  naam: string
+  groep: Groep
+}
+
+interface TechnischeCompetentie {
+  technischeCompetentieID: number
+  naam: string
+  beschrijving: string
+  taak: Taak
+  groepID: number
 }
 
 export default defineComponent({
@@ -469,6 +480,8 @@ export default defineComponent({
         this.beschrijving = ''
         this.selectedTaakID = ''
         this.selectedGroepID = ''
+        this.selectedTaakID = 0
+        this.selectedGroepID = 0
 
         await this.fetchTechnischeCompetenties()
       } catch (error) {
@@ -548,10 +561,7 @@ export default defineComponent({
         this.isEditModalVisible = false
         await this.fetchTechnischeCompetenties()
       } catch (error) {
-        console.error(
-          'Error updating technische competentie:',
-          error.response ? error.response.data : error,
-        )
+        console.error('Error updating technische competentie:', error)
       }
     },
 

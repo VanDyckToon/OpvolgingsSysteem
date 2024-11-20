@@ -190,12 +190,21 @@ import { defineComponent } from 'vue'
 import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
+
+interface Competentie {
+  competentieID: number
+  naam: string
+  beschrijving: string
+}
+
+
 export default defineComponent({
   name: 'Competentie',
   components: {
     Icon,
     HeaderComponent,
   },
+
   data() {
     return {
       competenties: [] as Competentie[], // Lijst van de rolen
@@ -320,6 +329,38 @@ export default defineComponent({
       }
     },
 
+      }
+    },
+
+    openEditModal(competentieID: number, naam: string, beschrijving: string) {
+      this.selectedCompetentieID = competentieID
+      this.editedNaam = naam
+      this.editedBeschrijving = beschrijving
+      this.isEditModalVisible = true
+    },
+
+    async updateCompetentie(
+      competentieID: number,
+      updatedNaam: string,
+      updatedBeschrijving: string,
+    ) {
+      try {
+        const token = localStorage.getItem('access_token')
+        await axios.patch(
+          `http://localhost:3000/competentie/${competentieID}`,
+          { naam: updatedNaam, beschrijving: updatedBeschrijving },
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+        this.isEditModalVisible = false
+        this.fetchCompetenties()
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          console.error('Error updating competentie:', error.response?.data)
+        } else {
+          console.error('Error updating competentie:', error)
+        }
+      }
+    },
     closeModal() {
       this.isEditModalVisible = false
     },

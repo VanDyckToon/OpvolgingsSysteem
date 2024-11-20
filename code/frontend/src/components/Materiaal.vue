@@ -86,6 +86,7 @@
         <h2 class="text-2xl font-bold mb-4 text-center">Materiaal Bewerken</h2>
         <div class="mb-4">
           <label class="block text-gray-700 font-bold mb-2" for="editNaam" req>
+          <label class="block text-gray-700 font-bold mb-2" for="editNaam">
             Nieuwe Materiaal Beschrijving:
           </label>
           <input
@@ -149,6 +150,11 @@ import axios from 'axios'
 import { defineComponent } from 'vue'
 import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
+
+interface Materiaal {
+  materiaalID: number
+  beschrijving: string
+}
 
 export default defineComponent({
   name: 'Materiaal',
@@ -266,6 +272,7 @@ export default defineComponent({
           'Error updating materiaal:',
           error.response ? error.response.data : error,
         )
+        console.error('Error updating meteriaal', error)
       }
     },
 

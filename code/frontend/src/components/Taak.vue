@@ -188,6 +188,13 @@ import HeaderComponent from '../components/Header.vue'
 interface Groep {
   groepID: number
   groepNaam: string
+  naam: string
+}
+
+interface Taak {
+  taakID: number
+  naam: string
+  groep: Groep
 }
 
 export default defineComponent({
@@ -261,6 +268,51 @@ export default defineComponent({
       }
     },
 
+        const response = await axios.get('http://localhost:3000/taak', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        this.taken = response.data.sort((a: Taak, b: Taak) =>
+          a.naam.localeCompare(b.naam),
+        )
+      } catch (error) {
+        console.error(
+          'Er is een fout opgetreden bij het ophalen van de taken:',
+          error,
+        )
+      }
+    },
+    async fetchGroepen() {
+      try {
+        const token = localStorage.getItem('access_token')
+        const response = await axios.get('http://localhost:3000/groep', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        this.groepen = response.data.sort((a: Groep, b: Groep) =>
+          a.naam.localeCompare(b.naam),
+        )
+      } catch (error) {
+        console.error(
+          'Er is een fout opgetreden bij het ophalen van de groepen:',
+          error,
+        )
+      }
+    },
+
+    async addTaak() {
+      try {
+        console.log(
+          'Adding taak with name:',
+          this.naam,
+          'and group ID:',
+          this.selectedGroepID,
+        )
+        const token = localStorage.getItem('access_token')
+        const response = await axios.post(
+          'http://localhost:3000/taak',
+          { naam: this.naam, groep: { groepID: this.selectedGroepID } },
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+
     async addTaak() {
       try {
         console.log(
@@ -282,6 +334,7 @@ export default defineComponent({
         // Clear the input fields
         this.naam = ''
         this.selectedGroepID = '' // Reset selected group
+        this.selectedGroepID = 0 // Reset selected group
 
         await this.fetchTaken()
       } catch (error) {
@@ -348,6 +401,7 @@ export default defineComponent({
           'Error updating taak:',
           error.response ? error.response.data : error,
         )
+        console.error('Error updating taak:', error)
       }
     },
 

@@ -213,6 +213,13 @@ import ColorPicker from 'primevue/colorpicker'
 import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
+interface Score {
+  scoreID: number
+  scoreNaam: string
+  waarde: string
+  kleurcode: string
+}
+
 export default defineComponent({
   name: 'Score',
   components: {

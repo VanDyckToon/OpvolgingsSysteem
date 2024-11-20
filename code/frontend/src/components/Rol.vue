@@ -140,6 +140,11 @@ import { defineComponent } from 'vue'
 import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
+interface Rol {
+  rolID: number
+  naam: string
+}
+
 export default defineComponent({
   name: 'Rol',
   components: {
@@ -256,6 +261,7 @@ export default defineComponent({
           'Error updating rol:',
           error.response ? error.response.data : error,
         )
+        console.error('Error updating rol:', error)
       }
     },
 

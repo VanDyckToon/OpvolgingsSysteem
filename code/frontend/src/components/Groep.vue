@@ -140,6 +140,10 @@ import { defineComponent } from 'vue'
 import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
+interface Groep {
+  groepID: number
+  naam: string
+}
 export default defineComponent({
   name: 'Groep',
   components: {
@@ -258,7 +262,34 @@ export default defineComponent({
         )
       }
     },
+      }
+    },
 
+    openEditModal(groepID: number, naam: string) {
+      // Kiest de juiste rol voor het aan te passen
+      this.selectedGroepID = groepID
+      this.editedNaam = naam
+      this.isEditModalVisible = true // Laat de Modal zien
+    },
+
+    async updateGroep(groepID: number, updatedNaam: string) {
+      try {
+        const token = localStorage.getItem('access_token')
+        await axios.patch(
+          `http://localhost:3000/groep/${groepID}`,
+          { naam: updatedNaam },
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+        this.isEditModalVisible = false
+        this.fetchGroepen() // Laad de lijst opnieuw na het updaten
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          console.error('Error updating groep:', error.response?.data)
+        } else {
+          console.error('Error updating groep:', error)
+        }
+      }
+    },
     closeModal() {
       this.isEditModalVisible = false // Sluit de modal zonder up te daten
     },
