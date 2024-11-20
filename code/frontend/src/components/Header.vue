@@ -42,15 +42,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { Icon } from '@iconify/vue'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from 'jwt-decode'
 
 export default defineComponent({
   name: 'HeaderComponent',
-  components: {
-    Icon,
-  },
+
   data() {
     return {
       gebruikerID: null as string | null,

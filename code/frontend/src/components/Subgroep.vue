@@ -256,13 +256,13 @@
               <!-- User profile picture -->
               <img
                 v-if="gebruiker.foto"
-                :src="`/src/assets/${gebruiker.foto}.jpg`"
+                :src="`/assets/${gebruiker.foto}.jpg`"
                 alt="Profile picture"
                 class="w-10 h-10 object-cover rounded-full"
               />
               <img
                 v-else
-                :src="`/src/assets/no_image_available.jpg`"
+                :src="`/assets/no_image_available.jpg`"
                 alt="No picture available"
                 class="w-10 h-10 object-cover rounded-full"
               />
@@ -354,13 +354,13 @@
               <!-- User profile picture -->
               <img
                 v-if="gebruiker.foto"
-                :src="`/src/assets/${gebruiker.foto}.jpg`"
+                :src="`/assets/${gebruiker.foto}.jpg`"
                 alt="Profile picture"
                 class="w-10 h-10 object-cover rounded-full"
               />
               <img
                 v-else
-                :src="`/src/assets/no_image_available.jpg`"
+                :src="`/assets/no_image_available.jpg`"
                 alt="No picture available"
                 class="w-10 h-10 object-cover rounded-full"
               />
@@ -413,7 +413,26 @@ import HeaderComponent from '../components/Header.vue'
 
 interface Groep {
   groepID: number
-  groepNaam: string
+  naam: string
+}
+
+interface Subgroep {
+  subgroepID: number
+  subgroepNaam: string
+  groep: Groep
+}
+
+interface Gebruiker {
+  gebruikerID: number
+  voornaam: string
+  achternaam: string
+  email: string
+  telefoonnummer: string
+  foto: string
+  rol: {
+    rolID: number
+    rolNaam: string
+  }
 }
 
 export default defineComponent({
@@ -431,6 +450,7 @@ export default defineComponent({
       isEditModalVisible: false,
       isDeleteModalVisible: false,
       selectedSubgroepID: 0, // ID van de rol dat wordt aangepast
+      selectedGebruikerID: 0,
       selectedGroepID: 0,
       selectedSubgroepNaam: '',
       editedNaam: '',
@@ -438,7 +458,7 @@ export default defineComponent({
       gebruikers: [] as Gebruiker[],
       werknemers: [] as Gebruiker[],
       begeleiders: [] as Gebruiker[],
-
+      searchQuery: '',
       isUserOverviewModalVisible: false,
     }
   },
@@ -598,7 +618,7 @@ export default defineComponent({
 
         // Clear the input fields
         this.naam = ''
-        this.selectedGroepID = '' // Reset selected group
+        this.selectedGroepID = 0 // Reset selected group
 
         // Refresh the list of subgroepen
         await this.fetchSubgroepen()
@@ -629,7 +649,7 @@ export default defineComponent({
           await this.fetchGebruikers(this.selectedSubgroepID)
 
           // Clear the selected werknemer ID
-          this.selectedGebruikerID = ''
+          this.selectedGebruikerID = 0
         } catch (error) {
           console.error('Error adding werknemer to subgroep:', error)
         }
@@ -693,10 +713,7 @@ export default defineComponent({
         this.isEditModalVisible = false // Close the modal
         await this.fetchSubgroepen() // Refresh the list after updating
       } catch (error) {
-        console.error(
-          'Error updating subgroep:',
-          error.response ? error.response.data : error,
-        )
+        console.error('Error updating subgroep:', error)
       }
     },
 

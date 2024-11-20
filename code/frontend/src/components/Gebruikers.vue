@@ -27,17 +27,16 @@
               <!-- Profile Image -->
               <img
                 v-if="gebruiker.foto"
-                :src="`/src/assets/${gebruiker.foto}.jpg`"
+                :src="`/assets/${gebruiker.foto}.jpg`"
                 alt="Profile picture"
                 class="w-10 h-10 object-cover rounded-full mr-4"
               />
               <img
                 v-else
-                :src="`/src/assets/no_image_available.jpg`"
+                :src="`/assets/no_image_available.jpg`"
                 alt="No picture available"
                 class="w-10 h-10 object-cover rounded-full mr-4"
               />
-
               <!-- User Details -->
               <div>
                 <div class="text-[#456A50] font-bold">
@@ -103,7 +102,7 @@
 <script lang="ts">
 import axios from 'axios'
 import { defineComponent } from 'vue'
-import { Icon } from '@iconify/vue'
+
 import HeaderComponent from '../components/Header.vue'
 import { jwtDecode } from 'jwt-decode'
 
@@ -118,7 +117,6 @@ interface Gebruiker {
 export default defineComponent({
   name: 'GebruikersPage',
   components: {
-    Icon,
     HeaderComponent,
   },
   data() {

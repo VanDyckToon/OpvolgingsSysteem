@@ -99,8 +99,8 @@ export default defineComponent({
         const decodedToken = JSON.parse(atob(access_token.split('.')[1])) // Decode JWT token
         router.push(`/begeleider/${decodedToken.gebruikerID}`) // Ensure the path is properly formatted
       } catch (error) {
-        // Show specific error message for invalid credentials
-        errorMessage.value = 'Verkeerde email en/of wachtwoord' // Popup message
+        console.error(error)
+        errorMessage.value = 'Verkeerde email en/of wachtwoord'
       }
     }
 
