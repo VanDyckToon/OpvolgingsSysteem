@@ -659,7 +659,6 @@ export default defineComponent({
     },
     async confirmDelete() {
       try {
-        const token = localStorage.getItem('access_token')
         await this.deleteSubgroep(this.selectedSubgroepID)
         this.isDeleteModalVisible = false // Close the modal after confirmation
       } catch (error) {

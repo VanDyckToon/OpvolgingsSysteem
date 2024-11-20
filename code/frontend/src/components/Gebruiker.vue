@@ -1036,11 +1036,10 @@ export default defineComponent({
             extraOpmerking: updatedExtraOpmerking,
             rol: { rolID: updatedRolID },
             subgroep: { subgroepID: updatedSubgroepID },
-            begeleider: { begeleiderID: updatedBegeleiderID },
+            begeleider: { gebruikerID: updatedBegeleiderID },
           },
           { headers: { Authorization: `Bearer ${token}` } },
         )
-
         this.isEditModalVisible = false // Close the modal
         await this.fetchGebruikers() // Refresh the list after updating
       } catch (error) {
