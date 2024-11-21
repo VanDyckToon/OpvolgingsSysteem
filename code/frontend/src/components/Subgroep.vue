@@ -431,7 +431,7 @@ interface Gebruiker {
   foto: string
   rol: {
     rolID: number
-    rolNaam: string
+    naam: string
   }
   subgroep: {
     subgroepID: number
@@ -577,7 +577,6 @@ export default defineComponent({
             headers: { Authorization: `Bearer ${token}` },
           },
         )
-        console.log('API Response:', response)
         this.werknemers = response.data
       } catch (error) {
         console.error('Error fetching gebruikers:', error)
@@ -603,12 +602,6 @@ export default defineComponent({
 
     async addSubgroep() {
       try {
-        console.log(
-          'Adding subgroep with name:',
-          this.naam,
-          'and group ID:',
-          this.selectedGroepID,
-        )
         const token = localStorage.getItem('access_token')
         const response = await axios.post(
           'http://localhost:3000/subgroep',
@@ -668,124 +661,143 @@ export default defineComponent({
     },
     async addGebruikerToSubgroep() {
       if (this.selectedGebruikerID && this.selectedSubgroepID) {
-        try {
-          // Haal de rol op van de geselecteerde gebruiker
-          const geselecteerdeGebruiker =
-            this.begeleiders.find(
-              begeleider => begeleider.gebruikerID === this.selectedGebruikerID,
-            ) ||
-            this.werknemers.find(
-              werknemer => werknemer.gebruikerID === this.selectedGebruikerID,
-            )
+        await this.fetchGebruikers(this.selectedSubgroepID)
+        const geselecteerdeGebruiker =
+          this.begeleiders.find(
+            b => b.gebruikerID === this.selectedGebruikerID,
+          ) ||
+          this.werknemers.find(w => w.gebruikerID === this.selectedGebruikerID)
 
-          if (!geselecteerdeGebruiker) {
-            alert('Geselecteerde gebruiker niet gevonden.')
-            return
-          }
-
-          // Controleer of de gebruiker een begeleider is
-          const isBegeleider = geselecteerdeGebruiker.rol?.rolID === 2
-
-          // Check if the selected user is a begeleider
-          if (isBegeleider) {
-            // Check if a begeleider already exists in the subgroep
-            const hasBegeleider = this.gebruikers.some(
-              gebruiker =>
-                gebruiker.rol?.rolID === 2 &&
-                gebruiker.subgroep?.subgroepID === this.selectedSubgroepID,
-            )
-
-            if (hasBegeleider) {
-              alert('Er kan slechts één begeleider in een subgroep zitten.')
-              return
-            }
-
-            // Voeg de begeleider toe aan de subgroep
-            const token = localStorage.getItem('access_token')
-            const response = await axios.patch(
-              `http://localhost:3000/gebruiker/${this.selectedGebruikerID}/addToSubgroep/${this.selectedSubgroepID}`,
-              {},
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              },
-            )
-            console.log(
-              'Response from adding begeleider to subgroep:',
-              response.data,
-            )
-
-            // Update all werknemers in the subgroep to set their begeleiderID
-            const werknemersInSubgroep = this.werknemers.filter(
-              werknemer =>
-                werknemer.subgroep?.subgroepID === this.selectedSubgroepID,
-            )
-
-            for (const werknemer of werknemersInSubgroep) {
-              await axios.patch(
-                `http://localhost:3000/gebruiker/${werknemer.gebruikerID}`,
-                {
-                  begeleider: { gebruikerID: this.selectedGebruikerID }, // set the begeleiderID to the added begeleider
-                },
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                },
-              )
-            }
-          } else {
-            // If a werknemer is added, just add them to the subgroep
-            const token = localStorage.getItem('access_token')
-            const response = await axios.patch(
-              `http://localhost:3000/gebruiker/${this.selectedGebruikerID}/addToSubgroep/${this.selectedSubgroepID}`,
-              {},
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              },
-            )
-            console.log(
-              'Response from adding werknemer to subgroep:',
-              response.data,
-            )
-
-            // If a begeleider already exists, set this werknemer's begeleiderID
-            const begeleiderInSubgroep = this.gebruikers.find(
-              gebruiker =>
-                gebruiker.rol?.rolID === 2 &&
-                gebruiker.subgroep?.subgroepID === this.selectedSubgroepID,
-            )
-
-            if (begeleiderInSubgroep) {
-              await axios.patch(
-                `http://localhost:3000/gebruiker/${this.selectedGebruikerID}`,
-                {
-                  begeleider: { gebruikerID: begeleiderInSubgroep.gebruikerID }, // set the begeleiderID of the werknemer
-                },
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                },
-              )
-            }
-          }
-
-          // Refresh de lijst van gebruikers
-          await this.fetchGebruikers(this.selectedSubgroepID)
-
-          // Reset de geselecteerde gebruiker ID
-          this.selectedGebruikerID = 0
-        } catch (error) {
-          console.error('Error adding gebruiker to subgroep:', error)
+        if (!geselecteerdeGebruiker) {
+          alert('Geselecteerde gebruiker niet gevonden.')
+          return
         }
-      } else {
-        console.error('Gebruiker en Subgroep moeten geselecteerd zijn')
+
+        const isBegeleider = geselecteerdeGebruiker.rol?.rolID === 2
+
+        if (
+          isBegeleider &&
+          (await this.hasExistingBegeleider(this.selectedSubgroepID))
+        ) {
+          alert('Er kan slechts één begeleider in een subgroep zitten.')
+          return
+        }
+
+        // Voeg de gebruiker toe (begeleider of werknemer)
+        try {
+          const token = localStorage.getItem('access_token')
+          if (!token) throw new Error('Geen toegang tot API')
+
+          if (isBegeleider) {
+            await this.addBegeleiderToSubgroep(geselecteerdeGebruiker)
+          } else {
+            await this.addWerknemerToSubgroep(geselecteerdeGebruiker)
+          }
+
+          // Ververs de gebruikerslijst
+          await this.fetchGebruikers(this.selectedSubgroepID)
+        } catch (error) {
+          console.error(
+            'Fout bij het toevoegen van gebruiker aan subgroep:',
+            error,
+          )
+        }
       }
     },
+    async hasExistingBegeleider(subgroepID: number) {
+      return this.gebruikers.some(
+        gebruiker =>
+          gebruiker.rol?.rolID === 2 &&
+          gebruiker.subgroep?.subgroepID === subgroepID,
+      )
+    },
+    async addBegeleiderToSubgroep(begeleider: Gebruiker) {
+      const hasBegeleider = this.gebruikers.some(
+        gebruiker =>
+          gebruiker.rol?.rolID === 2 &&
+          gebruiker.subgroep?.subgroepID === this.selectedSubgroepID,
+      )
+
+      if (hasBegeleider) {
+        alert('Er kan slechts één begeleider in een subgroep zitten.')
+        return
+      }
+      const token = localStorage.getItem('access_token')
+      const response = await axios.patch(
+        `http://localhost:3000/gebruiker/${begeleider.gebruikerID}/addToSubgroep/${this.selectedSubgroepID}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } },
+      )
+
+      console.log('Begeleider toegevoegd:', response.data)
+
+      // Werknemers in de subgroep updaten
+      const werknemersInSubgroep = this.werknemers.filter(
+        werknemer => werknemer.subgroep?.subgroepID === this.selectedSubgroepID,
+      )
+
+      for (const werknemer of werknemersInSubgroep) {
+        const token = localStorage.getItem('access_token')
+        await axios.patch(
+          `http://localhost:3000/gebruiker/${werknemer.gebruikerID}`,
+          { begeleider: { gebruikerID: begeleider.gebruikerID } },
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+      }
+    },
+    async addWerknemerToSubgroep(werknemer: Gebruiker) {
+      const token = localStorage.getItem('access_token')
+      const response = await axios.patch(
+        `http://localhost:3000/gebruiker/${werknemer.gebruikerID}/addToSubgroep/${this.selectedSubgroepID}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } },
+      )
+
+      console.log('Werknemer toegevoegd:', response.data)
+
+      // Controleer of er een begeleider in de subgroep aanwezig is
+      const begeleiderInSubgroep = this.gebruikers.find(
+        gebruiker =>
+          gebruiker.rol?.rolID === 2 &&
+          gebruiker.subgroep?.subgroepID === this.selectedSubgroepID,
+      )
+
+      if (begeleiderInSubgroep) {
+        const token = localStorage.getItem('access_token')
+        await axios.patch(
+          `http://localhost:3000/gebruiker/${werknemer.gebruikerID}`,
+          { begeleider: { gebruikerID: begeleiderInSubgroep.gebruikerID } },
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+      }
+    },
+    async updateSubgroep(
+      subgroepID: number,
+      updatedNaam: string,
+      updatedGroepID: number,
+    ) {
+      try {
+        if (!updatedNaam.trim()) {
+          alert('Subgroep naam mag niet leeg zijn')
+          return
+        }
+        const token = localStorage.getItem('access_token')
+        await axios.patch(
+          `http://localhost:3000/subgroep/${subgroepID}`,
+          {
+            subgroepNaam: updatedNaam, // Assuming your API expects 'subgroepNaam' as the key
+            groep: { groepID: updatedGroepID }, // Update the group ID as well
+          },
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+
+        this.isEditModalVisible = false // Close the modal
+        await this.fetchSubgroepen() // Refresh the list after updating
+      } catch (error) {
+        console.error('Error updating subgroep:', error)
+      }
+    },
+
     closeModal() {
       this.isEditModalVisible = false // Sluit de modal zonder up te daten
     },

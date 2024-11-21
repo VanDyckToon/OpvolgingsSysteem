@@ -117,43 +117,70 @@ export class GebruikerService {
     gebruikerID: number,
     subgroepID: number,
   ): Promise<Gebruiker> {
-    const gebruiker = await this.gebruikerRepository.findOne({
-      where: { gebruikerID },
-    });
+    try {
+      // Find the user (gebruiker) to add to the subgroep
+      const gebruiker = await this.gebruikerRepository.findOne({
+        where: { gebruikerID },
+        relations: ['rol'],
+      });
 
-    if (!gebruiker) {
-      throw new Error('Gebruiker not found');
+      if (!gebruiker) {
+        throw new Error(`Gebruiker with ID ${gebruikerID} not found`);
+      }
+
+      // Find the subgroep where the user will be added
+      const subgroep = await this.subgroepRepository.findOne({
+        where: { subgroepID },
+      });
+
+      if (!subgroep) {
+        throw new Error(`Subgroep with ID ${subgroepID} not found`);
+      }
+
+      // Check if the user is already in the subgroep (for other roles)
+      if (gebruiker.subgroep?.subgroepID === subgroepID) {
+        throw new Error(`Gebruiker is already in subgroep ${subgroepID}`);
+      }
+
+      // Set the subgroep for the gebruiker
+      gebruiker.subgroep = subgroep;
+
+      // If the gebruiker is a begeleider (role ID 2), we need to check if there is already a begeleider
+      if (gebruiker.rol?.rolID === 2) {
+        // Check if there's already a begeleider in the subgroep
+        const existingBegeleider = await this.gebruikerRepository.findOne({
+          where: { rol: { rolID: 2 }, subgroep: { subgroepID } },
+        });
+
+        if (existingBegeleider) {
+          throw new Error(`Subgroep ${subgroepID} already has a begeleider.`);
+        }
+
+        // If the gebruiker is a begeleider, update all werknemers to have this begeleider
+        await this.updateWerknemersBegeleider(subgroepID, gebruikerID);
+      }
+
+      // Save the gebruiker after adding to the subgroep
+      const updatedGebruiker = await this.gebruikerRepository.save(gebruiker);
+
+      // If the gebruiker is a werknemer (role ID 3), update the begeleider relationship
+      if (gebruiker.rol?.rolID === 3) {
+        const begeleider = await this.gebruikerRepository.findOne({
+          where: { rol: { rolID: 2 }, subgroep: { subgroepID } },
+        });
+
+        if (begeleider) {
+          gebruiker.begeleider = begeleider;
+          await this.gebruikerRepository.save(gebruiker);
+        }
+      }
+
+      // Return the updated gebruiker
+      return updatedGebruiker;
+    } catch (error) {
+      console.error('Error in addToSubgroep:', error.message, error.stack);
+      throw new Error('Failed to add gebruiker to subgroep.');
     }
-
-    const subgroep = await this.subgroepRepository.findOne({
-      where: { subgroepID },
-    });
-
-    if (!subgroep) {
-      throw new Error('Subgroep not found');
-    }
-
-    // Update subgroep of the gebruiker
-    gebruiker.subgroep = subgroep;
-
-    // If a new begeleider is assigned to the subgroep, update all users' begeleider
-    if (gebruiker.begeleider) {
-      gebruiker.begeleider = gebruiker.begeleider;
-    }
-
-    // Save the gebruiker with the updated subgroep and begeleider
-    await this.gebruikerRepository.save(gebruiker);
-
-    // If it's a werknemer, update all other werknemers' begeleider in the same subgroep
-    if (gebruiker.rol?.rolID === 3) {
-      // Assuming 3 is the ID for werknemers
-      await this.updateWerknemersBegeleider(
-        subgroepID,
-        gebruiker.begeleider.gebruikerID,
-      );
-    }
-
-    return gebruiker;
   }
 
   async updateWerknemersBegeleider(
@@ -161,7 +188,8 @@ export class GebruikerService {
     begeleiderID: number,
   ): Promise<void> {
     const werknemers = await this.gebruikerRepository.find({
-      where: { subgroep: { subgroepID }, rol: { rolID: 3 } }, // Assuming 3 is the ID for werknemers
+      where: { subgroep: { subgroepID }, rol: { rolID: 3 } }, // rolID 3 for werknemers
+      relations: ['begeleider'],
     });
 
     const begeleider = await this.gebruikerRepository.findOne({
@@ -184,6 +212,7 @@ export class GebruikerService {
   ): Promise<Gebruiker> {
     const werknemer = await this.gebruikerRepository.findOne({
       where: { gebruikerID: werknemerID },
+      relations: ['begeleider', 'subgroep', 'rol'],
     });
 
     if (!werknemer) {
