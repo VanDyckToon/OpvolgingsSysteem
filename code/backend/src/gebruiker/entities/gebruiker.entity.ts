@@ -66,9 +66,7 @@ export class Gebruiker {
   )
   opleidingGebruikers: OpleidingGebruiker[];
 
-  @ManyToOne(() => Subgroep, (subgroep) => subgroep.gebruikers, {
-    nullable: true,
-  })
+  @ManyToOne(() => Subgroep, (subgroep) => subgroep.gebruikers, { nullable: true })
   @JoinColumn({ name: 'subgroepID' })
   subgroep: Subgroep;
 
