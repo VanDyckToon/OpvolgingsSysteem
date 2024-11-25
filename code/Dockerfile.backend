@@ -11,7 +11,7 @@ COPY backend/package*.json ./
 RUN npm install
 
 # Copy rest of the application code
-COPY code/backend/ .
+COPY backend/ .
 
 # Build application
 RUN npm run build
