@@ -25,7 +25,9 @@ jobs:
         run: npm install
 
       - name: Build Backend project
-        run: code/backend && npm run build
+        run: |
+          cd code/backend
+          npm run build
 
   # Unit tests for backend
   unit-tests-backend:
@@ -41,10 +43,14 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies for Backend
-        run: cd code/backend && npm install
+        run: |
+          cd code/backend
+          npm install
 
       - name: Run backend unit tests
-        run: cd code/backend && npm run test
+        run: |
+          cd code/backend 
+          npm run test
 
   integration-tests-backend:
     runs-on: ubuntu-latest
@@ -59,10 +65,14 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies for Backend
-        run: cd code/backend && npm install
+        run: |
+          cd code/backend
+          npm install
 
       - name: Run integration tests for Backend
-        run: cd code/backend && npm run test:e2e
+        run: |
+          cd code/backend
+          npm run test:e2e
 
   # Build and Push Backend Docker Image
   publish-backend:
