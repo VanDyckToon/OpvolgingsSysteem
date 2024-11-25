@@ -2,9 +2,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { TestEnvironmentGlobals } from './testEnvironment';
+
+const globals = global as typeof globalThis & TestEnvironmentGlobals;
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
+
+  beforeAll(async () => {
+    process.env.DATABASE_URL = globals.postgresContainer.getConnectionUri();
+  });
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
