@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Groep } from '../../groep/entities/groep.entity';
 import { Gebruiker } from '../../gebruiker/entities/gebruiker.entity';
+import { GebruikerSubgroep } from '../../gebruiker-subgroep/entities/gebruiker-subgroep.entity';
 
 @Entity()
 export class Subgroep {
@@ -23,4 +24,10 @@ export class Subgroep {
 
   @OneToMany(() => Gebruiker, (gebruiker) => gebruiker.subgroep)
   gebruikers: Gebruiker[];
+
+  @OneToMany(
+    () => GebruikerSubgroep,
+    (gebruikerSubgroep) => gebruikerSubgroep.subgroep,
+  )
+  gebruikerSubgroepen: GebruikerSubgroep[];
 }

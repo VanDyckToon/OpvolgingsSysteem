@@ -12,6 +12,7 @@ import { Subgroep } from '../../subgroep/entities/subgroep.entity';
 import { CompetentieGebruiker } from '../../competentie-gebruiker/entities/competentie-gebruiker.entity';
 import { TechnischeCompetentieGebruiker } from '../../technische-competentie-gebruiker/entities/technische-competentie-gebruiker.entity';
 import { Opmerking } from '../../opmerking/entities/opmerking.entity';
+import { GebruikerSubgroep } from '../../gebruiker-subgroep/entities/gebruiker-subgroep.entity';
 
 @Entity()
 export class Gebruiker {
@@ -66,7 +67,9 @@ export class Gebruiker {
   )
   opleidingGebruikers: OpleidingGebruiker[];
 
-  @ManyToOne(() => Subgroep, (subgroep) => subgroep.gebruikers, { nullable: true })
+  @ManyToOne(() => Subgroep, (subgroep) => subgroep.gebruikers, {
+    nullable: true,
+  })
   @JoinColumn({ name: 'subgroepID' })
   subgroep: Subgroep;
 
@@ -97,4 +100,10 @@ export class Gebruiker {
 
   @OneToMany(() => Opmerking, (opmerking) => opmerking.begeleider)
   begeleiderOpmerkingen: Opmerking[];
+
+  @OneToMany(
+    () => GebruikerSubgroep,
+    (gebruikerSubgroep) => gebruikerSubgroep.gebruiker,
+  )
+  gebruikersSubgroep: GebruikerSubgroep[];
 }
