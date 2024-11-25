@@ -9,13 +9,14 @@ class CustomEnvironment extends NodeEnvironment {
 
   async setup(): Promise<void> {
     await super.setup();
-
     this.postgresContainer = await new PostgreSqlContainer().start();
     this.global.postgresContainer = this.postgresContainer;
   }
 
   async teardown(): Promise<void> {
-    await this.postgresContainer.stop();
+    if (this.postgresContainer) {
+      await this.postgresContainer.stop();
+    }
     await super.teardown();
   }
 }
