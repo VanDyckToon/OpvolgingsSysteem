@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { GebruikerSubgroepService } from './gebruiker-subgroep.service';
 import { CreateGebruikerSubgroepDto } from './dto/create-gebruiker-subgroep.dto';
 import { UpdateGebruikerSubgroepDto } from './dto/update-gebruiker-subgroep.dto';
 
 @Controller('gebruiker-subgroep')
 export class GebruikerSubgroepController {
-  constructor(private readonly gebruikerSubgroepService: GebruikerSubgroepService) {}
+  constructor(
+    private readonly gebruikerSubgroepService: GebruikerSubgroepService,
+  ) {}
 
   @Post()
   create(@Body() createGebruikerSubgroepDto: CreateGebruikerSubgroepDto) {
@@ -23,8 +33,14 @@ export class GebruikerSubgroepController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGebruikerSubgroepDto: UpdateGebruikerSubgroepDto) {
-    return this.gebruikerSubgroepService.update(+id, updateGebruikerSubgroepDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateGebruikerSubgroepDto: UpdateGebruikerSubgroepDto,
+  ) {
+    return this.gebruikerSubgroepService.update(
+      +id,
+      updateGebruikerSubgroepDto,
+    );
   }
 
   @Delete(':id')

@@ -11,7 +11,9 @@ describe('GebruikerSubgroepController', () => {
       providers: [GebruikerSubgroepService],
     }).compile();
 
-    controller = module.get<GebruikerSubgroepController>(GebruikerSubgroepController);
+    controller = module.get<GebruikerSubgroepController>(
+      GebruikerSubgroepController,
+    );
   });
 
   it('should be defined', () => {

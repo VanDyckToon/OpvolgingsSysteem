@@ -8,4 +8,7 @@ export class CreateGebruikerSubgroepDto {
 
   @ApiProperty()
   subgroep: Subgroep;
+
+  @ApiProperty()
+  begeleider: Gebruiker;
 }

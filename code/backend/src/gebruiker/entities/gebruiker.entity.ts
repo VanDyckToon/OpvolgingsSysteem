@@ -106,4 +106,10 @@ export class Gebruiker {
     (gebruikerSubgroep) => gebruikerSubgroep.gebruiker,
   )
   gebruikersSubgroep: GebruikerSubgroep[];
+
+  @OneToMany(
+    () => GebruikerSubgroep,
+    (gebruikerSubgroep) => gebruikerSubgroep.begeleider,
+  )
+  begeleidersSubgroep: GebruikerSubgroep[];
 }
