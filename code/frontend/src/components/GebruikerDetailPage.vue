@@ -53,13 +53,13 @@
             <div class="w-1/2">
               <img
                 v-if="gebruiker.foto"
-                :src="`/src/assets/${gebruiker.foto}.jpg`"
+                :src="`/assets/${gebruiker.foto}.jpg`"
                 alt="Profile picture"
                 class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
               />
               <img
                 v-else
-                :src="`/src/assets/no_image_available.jpg`"
+                :src="`/assets/no_image_available.jpg`"
                 alt="No picture available"
                 class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
               />

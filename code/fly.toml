@@ -1,0 +1,23 @@
+app = "desprong"
+
+[build]
+  image = "ghcr.io/thomas-more-digital-innovation/2425-sprong-001-opvolgingssystyeem:frontend-latest" 
+
+[[services]]
+  internal_port = 5173  
+  ports = [{ port = 80 }]
+  protocol = "tcp"
+
+[env]
+  NODE_ENV = "production" 
+
+[[services]]
+  internal_port = 3000  
+  ports = [{ port = 8080 }] 
+  protocol = "tcp"
+  allow_ports = [8080]
+
+[[services]]
+  internal_port = 5432  
+  ports = [{ port = 5432 }]  
+  protocol = "tcp"
