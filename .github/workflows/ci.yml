@@ -96,7 +96,7 @@ jobs:
 
       - name: Build and Push Backend Docker image
         run: |
-          docker build -f code/Dockerfile.backend -t ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):backend-latest ./code
+          docker build -f code/backend/Dockerfile -t ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):backend-latest ./code
           docker push ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):backend-latest
 
   # Build and Push Frontend Docker Image
@@ -119,5 +119,5 @@ jobs:
 
       - name: Build and Push Frontend Docker image
         run: |
-          docker build -f code/Dockerfile.frontend -t ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):frontend-latest ./code
+          docker build -f code/frontend/Dockerfile -t ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):frontend-latest ./code
           docker push ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):frontend-latest
