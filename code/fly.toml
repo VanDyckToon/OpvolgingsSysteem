@@ -1,30 +1,23 @@
 app = "desprong"
 
 [build]
-  # Gebruik de Docker images die door je pipeline zijn gepusht
-  image = "ghcr.io/<your-repo-name>:backend-latest"
+  image = "ghcr.io/thomas-more-digital-innovation/2425-sprong-001-opvolgingssystyeem:frontend-latest" 
 
 [[services]]
-  internal_port = 3000
+  internal_port = 5173  
+  ports = [{ port = 80 }]
   protocol = "tcp"
 
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-
-  [[services.ports]]
-    port = 80
-    handlers = ["http"]
+[env]
+  NODE_ENV = "production" 
 
 [[services]]
-  # Frontend service
-  internal_port = 5173
+  internal_port = 3000  
+  ports = [{ port = 8080 }] 
   protocol = "tcp"
+  allow_ports = [8080]
 
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-
-  [[services.ports]]
-    port = 443
-    handlers = ["tls", "http"]
+[[services]]
+  internal_port = 5432  
+  ports = [{ port = 5432 }]  
+  protocol = "tcp"
