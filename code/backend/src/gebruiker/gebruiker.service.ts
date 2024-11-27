@@ -30,7 +30,11 @@ export class GebruikerService {
     } else {
       data.wachtwoord = null;
       //data.email = null;
+<<<<<<< HEAD
     }
+=======
+    } 
+>>>>>>> b4c0f46a (Gebruiker CRUD)
 
     const gebruiker = await this.gebruikerRepository.save(data);
     return gebruiker;
@@ -39,6 +43,7 @@ export class GebruikerService {
   findAll() {
     return this.gebruikerRepository.find({
       relations: ['rol', 'opleidingGebruikers', 'subgroep', 'begeleider'],
+<<<<<<< HEAD
     });
   }
 
@@ -50,6 +55,8 @@ export class GebruikerService {
           rolID: Not(1),
         },
       },
+=======
+>>>>>>> b4c0f46a (Gebruiker CRUD)
     });
   }
 
