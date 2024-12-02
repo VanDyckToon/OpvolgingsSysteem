@@ -20,6 +20,7 @@ import { CompetentieGebruikerModule } from './competentie-gebruiker/competentie-
 import { TechnischeCompetentieGebruikerModule } from './technische-competentie-gebruiker/technische-competentie-gebruiker.module';
 import { OpmerkingModule } from './opmerking/opmerking.module';
 import { AuthModule } from './auth/auth.module';
+import { GebruikerSubgroepModule } from './gebruiker-subgroep/gebruiker-subgroep.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { AuthModule } from './auth/auth.module';
     TechnischeCompetentieGebruikerModule,
     AuthModule,
     OpmerkingModule,
+    GebruikerSubgroepModule,
   ],
   controllers: [AppController],
   providers: [AppService],

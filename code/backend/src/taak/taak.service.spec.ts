@@ -8,10 +8,7 @@ describe('TaakService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        TaakService,
-        { provide: getRepositoryToken(Taak), useValue: {} },
-      ],
+      providers: [TaakService, { provide: TaakService, useValue: {} }],
     }).compile();
 
     service = module.get<TaakService>(TaakService);
