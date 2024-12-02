@@ -18,6 +18,7 @@ import Competentie from '@/components/Competentie.vue'
 import TechnischeCompetentie from '@/components/TechnischeCompetentie.vue'
 import Gebruiker from '@/components/Gebruiker.vue'
 import OpleidingGebruikerPage from '@/components/OpleidingGebruikerPage.vue'
+import Detail from '@/components/Detail.vue'
 
 
 const routes = [
@@ -110,6 +111,11 @@ const routes = [
     path: '/gebruiker',
     name: 'Gebruiker',
     component: Gebruiker,
+  },
+  {
+    path: '/gebruikerinfo/:id',
+    name: 'Detail',
+    component: Detail,
   },
 ]
 

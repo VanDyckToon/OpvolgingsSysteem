@@ -26,6 +26,15 @@
           />
         </router-link>
 
+        <router-link :to="`/gebruikerinfo/${gebruikerID}`">
+          <!-- Use :to binding -->
+          <img
+            src="../assets/gebruiker-info.svg"
+            alt="home"
+            class="h-9 w-auto object-contain color-[#101234]"
+          />
+        </router-link>
+
         <button>
           <img
             src="../assets/exit.svg"

@@ -1,16 +1,19 @@
 import {
   Controller,
+  Req,
   Get,
   Post,
   Body,
   Patch,
   Param,
   Delete,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { GebruikerService } from './gebruiker.service';
 import { CreateGebruikerDto } from './dto/create-gebruikers.dto';
 import { UpdateGebruikerDto } from './dto/update-gebruiker.dto';
 import { Gebruiker } from './entities/gebruiker.entity';
+import * as bcrypt from 'bcrypt';
 
 @Controller('gebruiker')
 export class GebruikerController {
@@ -118,5 +121,48 @@ export class GebruikerController {
       begeleiderID,
     );
     return werknemer;
+  }
+
+  //wachtwoord verificatie
+  @Post('wachtwoord')
+  async wachtwoord(
+    @Body() body: { wachtwoord: string; gebruikerID: number },  // Expect wachtwoord and gebruikerID in body
+  ) {
+    console.log('Received request to verify password');
+    console.log('Request Body:', body);  // Log the body to check received values
+
+    const { wachtwoord, gebruikerID } = body;
+
+    if (!gebruikerID) {
+      console.log('No gebruikerID provided');
+      throw new UnauthorizedException('No gebruikerID provided');
+    }
+
+    // Find the gebruiker by gebruikerID
+    const gebruiker = await this.gebruikerService.findById(gebruikerID);
+    if (!gebruiker) {
+      console.log('User not found');
+      throw new UnauthorizedException('Gebruiker niet gevonden');
+    }
+
+    console.log('User found:', gebruiker);  // Log the found gebruiker
+
+    // Compare the provided password with the stored hashed password
+    const isMatch = await bcrypt.compare(wachtwoord, gebruiker.wachtwoord);
+    if (isMatch) {
+      console.log('Password match');
+      return { valid: true };  // Password is correct
+    } else {
+      console.log('Incorrect password');
+      throw new UnauthorizedException('Wachtwoord is onjuist');
+    }
+  }
+
+  @Patch(':gebruikerID/wachtwoord')
+  async updateWachtwoord(
+    @Param('gebruikerID') gebruikerID: number,
+    @Body('wachtwoord') nieuwWachtwoord: string,
+  ) {
+    return this.gebruikerService.updateWachtwoord(gebruikerID, nieuwWachtwoord);
   }
 }

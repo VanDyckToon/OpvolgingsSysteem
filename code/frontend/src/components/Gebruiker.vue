@@ -6,12 +6,10 @@
         <h1 class="text-[#104116] text-4xl font-extrabold pt-4 mb-6">
           Gebruikers Beheren
         </h1>
-        <button
-        @click="openCreateModal()"
-            class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline"
-          >
+        <button @click="openCreateModal()"
+            class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline">
             Gebruiker Toevoegen
-          </button>
+        </button>
       </div>
       <div class="col-span-1"></div>
 
@@ -334,13 +332,26 @@
           Gebruikers
         </h2>
 
+        <!-- Filter knop -->
+        <div class="mb-4 flex items-center justify-between">
+        <select
+          v-model="selectedRoleFilter"
+          class="w-1/3 p-2 border-2 border-gray-500 bg-gray-100 rounded"
+        >
+          <option value="">-- Filter op rol --</option>
+          <option v-for="rol in rolen" :key="rol.rolID" :value="rol.rolID">
+            {{ rol.naam }}
+          </option>
+        </select>
+      </div>
+
         <!-- Search Input -->
         <div class="mb-4">
           <input
             type="text"
             v-model="searchQuery"
             placeholder="Zoek gebruikers..."
-            class="w-full p-2 border border-gray-300 rounded"
+            class="w-full p-2 border-2 border-gray-500 bg-gray-100 rounded"
           />
         </div>
 
@@ -363,8 +374,9 @@
               </div>
             </div>
             <div class="flex space-x-4">
-              <Icon
-                icon="material-symbols:edit"
+              <img
+                src="../assets/edit.svg"
+                alt="edit"
                 class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                 @click="
                   openEditModal(
@@ -387,8 +399,9 @@
                   )
                 "
               />
-              <Icon
-                icon="mynaui:trash-solid"
+              <img
+                src="../assets/delete.svg"
+                alt="delete"
                 class="text-[#c9184a] hover:text-[#800f2f] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                 @click="
                   openDeleteModal(
@@ -856,6 +869,7 @@ export default defineComponent({
       editedBegeleiderID: 0,
       editedSubgroepID: 0,
       searchQuery: '',
+      selectedRoleFilter: '',
     }
   },
   async mounted() {
@@ -875,6 +889,17 @@ export default defineComponent({
         return fullName.includes(this.searchQuery.toLowerCase()) // Filter by name
       })
     },
+    filteredGebruikers() {
+    return this.gebruikers.filter((gebruiker) => {
+      const fullName = `${gebruiker.voornaam} ${gebruiker.achternaam}`.toLowerCase();
+      const nameMatches = fullName.includes(this.searchQuery.toLowerCase());
+
+      const roleMatches =
+        !this.selectedRoleFilter || gebruiker.rol.rolID == this.selectedRoleFilter;
+
+      return nameMatches && roleMatches; // Filter by both name and role
+    });
+  },
   },
   methods: {
     openDeleteModal(gebruikerID: number, voornaam: string, achternaam: string) {
@@ -951,12 +976,10 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get('http://localhost:3000/gebruiker', {
-          // Use the correct endpoint
           headers: { Authorization: `Bearer ${token}` },
         })
-        this.gebruikers = response.data // Get all users
+        this.gebruikers = response.data
 
-        // Ensure rolen is populated after fetching users
         const rolesResponse = await axios.get('http://localhost:3000/rol', {
           headers: { Authorization: `Bearer ${token}` },
         })

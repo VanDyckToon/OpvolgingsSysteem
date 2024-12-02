@@ -97,12 +97,32 @@
         <h2 class="text-3xl font-bold mb-6 text-center text-[#456A50]">
           Technische Competenties
         </h2>
+
+        <!-- Filter knop -->
+        <div class="mb-4 flex items-center justify-between">
+        <select
+          v-model="selectedGroepFilter"
+          class="w-1/3 p-2 border-2 border-gray-500 bg-gray-100 rounded"
+        >
+          <option value="">-- Filter op groep --</option>
+          <option v-for="groep in groepen" :key="groep.groepID" :value="groep.groepID">
+            {{ groep.naam }}
+          </option>
+        </select>
+      </div>
+      <div class="max-h-80 overflow-y-auto [&::-webkit-scrollbar]:w-2
+  [&::-webkit-scrollbar-track]:rounded-full
+  [&::-webkit-scrollbar-track]:bg-gray-100
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-[#456A50]
+  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
         <ul
-          v-if="technischeCompetenties.length"
+          v-if="filteredTechnischeCompetenties.length"
           class="divide-y divide-gray-200"
         >
           <li
-            v-for="technischeCompetentie in technischeCompetenties"
+            v-for="technischeCompetentie in filteredTechnischeCompetenties"
             :key="technischeCompetentie.technischeCompetentieID"
             class="py-4 flex items-center justify-between"
           >
@@ -123,8 +143,9 @@
               </div>
             </div>
             <div class="flex space-x-4">
-              <Icon
-                icon="material-symbols:edit"
+              <img
+                src="../assets/edit.svg"
+                alt="edit"
                 class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                 @click="
                   openEditModal(
@@ -136,8 +157,9 @@
                   )
                 "
               />
-              <Icon
-                icon="mynaui:trash-solid"
+              <img
+                src="../assets/delete.svg"
+                alt="delete"
                 class="text-[#c9184a] hover:text-[#800f2f] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                 @click="
                   openDeleteModal(
@@ -151,6 +173,7 @@
         </ul>
         <p v-else class="text-center text-gray-500">Geen taken gevonden</p>
       </div>
+    </div>
     </div>
 
     <!-- Modal component for editing the taak -->
@@ -328,6 +351,8 @@ export default defineComponent({
       editedBeschrijving: '',
       editedTaakID: 0,
       editedGroepID: 0,
+      selectedGroepFilter: '',
+      searchQuery: '',
     }
   },
   async mounted() {
@@ -351,6 +376,20 @@ export default defineComponent({
         this.filterTaken()
       }
     },
+  },
+
+  computed: {
+    filteredTechnischeCompetenties() {
+    return this.technischeCompetenties.filter((technischeCompetentie) => {
+      const fullName = `${technischeCompetentie.naam}`.toLowerCase();
+      const nameMatches = fullName.includes(this.searchQuery.toLowerCase());
+
+      const groepMatches =
+        !this.selectedGroepFilter || technischeCompetentie.taak?.groep?.groepID == this.selectedGroepFilter;
+
+      return nameMatches && groepMatches;
+    });
+  },
   },
 
   methods: {

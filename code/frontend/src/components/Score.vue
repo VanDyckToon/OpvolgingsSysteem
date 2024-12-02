@@ -73,6 +73,13 @@
         <h2 class="text-3xl font-bold mb-6 text-center text-[#456A50]">
           Scores
         </h2>
+        <div class="max-h-80 overflow-y-auto [&::-webkit-scrollbar]:w-2
+  [&::-webkit-scrollbar-track]:rounded-full
+  [&::-webkit-scrollbar-track]:bg-gray-100
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-[#456A50]
+  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
         <ul v-if="scores.length" class="divide-y divide-gray-200">
           <li
             v-for="score in scores"
@@ -87,8 +94,9 @@
               <div class="font-bold">Waarde: {{ score.waarde }}</div>
             </div>
             <div class="flex space-x-4">
-              <Icon
-                icon="material-symbols:edit"
+              <img
+                src="../assets/edit.svg"
+                alt="edit"
                 class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                 @click="
                   openEditModal(
@@ -99,8 +107,9 @@
                   )
                 "
               />
-              <Icon
-                icon="mynaui:trash-solid"
+              <img
+                src="../assets/delete.svg"
+                alt="delete"
                 class="text-[#c9184a] hover:text-[#800f2f] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                 @click="openDeleteModal(score.scoreID, score.scoreNaam)"
               />
@@ -109,6 +118,7 @@
         </ul>
         <p v-else class="text-center text-gray-500">Geen scores gevonden</p>
       </div>
+    </div>
     </div>
 
     <!-- Modal component for editing scores -->

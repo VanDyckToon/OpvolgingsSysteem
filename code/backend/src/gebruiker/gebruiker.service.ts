@@ -175,6 +175,11 @@ export class GebruikerService {
     }
   }
 
+    //voorwachtwoorden aan te passen
+  async findById(gebruikerID: number): Promise<Gebruiker> {
+    return this.gebruikerRepository.findOne({ where: { gebruikerID } });
+  }
+
   async assignBegeleiderToWerknemer(
     werknemerID: number,
     begeleiderID: number,
@@ -199,4 +204,22 @@ export class GebruikerService {
     werknemer.begeleider = begeleider;
     return this.gebruikerRepository.save(werknemer);
   }
+
+  async updateWachtwoord(gebruikerID: number, nieuwWachtwoord: string): Promise<void> {
+    if (!nieuwWachtwoord || typeof nieuwWachtwoord !== 'string') {
+      throw new Error('A valid password is required');
+    }
+  
+    const gebruiker = await this.gebruikerRepository.findOne({ where: { gebruikerID } });
+    if (!gebruiker) {
+      throw new Error('Gebruiker not found');
+    }
+  
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(nieuwWachtwoord, saltRounds);  // Ensure nieuwWachtwoord is valid
+  
+    gebruiker.wachtwoord = hashedPassword;
+    await this.gebruikerRepository.save(gebruiker);
+  }
+  
 }

@@ -93,6 +93,13 @@
         <h2 class="text-3xl font-bold mb-6 text-center text-[#456A50]">
           Opleidingen
         </h2>
+        <div class="max-h-80 overflow-y-auto [&::-webkit-scrollbar]:w-2
+  [&::-webkit-scrollbar-track]:rounded-full
+  [&::-webkit-scrollbar-track]:bg-gray-100
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-[#456A50]
+  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
         <ul v-if="opleidingen.length" class="divide-y divide-gray-200">
           <li
             v-for="opleiding in opleidingen"
@@ -127,8 +134,9 @@
                 />
               </button>
 
-              <Icon
-                icon="material-symbols:edit"
+              <img
+                src="../assets/edit.svg"
+                alt="edit"
                 class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                 @click="
                   openEditModal(
@@ -140,8 +148,9 @@
                   )
                 "
               />
-              <Icon
-                icon="mynaui:trash-solid"
+              <img
+                src="../assets/delete.svg"
+                alt="delete"
                 class="text-[#c9184a] hover:text-[#800f2f] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                 @click="openDeleteModal(opleiding.opleidingID, opleiding.naam)"
               />
@@ -152,6 +161,7 @@
           Geen opleidingen gevonden
         </p>
       </div>
+    </div>
     </div>
 
     <!-- Modal for User Overview -->
