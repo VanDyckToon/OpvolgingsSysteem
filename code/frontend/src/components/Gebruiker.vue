@@ -6,11 +6,9 @@
         <h1 class="text-[#104116] text-4xl font-extrabold pt-4 mb-6">
           Gebruikers Beheren
         </h1>
-        <button
-          @click="openCreateModal()"
-          class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline"
-        >
-          Gebruiker Toevoegen
+        <button @click="openCreateModal()"
+            class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline">
+            Gebruiker Toevoegen
         </button>
       </div>
       <div class="col-span-1"></div>
@@ -744,7 +742,6 @@
 <script lang="ts">
 import axios from 'axios'
 import { defineComponent } from 'vue'
-import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
 interface RequestData {
@@ -799,7 +796,6 @@ interface Gebruiker {
 export default defineComponent({
   name: 'Gebruiker',
   components: {
-    Icon,
     HeaderComponent,
   },
   data() {
@@ -847,6 +843,7 @@ export default defineComponent({
       editedBegeleiderID: 0,
       editedSubgroepID: 0,
       searchQuery: '',
+      selectedRoleFilter: 0,
     }
   },
   async mounted() {
@@ -860,12 +857,16 @@ export default defineComponent({
       return this.gebruikers.filter(gebruiker => gebruiker.rol.rolID === 2)
     },
     filteredGebruikers() {
-      return this.gebruikers.filter(gebruiker => {
-        const fullName =
-          `${gebruiker.voornaam} ${gebruiker.achternaam}`.toLowerCase()
-        return fullName.includes(this.searchQuery.toLowerCase()) // Filter by name
-      })
-    },
+    return this.gebruikers.filter((gebruiker) => {
+      const fullName = `${gebruiker.voornaam} ${gebruiker.achternaam}`.toLowerCase();
+      const nameMatches = fullName.includes(this.searchQuery.toLowerCase());
+
+      const roleMatches =
+        !this.selectedRoleFilter || gebruiker.rol.rolID == this.selectedRoleFilter;
+
+      return nameMatches && roleMatches; // Filter by both name and role
+    });
+  },
   },
   methods: {
     openDeleteModal(gebruikerID: number, voornaam: string, achternaam: string) {
@@ -942,12 +943,10 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get('http://localhost:3000/gebruiker', {
-          // Use the correct endpoint
           headers: { Authorization: `Bearer ${token}` },
         })
-        this.gebruikers = response.data // Get all users
+        this.gebruikers = response.data
 
-        // Ensure rolen is populated after fetching users
         const rolesResponse = await axios.get('http://localhost:3000/rol', {
           headers: { Authorization: `Bearer ${token}` },
         })

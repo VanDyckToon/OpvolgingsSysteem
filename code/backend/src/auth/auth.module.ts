@@ -5,6 +5,7 @@ import { GebruikerModule } from '../gebruiker/gebruiker.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { Gebruiker } from '../gebruiker/entities/gebruiker.entity';
+import { JwtStrategy } from './jwt.strategy'; 
 import { AuthGuard } from './auth.guard';
 
 @Module({
@@ -20,6 +21,8 @@ import { AuthGuard } from './auth.guard';
   providers: [
     AuthService,
     Gebruiker,
+    JwtStrategy,
+    AuthGuard, 
     //{ provide: 'APP_GUARD', useClass: AuthGuard },
   ],
   exports: [AuthService],
