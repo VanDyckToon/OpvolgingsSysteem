@@ -21,6 +21,8 @@ import { TechnischeCompetentieGebruikerModule } from './technische-competentie-g
 import { OpmerkingModule } from './opmerking/opmerking.module';
 import { AuthModule } from './auth/auth.module';
 import { GebruikerSubgroepModule } from './gebruiker-subgroep/gebruiker-subgroep.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -33,6 +35,9 @@ import { GebruikerSubgroepModule } from './gebruiker-subgroep/gebruiker-subgroep
         synchronize: false,
       }),
       inject: [ConfigService],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'frontend', 'dist'),
     }),
     RolModule,
     CompetentieModule,
