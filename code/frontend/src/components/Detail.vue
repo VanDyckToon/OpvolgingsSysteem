@@ -50,7 +50,7 @@
             <div class="flex justify-center space-x-4 mt-8">
             <div>
                 <button
-            @click="openWachtwoordModal()"
+            @click="openWachtwoordModal(gebruiker.gebruikerID, gebruiker.wachtwoord)"
             class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline"
           >
             Wachtwoord aanpassen
@@ -58,7 +58,8 @@
             </div>
             <div class="right-0">
                 <button
-            @click="openEmailModal()"
+            @click="openEmailModal(gebruiker.gebruikerID, gebruiker.wachtwoord)
+            "
             class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline"
           >
             E-mail aanpassen
@@ -100,7 +101,7 @@
             Annuleer
           </button>
           <button
-            @click="openWachtwoordAanpassenModal(editedWachtwoord,)"
+            @click="openWachtwoordAanpassenModal()"
             class="bg-[#456A50] hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white px-4 py-2 rounded"
           >
             Bevestigen
@@ -191,7 +192,7 @@
                     Annuleer
                 </button>
                 <button
-                    @click="openEmailAanpassenModal(editedWachtwoord)"
+                    @click="openEmailAanpassenModal()"
                     class="bg-[#456A50] hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white px-4 py-2 rounded"
                 >
                     Bevestigen
@@ -258,8 +259,7 @@
   import axios from 'axios'
   import { defineComponent } from 'vue'
   import HeaderComponent from '../components/Header.vue'
-  import { jwtDecode } from 'jwt-decode'
-  
+
   interface Gebruiker {
     gebruikerID: number
     voornaam: string
@@ -274,6 +274,7 @@
     foto: string
     telefoonnummer: string
     extraOpmerking: string
+    wachtwoord: string
   }
   
   export default defineComponent({

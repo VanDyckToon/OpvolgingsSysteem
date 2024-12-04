@@ -766,7 +766,6 @@
 <script lang="ts">
 import axios from 'axios'
 import { defineComponent } from 'vue'
-import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
 interface RequestData {
@@ -821,7 +820,6 @@ interface Gebruiker {
 export default defineComponent({
   name: 'Gebruiker',
   components: {
-    Icon,
     HeaderComponent,
   },
   data() {
@@ -869,7 +867,7 @@ export default defineComponent({
       editedBegeleiderID: 0,
       editedSubgroepID: 0,
       searchQuery: '',
-      selectedRoleFilter: '',
+      selectedRoleFilter: 0,
     }
   },
   async mounted() {
@@ -881,13 +879,6 @@ export default defineComponent({
   computed: {
     filteredBegeleiders() {
       return this.gebruikers.filter(gebruiker => gebruiker.rol.rolID === 2)
-    },
-    filteredGebruikers() {
-      return this.gebruikers.filter(gebruiker => {
-        const fullName =
-          `${gebruiker.voornaam} ${gebruiker.achternaam}`.toLowerCase()
-        return fullName.includes(this.searchQuery.toLowerCase()) // Filter by name
-      })
     },
     filteredGebruikers() {
     return this.gebruikers.filter((gebruiker) => {

@@ -305,7 +305,6 @@
 <script lang="ts">
 import axios from 'axios'
 import { defineComponent } from 'vue'
-import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
 interface Groep {
@@ -330,7 +329,6 @@ interface TechnischeCompetentie {
 export default defineComponent({
   name: 'TechnischeCompetentie',
   components: {
-    Icon,
     HeaderComponent,
   },
   data() {
@@ -351,7 +349,7 @@ export default defineComponent({
       editedBeschrijving: '',
       editedTaakID: 0,
       editedGroepID: 0,
-      selectedGroepFilter: '',
+      selectedGroepFilter: 0,
       searchQuery: '',
     }
   },
@@ -524,7 +522,6 @@ export default defineComponent({
 
     async confirmDelete() {
       try {
-        const token = localStorage.getItem('access_token')
         await this.deleteTechnischeCompetentie(
           this.selectedTechnischeCompetentieID,
         )
