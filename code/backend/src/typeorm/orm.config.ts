@@ -15,6 +15,7 @@ import { OpleidingGebruiker } from '../opleiding-gebruiker/entities/opleiding-ge
 import { CompetentieGebruiker } from '../competentie-gebruiker/entities/competentie-gebruiker.entity';
 import { TechnischeCompetentieGebruiker } from '../technische-competentie-gebruiker/entities/technische-competentie-gebruiker.entity';
 import { Opmerking } from '../opmerking/entities/opmerking.entity';
+import { GebruikerSubgroep } from '../gebruiker-subgroep/entities/gebruiker-subgroep.entity';
 
 export const ormConfig = {
   type: 'postgres',
@@ -34,6 +35,7 @@ export const ormConfig = {
     CompetentieGebruiker,
     TechnischeCompetentieGebruiker,
     Opmerking,
+    GebruikerSubgroep,
   ],
   migrations: [join(__dirname, '../migrations/**/*.{ts,js}')],
   synchronize: false,

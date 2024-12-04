@@ -441,7 +441,7 @@ interface Gebruiker {
   foto: string
   rol: {
     rolID: number
-    rolNaam: string
+    naam: string
   }
   subgroep: {
     subgroepID: number
@@ -670,8 +670,8 @@ export default defineComponent({
       this.isUserOverviewModalVisible = true
     },
     async addGebruikerToSubgroep() {
-      console.log('Adding gebruiker with ID:', this.selectedGebruikerID)
       if (this.selectedGebruikerID && this.selectedSubgroepID) {
+        await this.fetchGebruikers(this.selectedSubgroepID)
         const geselecteerdeGebruiker =
           this.begeleiders.find(
             b => b.gebruikerID === this.selectedGebruikerID,
@@ -699,9 +699,9 @@ export default defineComponent({
           if (!token) throw new Error('Geen toegang tot API')
 
           if (isBegeleider) {
-            await this.addBegeleiderToSubgroep(geselecteerdeGebruiker, token)
+            await this.addBegeleiderToSubgroep(geselecteerdeGebruiker)
           } else {
-            await this.addWerknemerToSubgroep(geselecteerdeGebruiker, token)
+            await this.addWerknemerToSubgroep(geselecteerdeGebruiker)
           }
 
           // Ververs de gebruikerslijst
@@ -721,7 +721,7 @@ export default defineComponent({
           gebruiker.subgroep?.subgroepID === subgroepID,
       )
     },
-    async addBegeleiderToSubgroep(begeleider: Gebruiker, token: string) {
+    async addBegeleiderToSubgroep(begeleider: Gebruiker) {
       const hasBegeleider = this.gebruikers.some(
         gebruiker =>
           gebruiker.rol?.rolID === 2 &&
@@ -732,7 +732,7 @@ export default defineComponent({
         alert('Er kan slechts één begeleider in een subgroep zitten.')
         return
       }
-
+      const token = localStorage.getItem('access_token')
       const response = await axios.patch(
         `http://localhost:3000/gebruiker/${begeleider.gebruikerID}/addToSubgroep/${this.selectedSubgroepID}`,
         {},
@@ -747,6 +747,7 @@ export default defineComponent({
       )
 
       for (const werknemer of werknemersInSubgroep) {
+        const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/gebruiker/${werknemer.gebruikerID}`,
           { begeleider: { gebruikerID: begeleider.gebruikerID } },
@@ -754,7 +755,8 @@ export default defineComponent({
         )
       }
     },
-    async addWerknemerToSubgroep(werknemer: Gebruiker, token: string) {
+    async addWerknemerToSubgroep(werknemer: Gebruiker) {
+      const token = localStorage.getItem('access_token')
       const response = await axios.patch(
         `http://localhost:3000/gebruiker/${werknemer.gebruikerID}/addToSubgroep/${this.selectedSubgroepID}`,
         {},
@@ -771,6 +773,7 @@ export default defineComponent({
       )
 
       if (begeleiderInSubgroep) {
+        const token = localStorage.getItem('access_token')
         await axios.patch(
           `http://localhost:3000/gebruiker/${werknemer.gebruikerID}`,
           { begeleider: { gebruikerID: begeleiderInSubgroep.gebruikerID } },

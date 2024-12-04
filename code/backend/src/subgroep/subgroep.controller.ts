@@ -50,6 +50,4 @@ export class SubgroepController {
   ): Promise<Gebruiker[]> {
     return this.subgroepService.getGebruikersBySubgroep(subgroepID);
   }
-
-  
 }
