@@ -5,7 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   OneToMany,
-  JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { OpleidingGebruiker } from '../../opleiding-gebruiker/entities/opleiding-gebruiker.entity';
 import { Subgroep } from '../../subgroep/entities/subgroep.entity';
@@ -70,17 +71,21 @@ export class Gebruiker {
   @ManyToOne(() => Subgroep, (subgroep) => subgroep.gebruikers, {
     nullable: true,
   })
-  @JoinColumn({ name: 'subgroepID' })
   subgroep: Subgroep;
 
-  @ManyToOne(() => Gebruiker, (begeleider) => begeleider.gebruikers, {
-    nullable: true,
+  @ManyToMany(() => Gebruiker, (gebruiker) => gebruiker.begeleid)
+  @JoinTable({
+    name: 'gebruikers_begeleiders',
+    joinColumn: { name: 'gebruikerID', referencedColumnName: 'gebruikerID' },
+    inverseJoinColumn: {
+      name: 'begeleiderID',
+      referencedColumnName: 'gebruikerID',
+    },
   })
-  @JoinColumn({ name: 'begeleiderID' })
-  begeleider: Gebruiker;
+  begeleiders: Gebruiker[];
 
-  @OneToMany(() => Gebruiker, (gebruiker) => gebruiker.begeleider)
-  gebruikers: Gebruiker[];
+  @ManyToMany(() => Gebruiker, (begeleider) => begeleider.begeleiders)
+  begeleid: Gebruiker[];
 
   @OneToMany(
     () => CompetentieGebruiker,
@@ -106,10 +111,4 @@ export class Gebruiker {
     (gebruikerSubgroep) => gebruikerSubgroep.gebruiker,
   )
   gebruikersSubgroep: GebruikerSubgroep[];
-
-  @OneToMany(
-    () => GebruikerSubgroep,
-    (gebruikerSubgroep) => gebruikerSubgroep.begeleider,
-  )
-  begeleidersSubgroep: GebruikerSubgroep[];
 }
