@@ -5,13 +5,13 @@ FROM node:20-slim AS build
 WORKDIR /app
 
 # Copy the package.json and package-lock.json (or yarn.lock)
-COPY package*.json ./
+COPY frontend/package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the application files
-COPY . .
+COPY frontend/ ./
 
 # Build the frontend application
 RUN npm run build
