@@ -330,8 +330,9 @@
                 </div>
               </div>
               <div class="flex space-x-4">
-                <Icon
-                  icon="material-symbols:edit"
+                <img
+                  src="../assets/edit.svg"
+                  alt="edit"
                   class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                   @click="
                     openEditModal(
@@ -354,8 +355,9 @@
                     )
                   "
                 />
-                <Icon
-                  icon="mynaui:trash-solid"
+                <img
+                  src="../assets/delete.svg"
+                  alt="delete"
                   class="text-[#c9184a] hover:text-[#800f2f] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                   @click="
                     openDeleteModal(
