@@ -705,7 +705,8 @@ export default defineComponent({
 
         // Adjust how you're accessing gebruikerID to ensure correct comparison
         const isGebruikerAlreadyInSubgroep = response.data.some(
-          entry => entry.gebruiker.gebruikerID === this.selectedGebruikerID,
+          (entry: { gebruiker: { gebruikerID: number } }) =>
+            entry.gebruiker.gebruikerID === this.selectedGebruikerID,
         )
 
         if (!isGebruikerAlreadyInSubgroep) {
