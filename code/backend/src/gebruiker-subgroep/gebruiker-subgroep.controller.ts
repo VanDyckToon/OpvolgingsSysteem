@@ -47,4 +47,19 @@ export class GebruikerSubgroepController {
   remove(@Param('id') id: string) {
     return this.gebruikerSubgroepService.remove(+id);
   }
+
+  @Get('/gebruikers/:subgroepID')
+  getGebruikersBySubgroep(@Param('subgroepID') subgroepID: number) {
+    return this.gebruikerSubgroepService.getGebruikersBySubgroep(subgroepID);
+  }
+
+  @Delete('/gebruikers/:gebruikerID/:subgroepID') removeGebruikerFromSubgroep(
+    @Param('gebruikerID') gebruikerID: number,
+    @Param('subgroepID') subgroepID: number,
+  ) {
+    return this.gebruikerSubgroepService.removeGebruikerFromSubgroep(
+      gebruikerID,
+      subgroepID,
+    );
+  }
 }

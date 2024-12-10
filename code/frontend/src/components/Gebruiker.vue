@@ -6,9 +6,11 @@
         <h1 class="text-[#104116] text-4xl font-extrabold pt-4 mb-6">
           Gebruikers Beheren
         </h1>
-        <button @click="openCreateModal()"
-            class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline">
-            Gebruiker Toevoegen
+        <button
+          @click="openCreateModal()"
+          class="bg-[#456A50] rounded-s-full rounded-r-full shadow-xl hover:bg-[#104116] hover:ease-in-out hover:duration-500 text-white text-center font-bold py-2 px-12 rounded focus:outline-none focus:shadow-outline"
+        >
+          Gebruiker Toevoegen
         </button>
       </div>
       <div class="col-span-1"></div>
@@ -140,30 +142,6 @@
                     placeholder="Vul hier het wachtwoord in"
                     required
                   />
-                  <label
-                    v-if="selectedRolID && isWerknemer(selectedRolID)"
-                    class="block text-[#456A50] text-xl font-bold mb-2 py-1 mt-2"
-                    for="begeleiderName"
-                  >
-                    Selecteer een begeleider:
-                  </label>
-                  <select
-                    v-if="selectedRolID && isWerknemer(selectedRolID)"
-                    v-model="selectedBegeleiderID"
-                    class="rounded-s-full rounded-r-full shadow border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200 w-11/12"
-                    required
-                  >
-                    <option disabled selected value="">
-                      Selecteer een begeleider
-                    </option>
-                    <option
-                      v-for="begeleider in filteredBegeleiders"
-                      :key="begeleider.gebruikerID"
-                      :value="begeleider.gebruikerID"
-                    >
-                      {{ begeleider.voornaam }} {{ begeleider.achternaam }}
-                    </option>
-                  </select>
                 </div>
                 <div>
                   <label
@@ -352,8 +330,9 @@
                 </div>
               </div>
               <div class="flex space-x-4">
-                <Icon
-                  icon="material-symbols:edit"
+                <img
+                  src="../assets/edit.svg"
+                  alt="edit"
                   class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                   @click="
                     openEditModal(
@@ -376,8 +355,9 @@
                     )
                   "
                 />
-                <Icon
-                  icon="mynaui:trash-solid"
+                <img
+                  src="../assets/delete.svg"
+                  alt="delete"
                   class="text-[#c9184a] hover:text-[#800f2f] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
                   @click="
                     openDeleteModal(
@@ -816,13 +796,13 @@ export default defineComponent({
       ICENaam: '',
       ICETelefoonnummer: '',
       extraOpmerking: '',
-      begeleiderID: 0,
+
       isEditModalVisible: false,
       isCreateModalVisible: false,
       isDeleteModalVisible: false,
       selectedGebruikerID: 0,
       selectedRolID: 0,
-      selectedBegeleiderID: 0,
+
       selectedSubgroepID: 0,
       selectedVoornaam: '',
       selectedGebruikerVoornaam: '',
@@ -840,7 +820,7 @@ export default defineComponent({
       editedICETelefoonnummer: '',
       editedExtraOpmerking: '',
       editedRolID: 0,
-      editedBegeleiderID: 0,
+
       editedSubgroepID: 0,
       searchQuery: '',
       selectedRoleFilter: 0,
@@ -857,16 +837,18 @@ export default defineComponent({
       return this.gebruikers.filter(gebruiker => gebruiker.rol.rolID === 2)
     },
     filteredGebruikers() {
-    return this.gebruikers.filter((gebruiker) => {
-      const fullName = `${gebruiker.voornaam} ${gebruiker.achternaam}`.toLowerCase();
-      const nameMatches = fullName.includes(this.searchQuery.toLowerCase());
+      return this.gebruikers.filter(gebruiker => {
+        const fullName =
+          `${gebruiker.voornaam} ${gebruiker.achternaam}`.toLowerCase()
+        const nameMatches = fullName.includes(this.searchQuery.toLowerCase())
 
-      const roleMatches =
-        !this.selectedRoleFilter || gebruiker.rol.rolID == this.selectedRoleFilter;
+        const roleMatches =
+          !this.selectedRoleFilter ||
+          gebruiker.rol.rolID == this.selectedRoleFilter
 
-      return nameMatches && roleMatches; // Filter by both name and role
-    });
-  },
+        return nameMatches && roleMatches // Filter by both name and role
+      })
+    },
   },
   methods: {
     openDeleteModal(gebruikerID: number, voornaam: string, achternaam: string) {
@@ -992,15 +974,6 @@ export default defineComponent({
           subgroep: { subgroepID: this.selectedSubgroepID },
         }
 
-        // If the role is 'Werknemer' (Employee), include the begeleider (supervisor)
-        if (this.isWerknemer(this.selectedRolID)) {
-          if (this.selectedBegeleiderID) {
-            requestData.begeleider = { gebruikerID: this.selectedBegeleiderID }
-          } else {
-            console.error('Begeleider is required for Werknemer')
-            return
-          }
-        }
         // Make the API request to add the gebruiker
         const response = await axios.post(
           'http://localhost:3000/gebruiker',
@@ -1009,7 +982,59 @@ export default defineComponent({
             headers: { Authorization: `Bearer ${token}` },
           },
         )
-
+        await axios.post(
+          'http://localhost:3000/gebruiker-subgroep',
+          {
+            gebruiker: { gebruikerID: response.data.gebruikerID },
+            subgroep: { subgroepID: this.selectedSubgroepID },
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        )
+        const gebruikersInSubgroep = await axios.get(
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { subgroepID: this.selectedSubgroepID },
+          },
+        )
+        if (requestData.rol.rolID === 3) {
+          await axios.get(
+            `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+              params: { subgroepID: this.selectedSubgroepID },
+            },
+          )
+          for (const gebruiker of gebruikersInSubgroep.data) {
+            if (gebruiker.gebruiker.rol.rolID === 2) {
+              await axios.post(
+                `http://localhost:3000/gebruiker/${response.data.gebruikerID}/begeleiders/${gebruiker.gebruiker.gebruikerID}`, // Gebruik selectedGebruikerID
+                {},
+                { headers: { Authorization: `Bearer ${token}` } },
+              )
+            }
+          }
+        }
+        if (requestData.rol.rolID === 2) {
+          await axios.get(
+            `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+              params: { subgroepID: this.selectedSubgroepID },
+            },
+          )
+          for (const gebruiker of gebruikersInSubgroep.data) {
+            if (gebruiker.gebruiker.rol.rolID === 3) {
+              await axios.post(
+                `http://localhost:3000/gebruiker/${gebruiker.gebruiker.gebruikerID}/begeleiders/${response.data.gebruikerID}`, // Gebruik selectedGebruikerID
+                {},
+                { headers: { Authorization: `Bearer ${token}` } },
+              )
+            }
+          }
+        }
         console.log('Response from addGebruiker:', response.data)
 
         // Optionally, reset the form
@@ -1027,7 +1052,6 @@ export default defineComponent({
         this.extraOpmerking = ''
         this.selectedRolID = 0
         this.selectedSubgroepID = 0
-        this.selectedBegeleiderID = 0
 
         this.isCreateModalVisible = false
         // Refresh the users list

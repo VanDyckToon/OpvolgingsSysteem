@@ -44,41 +44,37 @@
         <h2 class="text-3xl font-bold mb-6 text-center text-[#456A50]">
           Rollen
         </h2>
-        <div class="max-h-80 overflow-y-auto [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:rounded-full
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-[#456A50]
-  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
-        <ul v-if="rolen.length" class="divide-y divide-gray-200">
-          <li
-            v-for="rol in rolen"
-            :key="rol.rolID"
-            class="py-4 flex items-center justify-between"
-          >
-            <div>
-              <div class="text-[#456A50] font-bold">{{ rol.naam }}</div>
-            </div>
-            <div class="flex space-x-4">
-              <img
-                src="../assets/edit.svg"
-                alt="edit"
-                class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
-                @click="openEditModal(rol.rolID, rol.naam)"
-              />
-              <img
-                src="../assets/delete.svg"
-                alt="delete"
-                class="text-[#c9184a] hover:text-[#800f2f] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
-                @click="openDeleteModal(rol.rolID, rol.naam)"
-              />
-            </div>
-          </li>
-        </ul>
-        <p v-else class="text-center text-gray-500">Geen rollen gevonden</p>
+        <div
+          class="max-h-80 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#456A50] dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4"
+        >
+          <ul v-if="rolen.length" class="divide-y divide-gray-200">
+            <li
+              v-for="rol in rolen"
+              :key="rol.rolID"
+              class="py-4 flex items-center justify-between"
+            >
+              <div>
+                <div class="text-[#456A50] font-bold">{{ rol.naam }}</div>
+              </div>
+              <div class="flex space-x-4">
+                <img
+                  src="../assets/edit.svg"
+                  alt="edit"
+                  class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
+                  @click="openEditModal(rol.rolID, rol.naam)"
+                />
+                <img
+                  src="../assets/delete.svg"
+                  alt="delete"
+                  class="text-[#c9184a] hover:text-[#800f2f] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
+                  @click="openDeleteModal(rol.rolID, rol.naam)"
+                />
+              </div>
+            </li>
+          </ul>
+          <p v-else class="text-center text-gray-500">Geen rollen gevonden</p>
+        </div>
       </div>
-    </div>
     </div>
 
     <!-- Modal component voor het aanpassen van de rolen -->
@@ -147,7 +143,6 @@
 <script lang="ts">
 import axios from 'axios'
 import { defineComponent } from 'vue'
-import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
 interface Rol {
@@ -158,7 +153,6 @@ interface Rol {
 export default defineComponent({
   name: 'Rol',
   components: {
-    Icon,
     HeaderComponent,
   },
   data() {
