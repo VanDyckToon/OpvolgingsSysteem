@@ -158,4 +158,26 @@ export class GebruikerController {
   ) {
     return this.gebruikerService.assignBegeleider(gebruikerID, begeleiderID);
   }
+  @Post('batch/begeleiders/:begeleiderID')
+  async assignBegeleiderToSubgroep(
+    @Body() gebruikerIDs: number[],
+    @Param('begeleiderID') begeleiderID: number,
+  ) {
+    return Promise.all(
+      gebruikerIDs.map((gebruikerID) =>
+        this.gebruikerService.assignBegeleider(gebruikerID, begeleiderID),
+      ),
+    );
+  }
+  @Delete(':gebruikerID/begeleiders/:begeleiderID')
+  async removeBegeleider(
+    @Param('gebruikerID') gebruikerID: number,
+    @Param('begeleiderID') begeleiderID: number,
+  ) {
+    await this.gebruikerService.removeBegeleiderFromGebruiker(
+      gebruikerID,
+      begeleiderID,
+    );
+    return { message: 'Begeleider removed from gebruiker successfully' };
+  }
 }

@@ -263,4 +263,15 @@ export class GebruikerService {
       relations: ['begeleiders'],
     });
   }
+  async removeBegeleiderFromGebruiker(
+    gebruikerID: number,
+    begeleiderID: number,
+  ): Promise<void> {
+    // Use QueryBuilder to delete the association in the join table
+    await this.gebruikerRepository
+      .createQueryBuilder()
+      .relation(Gebruiker, 'begeleiders') // Relation name matches @ManyToMany property
+      .of(gebruikerID) // Target the specific gebruiker
+      .remove(begeleiderID); // Remove the relation with the specified begeleider
+  }
 }

@@ -240,7 +240,7 @@
               icon="gridicons:add"
               width="30"
               class="ml-4 text-[#104116]"
-              @click="addGebruikerToSubgroep(selectedGebruikerID)"
+              @click="addGebruikerToSubgroep(), assignBegeleiderToSubgroep()"
             />
           </div>
         </div>
@@ -292,10 +292,14 @@
               <!-- Remove Icon -->
               <button
                 @click="
-                  removeUserFromSubgroep(
+                  removeBegeleiderFromGebruiker(
                     gebruiker.gebruikerID,
                     selectedSubgroepID,
-                  )
+                  ),
+                    removeUserFromSubgroep(
+                      gebruiker.gebruikerID,
+                      selectedSubgroepID,
+                    )
                 "
                 class="text-red-600 hover:text-red-800"
                 aria-label="Remove user from subgroep"
@@ -342,7 +346,9 @@
               icon="gridicons:add"
               width="30"
               class="ml-4 text-[#104116]"
-              @click="addGebruikerToSubgroep"
+              @click="
+                addGebruikerToSubgroep(), addExistingBegeleiderToGebruiker()
+              "
             />
           </div>
         </div>
@@ -394,10 +400,14 @@
               <!-- Remove Icon -->
               <button
                 @click="
-                  removeUserFromSubgroep(
+                  removeWerknemerFromBegeleiders(
                     gebruiker.gebruikerID,
                     selectedSubgroepID,
-                  )
+                  ),
+                    removeUserFromSubgroep(
+                      gebruiker.gebruikerID,
+                      selectedSubgroepID,
+                    )
                 "
                 class="text-red-600 hover:text-red-800"
                 aria-label="Remove user from subgroep"
@@ -427,6 +437,7 @@ import axios from 'axios'
 import { defineComponent } from 'vue'
 import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
+import Gebruiker from './Gebruiker.vue'
 
 interface Groep {
   groepID: number
@@ -450,7 +461,7 @@ interface Gebruiker {
     rolID: number
     naam: string
   }
-  subgroep: {
+  gebruiker_subgroeps: {
     subgroepID: number
   }
 }
@@ -514,7 +525,7 @@ export default defineComponent({
     closeDeleteModal() {
       this.isDeleteModalVisible = false
     },
-    async removeUserFromSubgroep(gebruikerID, subgroepID) {
+    async removeUserFromSubgroep(gebruikerID: number, subgroepID: number) {
       try {
         const token = localStorage.getItem('access_token')
         await axios.delete(
@@ -565,7 +576,7 @@ export default defineComponent({
         )
       }
     },
-    async fetchGebruikers(subgroepID) {
+    async fetchGebruikers(subgroepID: number) {
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
@@ -574,16 +585,22 @@ export default defineComponent({
             headers: { Authorization: `Bearer ${token}` },
           },
         )
-        // Extract the gebruiker objects
+
+        // Voeg expliciet de subgroepID toe aan elk gebruiker-object
         this.gebruikers = Array.isArray(response.data)
-          ? response.data.map(item => item.gebruiker)
+          ? response.data.map(item => ({
+              ...item.gebruiker,
+              subgroepID: subgroepID, // Zorg ervoor dat dit veld beschikbaar is
+            }))
           : []
+
         console.log('Fetched gebruikers:', this.gebruikers)
       } catch (error) {
         console.error('Error fetching gebruikers:', error)
         this.gebruikers = []
       }
     },
+
     async fetchAllWerknemers(rolID: number) {
       try {
         const token = localStorage.getItem('access_token')
@@ -676,18 +693,211 @@ export default defineComponent({
     async addGebruikerToSubgroep() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.post(
-          'http://localhost:3000/gebruiker-subgroep',
+        const response = await axios.get(
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
           {
-            gebruiker: { gebruikerID: this.selectedGebruikerID },
-            subgroep: { subgroepID: this.selectedSubgroepID },
+            headers: { Authorization: `Bearer ${token}` },
+            params: { subgroepID: this.selectedSubgroepID },
           },
-          { headers: { Authorization: `Bearer ${token}` } },
         )
-        this.fetchGebruikers(this.selectedSubgroepID)
-        console.log('Gebruiker added to subgroep:', response.data)
+
+        console.log(response.data)
+
+        // Adjust how you're accessing gebruikerID to ensure correct comparison
+        const isGebruikerAlreadyInSubgroep = response.data.some(
+          entry => entry.gebruiker.gebruikerID === this.selectedGebruikerID,
+        )
+
+        if (!isGebruikerAlreadyInSubgroep) {
+          await axios.post(
+            'http://localhost:3000/gebruiker-subgroep',
+            {
+              gebruiker: { gebruikerID: this.selectedGebruikerID },
+              subgroep: { subgroepID: this.selectedSubgroepID },
+            },
+            { headers: { Authorization: `Bearer ${token}` } },
+          )
+          this.fetchGebruikers(this.selectedSubgroepID)
+        } else {
+          console.log('Gebruiker is already in the subgroep')
+        }
       } catch (error) {
         console.error('Error adding gebruiker to subgroep:', error)
+      }
+    },
+
+    async addExistingBegeleiderToGebruiker() {
+      try {
+        if (!this.selectedGebruikerID || !this.selectedGebruikerID) {
+          console.error('Fout: Gebruiker of Begeleider ID ontbreekt')
+          return
+        }
+        const token = localStorage.getItem('access_token')
+        const gebruikersInSubgroep = await axios.get(
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { subgroepID: this.selectedSubgroepID },
+          },
+        )
+        for (const gebruiker of gebruikersInSubgroep.data) {
+          if (gebruiker.gebruiker.rol.rolID === 2) {
+            await axios.post(
+              `http://localhost:3000/gebruiker/${this.selectedGebruikerID}/begeleiders/${gebruiker.gebruiker.gebruikerID}`, // Gebruik selectedGebruikerID
+              {},
+              { headers: { Authorization: `Bearer ${token}` } },
+            )
+          }
+        }
+      } catch (error) {
+        console.error('Error adding gebruiker to subgroep:', error)
+      }
+    },
+
+    async assignBegeleiderToSubgroep() {
+      try {
+        console.log(this.selectedGebruikerID)
+        // Controleer of selectedGebruikerID en selectedBegeleiderID zijn ingesteld
+        if (!this.selectedGebruikerID || !this.selectedSubgroepID) {
+          console.error('Fout: Gebruiker of Subgroep ID ontbreekt')
+          return
+        }
+
+        const token = localStorage.getItem('access_token')
+
+        const gebruikersInSubgroep = await axios.get(
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { subgroepID: this.selectedSubgroepID },
+          },
+        )
+
+        if (gebruikersInSubgroep.data.length === 0) {
+          console.warn('Geen gebruikers gevonden in de subgroep.')
+          return
+        }
+
+        console.log(gebruikersInSubgroep.data)
+
+        // Verstuur een API-aanroep voor elke gebruiker in de subgroep
+        for (const gebruiker of gebruikersInSubgroep.data) {
+          if (gebruiker.gebruiker.rol.rolID === 3) {
+            await axios.post(
+              `http://localhost:3000/gebruiker/${gebruiker.gebruiker.gebruikerID}/begeleiders/${this.selectedGebruikerID}`, // Gebruik selectedGebruikerID
+              {},
+              { headers: { Authorization: `Bearer ${token}` } },
+            )
+          }
+        }
+
+        this.fetchGebruikers(this.selectedSubgroepID) // Vernieuw de gebruikerslijst
+        console.log(
+          'Begeleider succesvol toegewezen aan alle gebruikers in de subgroep.',
+        )
+      } catch (error) {
+        console.error('Fout bij het toewijzen van begeleider:', error)
+      }
+    },
+
+    async removeBegeleiderFromGebruiker(
+      gebruikerID: number,
+      subgroepID: number,
+    ) {
+      try {
+        this.selectedGebruikerID = gebruikerID
+        this.selectedSubgroepID = subgroepID
+        console.log(this.selectedGebruikerID, this.selectedSubgroepID)
+        if (!this.selectedGebruikerID || !this.selectedSubgroepID) {
+          console.error('Fout: Gebruiker of Subgroep ID ontbreekt')
+          return
+        }
+        const token = localStorage.getItem('access_token')
+        const gebruikersInSubgroep = await axios.get(
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { subgroepID: this.selectedSubgroepID },
+          },
+        )
+        if (gebruikersInSubgroep.data.length === 0) {
+          console.warn('Geen gebruikers gevonden in de subgroep.')
+          return
+        }
+        // Verstuur een API-aanroep voor elke gebruiker in de subgroep
+        for (const gebruiker of gebruikersInSubgroep.data) {
+          if (gebruiker.gebruiker.rol.rolID === 3) {
+            await axios.delete(
+              `http://localhost:3000/gebruiker/${gebruiker.gebruiker.gebruikerID}/begeleiders/${this.selectedGebruikerID}`, // Gebruik selectedGebruikerID
+              { headers: { Authorization: `Bearer ${token}` } },
+            )
+          }
+        }
+        this.fetchGebruikers(this.selectedSubgroepID) // Vernieuw de gebruikerslijst
+        console.log(
+          'Begeleider succesvol verwijderd uit alle gebruikers in de subgroep.',
+        )
+      } catch (error) {
+        console.error('Fout bij het verwijderen van begeleider:', error)
+      }
+    },
+
+    async removeWerknemerFromBegeleiders(
+      gebruikerID: number,
+      subgroepID: number,
+    ) {
+      try {
+        this.selectedGebruikerID = gebruikerID
+        this.selectedSubgroepID = subgroepID
+        console.log(
+          'Selected IDs:',
+          this.selectedGebruikerID,
+          this.selectedSubgroepID,
+        )
+        if (!this.selectedGebruikerID || !this.selectedSubgroepID) {
+          console.error('Fout: Gebruiker of Subgroep ID ontbreekt')
+          return
+        }
+
+        const token = localStorage.getItem('access_token')
+        const gebruikersInSubgroep = await axios.get(
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { subgroepID: this.selectedSubgroepID },
+          },
+        )
+
+        console.log(
+          'Fetched gebruikersInSubgroep data:',
+          gebruikersInSubgroep.data,
+        )
+
+        for (const gebruiker of gebruikersInSubgroep.data) {
+          console.log('Processing gebruiker:', gebruiker)
+
+          // Use optional chaining to handle missing properties
+          if (
+            gebruiker?.gebruiker?.rol?.rolID === 2 &&
+            gebruiker?.subgroep?.subgroepID === this.selectedSubgroepID
+          ) {
+            console.log('Deleting begeleider:', gebruiker)
+
+            await axios.delete(
+              `http://localhost:3000/gebruiker/${this.selectedGebruikerID}/begeleiders/${gebruiker.gebruiker.gebruikerID}`,
+              { headers: { Authorization: `Bearer ${token}` } },
+            )
+
+            console.log('Begeleider verwijderd')
+          }
+        }
+
+        await this.fetchGebruikers(this.selectedSubgroepID) // Refresh users list
+      } catch (error) {
+        console.error(
+          `Fout bij het verwijderen van begeleider in subgroep ${this.selectedSubgroepID}:`,
+          error,
+        )
       }
     },
     async updateSubgroep(
