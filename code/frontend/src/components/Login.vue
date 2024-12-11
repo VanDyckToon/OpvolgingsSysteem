@@ -85,13 +85,12 @@ export default defineComponent({
     const login = async () => {
       try {
         const response = await axios.post(
-          'http://localhost:3000/auth/loginBegeleider',
+          `${import.meta.env.VUE_APP_API_URL}/auth/loginBegeleider`,
           {
             email: email.value,
             wachtwoord: password.value,
           },
         )
-      
 
         const { access_token } = response.data
         localStorage.setItem('access_token', access_token) // Store token
