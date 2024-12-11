@@ -113,5 +113,8 @@ export class Gebruiker {
   gebruikersSubgroep: GebruikerSubgroep[];
 
   @Column({ default: null })
-  subgroepID: string;
+  subgroepID: number;
+
+  @Column({ default: null })
+  begeleidID: number;
 }
