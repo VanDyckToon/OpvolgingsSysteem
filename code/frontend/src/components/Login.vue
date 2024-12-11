@@ -85,7 +85,7 @@ export default defineComponent({
     const login = async () => {
       try {
         const response = await axios.post(
-          `${import.meta.env.VUE_APP_API_URL}/auth/loginBegeleider`,
+          `${import.meta.env.VITE_APP_API_URL}/auth/loginBegeleider`,
           {
             email: email.value,
             wachtwoord: password.value,
