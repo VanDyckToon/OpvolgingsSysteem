@@ -116,5 +116,5 @@ export class Gebruiker {
   subgroepID: number;
 
   @Column({ default: null })
-  begeleidID: number;
+  begeleiderID: number;
 }
