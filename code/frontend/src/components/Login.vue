@@ -91,6 +91,7 @@ export default defineComponent({
             wachtwoord: password.value,
           },
         )
+      
 
         const { access_token } = response.data
         localStorage.setItem('access_token', access_token) // Store token

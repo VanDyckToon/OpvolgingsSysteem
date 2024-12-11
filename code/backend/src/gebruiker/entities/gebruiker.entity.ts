@@ -111,4 +111,7 @@ export class Gebruiker {
     (gebruikerSubgroep) => gebruikerSubgroep.gebruiker,
   )
   gebruikersSubgroep: GebruikerSubgroep[];
+
+  @Column({ default: null })
+  subgroepID: string;
 }
