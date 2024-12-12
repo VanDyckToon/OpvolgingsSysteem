@@ -20,11 +20,10 @@ jobs:
           username: ${{ vars.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-
-      - name: Deploy to DigitalOcean Droplet
-        run: |
-          cd ../opt/desprong
-          docker-compose down
-          docker pull ghcr.io/vandycktoon/opvolgingssysteem:backend-latest
-          docker pull ghcr.io/vandycktoon/opvolgingssysteem:frontend-latest
-          docker-compose up -d
+          
+          script: |
+            cd ../opt/desprong
+            docker-compose down
+            docker pull ghcr.io/vandycktoon/opvolgingssysteem:backend-latest
+            docker pull ghcr.io/vandycktoon/opvolgingssysteem:frontend-latest
+            docker-compose up -d
