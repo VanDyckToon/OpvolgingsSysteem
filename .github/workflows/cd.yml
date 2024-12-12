@@ -11,8 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: Hosting
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
+
 
       - name: Deploy to Droplet
         uses: appleboy/ssh-action@v1.1.0
