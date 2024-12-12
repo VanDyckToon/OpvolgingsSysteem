@@ -23,7 +23,6 @@ jobs:
           port: 22
 
           script: |
-            pwd
             cd ../opt/desprong
             docker-compose down
             docker rmi frontend-latest backend-latest
