@@ -1,21 +1,21 @@
-# Use a Node.js base image to build the application
+# Use a Node.js base image to build the frontend application
 FROM node:20-slim AS build
 
 # Set the working directory in the container
 WORKDIR /app
 
 # Copy only the package.json and package-lock.json first (for caching)
-COPY package*.json ./
+COPY ./frontend/package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application files
-COPY . .
+# Copy the rest of the frontend application files
+COPY ./frontend/ ./
 
 # Build the frontend application
 RUN npm run build
- 
+
 # Use a smaller base image for the final output
 FROM node:20-slim
 
