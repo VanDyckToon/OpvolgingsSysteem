@@ -172,7 +172,7 @@ export default defineComponent({
         const token = localStorage.getItem('access_token')
 
         const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_URL}gebruiker/${this.$route.params.id}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker/${this.$route.params.id}`,
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.gebruiker = response.data
