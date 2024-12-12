@@ -14,12 +14,14 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
+
   SwaggerModule.setup('api', app, document);
   app.enableCors({
     origin: ['http://localhost:5173', 'http://161.35.20.135:5173/'],
     methods: 'GET,POST,PUT,DELETE',
     allowedHeaders: 'Content-Type,Authorization',
   });
+
   await app.listen(3000);
 }
 bootstrap();
