@@ -12,16 +12,6 @@ jobs:
     environment: Hosting
     steps:
 
-      - name: Debug Connection
-        run: |
-          echo "Testing connection..."
-          ping -c 4 161.35.20.135
-
-      - name: Debug SSH Key
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | head -n 2
-
-
       - name: Checkout code
         uses: actions/checkout@v4
 
