@@ -27,6 +27,7 @@ jobs:
           script: |
             cd ../opt/desprong
             docker-compose down
+            docker rmi frontend-latest backend-latest
             docker pull ghcr.io/vandycktoon/opvolgingssysteem:backend-latest
             docker pull ghcr.io/vandycktoon/opvolgingssysteem:frontend-latest
-            docker-compose up -d
+            docker-compose up --build -d
