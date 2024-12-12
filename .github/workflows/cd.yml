@@ -13,17 +13,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
+      - name: Deploy to Droplet
+        uses: appleboy/ssh-action@v1.1.0
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
+          host: ${{ vars.SSH_HOSTNAME }}
+          username: ${{ vars.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
 
       - name: Deploy to DigitalOcean Droplet
         run: |
-          ssh -o StrictHostKeyChecking=no root@161.35.20.135 << 'EOF'
           cd ../opt/desprong
           docker-compose down
           docker pull ghcr.io/vandycktoon/opvolgingssysteem:backend-latest
           docker pull ghcr.io/vandycktoon/opvolgingssysteem:frontend-latest
           docker-compose up -d
-          EOF
