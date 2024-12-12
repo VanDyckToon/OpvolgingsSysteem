@@ -153,9 +153,12 @@ export default defineComponent({
     async fetchCompetenties() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/competentie', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const response = await axios.get(
+          `${import.meta.env.VITE_APP_API_URL}/competentie`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        )
         this.competenties = response.data
       } catch (error) {
         console.error(
@@ -169,7 +172,7 @@ export default defineComponent({
         const token = localStorage.getItem('access_token')
 
         const response = await axios.get(
-          `http://localhost:3000/gebruiker/${this.$route.params.id}`,
+          `${import.meta.env.VITE_APP_API_URL}gebruiker/${this.$route.params.id}`,
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.gebruiker = response.data
@@ -182,7 +185,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          `http://localhost:3000/competentie-gebruiker/werknemer/${this.begeleiderID}`,
+          `${import.meta.env.VITE_APP_API_URL}/competentie-gebruiker/werknemer/${this.begeleiderID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -209,7 +212,7 @@ export default defineComponent({
     async fetchScores() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/score', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}:3000/score`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.scores = response.data
@@ -240,7 +243,7 @@ export default defineComponent({
         }))
 
         await axios.post(
-          'http://localhost:3000/competentie-gebruiker',
+          `${import.meta.env.VITE_APP_API_URL}/competentie-gebruiker`,
           payload,
           {
             headers: { Authorization: `Bearer ${token}` },

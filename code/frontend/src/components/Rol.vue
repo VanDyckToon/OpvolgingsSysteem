@@ -185,7 +185,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
 
-        const response = await axios.get('http://localhost:3000/rol', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/rol`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.rolen = response.data.sort((a: Rol, b: Rol) =>
@@ -203,7 +203,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.post(
-          'http://localhost:3000/rol',
+        `${import.meta.env.VITE_APP_API_URL}/rol`,
           { naam: this.naam },
           { headers: { Authorization: `Bearer ${token}` } },
         )
@@ -216,7 +216,6 @@ export default defineComponent({
 
     async confirmDelete() {
       try {
-        const token = localStorage.getItem('access_token')
         await this.deleteRol(this.selectedRolID)
         this.isDeleteModalVisible = false // Close the modal after confirmation
       } catch (error) {
@@ -227,7 +226,7 @@ export default defineComponent({
     async deleteRol(rolID: number) {
       try {
         const token = localStorage.getItem('access_token')
-        await axios.delete(`http://localhost:3000/rol/${rolID}`, {
+        await axios.delete(`${import.meta.env.VITE_APP_API_URL}/rol/${rolID}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.fetchRolen() // Refresh the list after deletion
@@ -250,7 +249,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.patch(
-          `http://localhost:3000/rol/${rolID}`,
+          `${import.meta.env.VITE_APP_API_URL}/rol/${rolID}`,
           { naam: updatedNaam },
           { headers: { Authorization: `Bearer ${token}` } },
         )

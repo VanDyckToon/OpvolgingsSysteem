@@ -317,7 +317,7 @@
     const token = localStorage.getItem('access_token')
     console.log('Access Token:', token) // Debugging line
     const response = await axios.get(
-      `http://localhost:3000/gebruiker/${this.gebruikerID}`,
+      `${import.meta.env.VITE_APP_API_URL}/gebruiker/${this.gebruikerID}`,
       { headers: { Authorization: `Bearer ${token}` } }
     )
     console.log('API Response:', response) // Debugging line
@@ -363,7 +363,7 @@ openWachtwoordModal(gebruikerID: number, wachtwoord: string) {
         console.log('Sending token in headers:', token);
 
         const response = await axios.post(
-            'http://localhost:3000/gebruiker/wachtwoord',
+            `${import.meta.env.VITE_APP_API_URL}/gebruiker/wachtwoord`,
             { wachtwoord: this.editedWachtwoord, gebruikerID: gebruikerID },  // Send the gebruikerID to the backend
             { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -395,7 +395,7 @@ async updateWachtwoord() {
         const gebruikerID = this.gebruikerID || localStorage.getItem('gebruikerID');
 
         await axios.patch(
-          `http://localhost:3000/gebruiker/${gebruikerID}/wachtwoord`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker/${gebruikerID}/wachtwoord`,
           { wachtwoord: this.nieuwWachtwoord }, // Send only one password
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -433,7 +433,7 @@ async openEmailAanpassenModal() {
         console.log('Sending token in headers:', token);
 
         const response = await axios.post(
-            'http://localhost:3000/gebruiker/wachtwoord',
+            `${import.meta.env.VITE_APP_API_URL}/gebruiker/wachtwoord`,
             { wachtwoord: this.editedWachtwoord, gebruikerID: gebruikerID },  // Send the gebruikerID to the backend
             { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -464,7 +464,7 @@ async updateEmail() {
         const gebruikerID = this.gebruikerID || localStorage.getItem('gebruikerID');
 
         await axios.patch(
-          `http://localhost:3000/gebruiker/${gebruikerID}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker/${gebruikerID}`,
           { email: this.nieuwEmail }, // Send only one password
           { headers: { Authorization: `Bearer ${token}` } }
         );

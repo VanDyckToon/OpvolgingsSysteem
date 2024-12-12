@@ -191,7 +191,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
 
-        const response = await axios.get('http://localhost:3000/groep', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/groep`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.groepen = response.data.sort((a: Groep, b: Groep) =>
@@ -209,7 +209,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.post(
-          'http://localhost:3000/groep',
+          `${import.meta.env.VITE_APP_API_URL}/groep`,
           { naam: this.naam },
           { headers: { Authorization: `Bearer ${token}` } },
         )
@@ -222,7 +222,6 @@ export default defineComponent({
 
     async confirmDelete() {
       try {
-        const token = localStorage.getItem('access_token')
         await this.deleteGroep(this.selectedGroepID)
         this.isDeleteModalVisible = false // Close the modal after confirmation
       } catch (error) {
@@ -233,7 +232,7 @@ export default defineComponent({
     async deleteGroep(groepID: number) {
       try {
         const token = localStorage.getItem('access_token')
-        await axios.delete(`http://localhost:3000/groep/${groepID}`, {
+        await axios.delete(`${import.meta.env.VITE_APP_API_URL}/groep/${groepID}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.fetchGroepen() // Refresh the list after deletion
@@ -256,7 +255,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.patch(
-          `http://localhost:3000/groep/${groepID}`,
+          `${import.meta.env.VITE_APP_API_URL}/groep/${groepID}`,
           { naam: updatedNaam },
           { headers: { Authorization: `Bearer ${token}` } },
         )

@@ -158,7 +158,6 @@
 <script lang="ts">
 import axios from 'axios'
 import { defineComponent } from 'vue'
-import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
 interface Materiaal {
@@ -169,7 +168,6 @@ interface Materiaal {
 export default defineComponent({
   name: 'Materiaal',
   components: {
-    Icon,
     HeaderComponent,
   },
   data() {
@@ -202,7 +200,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
 
-        const response = await axios.get('http://localhost:3000/materiaal', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/materiaal`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.materialen = response.data.sort((a: Materiaal, b: Materiaal) =>
@@ -220,7 +218,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.post(
-          'http://localhost:3000/materiaal',
+          `${import.meta.env.VITE_APP_API_URL}/materiaal`,
           { beschrijving: this.beschrijving },
           { headers: { Authorization: `Bearer ${token}` } },
         )
@@ -233,7 +231,6 @@ export default defineComponent({
 
     async confirmDelete() {
       try {
-        const token = localStorage.getItem('access_token')
         await this.deleteMateriaal(this.selectedMateriaalID)
         this.isDeleteModalVisible = false // Close the modal after confirmation
       } catch (error) {
@@ -244,7 +241,7 @@ export default defineComponent({
     async deleteMateriaal(materiaalID: number) {
       try {
         const token = localStorage.getItem('access_token')
-        await axios.delete(`http://localhost:3000/materiaal/${materiaalID}`, {
+        await axios.delete(`${import.meta.env.VITE_APP_API_URL}/materiaal/${materiaalID}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.fetchMaterialen() // Refresh the list after deletion
@@ -267,7 +264,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.patch(
-          `http://localhost:3000/materiaal/${materiaalID}`,
+          `${import.meta.env.VITE_APP_API_URL}/materiaal/${materiaalID}`,
           { beschrijving: updatedBeschrijving },
           { headers: { Authorization: `Bearer ${token}` } },
         )

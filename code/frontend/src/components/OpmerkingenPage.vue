@@ -160,7 +160,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          `http://localhost:3000/gebruiker/${this.$route.params.id}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker/${this.$route.params.id}`,
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.gebruiker = response.data
@@ -172,7 +172,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          `http://localhost:3000/opmerking/werknemer/${this.$route.params.id}`,
+          `${import.meta.env.VITE_APP_API_URL}/opmerking/werknemer/${this.$route.params.id}`,
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.comments = response.data
@@ -196,7 +196,7 @@ export default defineComponent({
           werknemer: { gebruikerID: this.gebruiker?.gebruikerID },
           begeleider: { gebruikerID: this.begeleiderID },
         }
-        await axios.post(`http://localhost:3000/opmerking`, commentData, {
+        await axios.post(`${import.meta.env.VITE_APP_API_URL}/opmerking`, commentData, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.newComment = ''

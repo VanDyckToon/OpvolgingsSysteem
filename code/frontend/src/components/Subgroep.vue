@@ -529,7 +529,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.delete(
-          `http://localhost:3000/gebruiker-subgroep/gebruikers/${gebruikerID}/${subgroepID}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker-subgroep/gebruikers/${gebruikerID}/${subgroepID}`,
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.gebruikers = this.gebruikers.filter(
@@ -547,7 +547,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
 
-        const response = await axios.get('http://localhost:3000/subgroep', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/subgroep`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.subgroepen = response.data.sort((a: Subgroep, b: Subgroep) =>
@@ -563,7 +563,7 @@ export default defineComponent({
     async fetchGroepen() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/groep', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/groep`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.groepen = response.data.sort((a: Groep, b: Groep) =>
@@ -580,7 +580,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          `http://localhost:3000/gebruiker-subgroep/gebruikers/${subgroepID}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker-subgroep/gebruikers/${subgroepID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -605,7 +605,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          `http://localhost:3000/gebruiker/rol/${rolID}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker/rol/${rolID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -621,7 +621,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          `http://localhost:3000/gebruiker/rol/${rolID}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker/rol/${rolID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -637,7 +637,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.post(
-          'http://localhost:3000/subgroep',
+          `${import.meta.env.VITE_APP_API_URL}/subgroep`,
           { subgroepNaam: this.naam, groep: { groepID: this.selectedGroepID } },
           { headers: { Authorization: `Bearer ${token}` } },
         )
@@ -666,7 +666,7 @@ export default defineComponent({
     async deleteSubgroep(subgroepID: number) {
       try {
         const token = localStorage.getItem('access_token')
-        await axios.delete(`http://localhost:3000/subgroep/${subgroepID}`, {
+        await axios.delete(`${import.meta.env.VITE_APP_API_URL}/subgroep/${subgroepID}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.fetchSubgroepen()
@@ -694,7 +694,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             params: { subgroepID: this.selectedSubgroepID },
@@ -711,7 +711,7 @@ export default defineComponent({
 
         if (!isGebruikerAlreadyInSubgroep) {
           await axios.post(
-            'http://localhost:3000/gebruiker-subgroep',
+            `${import.meta.env.VITE_APP_API_URL}/gebruiker-subgroep`,
             {
               gebruiker: { gebruikerID: this.selectedGebruikerID },
               subgroep: { subgroepID: this.selectedSubgroepID },
@@ -735,7 +735,7 @@ export default defineComponent({
         }
         const token = localStorage.getItem('access_token')
         const gebruikersInSubgroep = await axios.get(
-          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             params: { subgroepID: this.selectedSubgroepID },
@@ -744,7 +744,7 @@ export default defineComponent({
         for (const gebruiker of gebruikersInSubgroep.data) {
           if (gebruiker.gebruiker.rol.rolID === 2) {
             await axios.post(
-              `http://localhost:3000/gebruiker/${this.selectedGebruikerID}/begeleiders/${gebruiker.gebruiker.gebruikerID}`, // Gebruik selectedGebruikerID
+              `${import.meta.env.VITE_APP_API_URL}/gebruiker/${this.selectedGebruikerID}/begeleiders/${gebruiker.gebruiker.gebruikerID}`, // Gebruik selectedGebruikerID
               {},
               { headers: { Authorization: `Bearer ${token}` } },
             )
@@ -767,7 +767,7 @@ export default defineComponent({
         const token = localStorage.getItem('access_token')
 
         const gebruikersInSubgroep = await axios.get(
-          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             params: { subgroepID: this.selectedSubgroepID },
@@ -785,7 +785,7 @@ export default defineComponent({
         for (const gebruiker of gebruikersInSubgroep.data) {
           if (gebruiker.gebruiker.rol.rolID === 3) {
             await axios.post(
-              `http://localhost:3000/gebruiker/${gebruiker.gebruiker.gebruikerID}/begeleiders/${this.selectedGebruikerID}`, // Gebruik selectedGebruikerID
+              `${import.meta.env.VITE_APP_API_URL}/gebruiker/${gebruiker.gebruiker.gebruikerID}/begeleiders/${this.selectedGebruikerID}`, // Gebruik selectedGebruikerID
               {},
               { headers: { Authorization: `Bearer ${token}` } },
             )
@@ -815,7 +815,7 @@ export default defineComponent({
         }
         const token = localStorage.getItem('access_token')
         const gebruikersInSubgroep = await axios.get(
-          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             params: { subgroepID: this.selectedSubgroepID },
@@ -829,7 +829,7 @@ export default defineComponent({
         for (const gebruiker of gebruikersInSubgroep.data) {
           if (gebruiker.gebruiker.rol.rolID === 3) {
             await axios.delete(
-              `http://localhost:3000/gebruiker/${gebruiker.gebruiker.gebruikerID}/begeleiders/${this.selectedGebruikerID}`, // Gebruik selectedGebruikerID
+              `${import.meta.env.VITE_APP_API_URL}/gebruiker/${gebruiker.gebruiker.gebruikerID}/begeleiders/${this.selectedGebruikerID}`, // Gebruik selectedGebruikerID
               { headers: { Authorization: `Bearer ${token}` } },
             )
           }
@@ -862,7 +862,7 @@ export default defineComponent({
 
         const token = localStorage.getItem('access_token')
         const gebruikersInSubgroep = await axios.get(
-          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             params: { subgroepID: this.selectedSubgroepID },
@@ -885,7 +885,7 @@ export default defineComponent({
             console.log('Deleting begeleider:', gebruiker)
 
             await axios.delete(
-              `http://localhost:3000/gebruiker/${this.selectedGebruikerID}/begeleiders/${gebruiker.gebruiker.gebruikerID}`,
+              `${import.meta.env.VITE_APP_API_URL}/gebruiker/${this.selectedGebruikerID}/begeleiders/${gebruiker.gebruiker.gebruikerID}`,
               { headers: { Authorization: `Bearer ${token}` } },
             )
 
@@ -913,7 +913,7 @@ export default defineComponent({
         }
         const token = localStorage.getItem('access_token')
         await axios.patch(
-          `http://localhost:3000/subgroep/${subgroepID}`,
+          `${import.meta.env.VITE_APP_API_URL}/subgroep/${subgroepID}`,
           {
             subgroepNaam: updatedNaam, // Assuming your API expects 'subgroepNaam' as the key
             groep: { groepID: updatedGroepID }, // Update the group ID as well
