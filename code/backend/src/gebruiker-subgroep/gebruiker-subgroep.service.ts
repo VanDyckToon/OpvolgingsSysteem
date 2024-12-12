@@ -25,14 +25,10 @@ export class GebruikerSubgroepService {
     const subgroep = await this.subgorepRepository.findOneBy({
       subgroepID: createGebruikerSubgroepDto.subgroep.subgroepID,
     });
-    const begeleider = await this.gebruikerRepository.findOneBy({
-      gebruikerID: createGebruikerSubgroepDto.begeleider.gebruikerID,
-    });
 
     const gebruikerSubgroep = this.gebruikerSubgroepRepository.create({
       gebruiker,
       subgroep,
-      begeleider,
     });
 
     return this.gebruikerSubgroepRepository.save(gebruikerSubgroep);
@@ -46,6 +42,15 @@ export class GebruikerSubgroepService {
     return this.gebruikerSubgroepRepository.findOneBy({ gebruikerSubgroepID });
   }
 
+  getGebruikersBySubgroep(subgroepID: number) {
+    return this.gebruikerSubgroepRepository.find({
+      where: {
+        subgroep: { subgroepID },
+      },
+      relations: ['gebruiker', 'subgroep', 'gebruiker.rol'],
+    });
+  }
+
   update(
     gebruikerSubgroepID: number,
     updateGebruikerSubgroepDto: UpdateGebruikerSubgroepDto,
@@ -54,6 +59,13 @@ export class GebruikerSubgroepService {
       gebruikerSubgroepID,
       updateGebruikerSubgroepDto,
     );
+  }
+
+  removeGebruikerFromSubgroep(gebruikerID: number, subgroepID: number) {
+    return this.gebruikerSubgroepRepository.delete({
+      gebruiker: { gebruikerID },
+      subgroep: { subgroepID },
+    });
   }
 
   remove(gebruikerSubgroepID: number) {

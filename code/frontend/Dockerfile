@@ -15,7 +15,7 @@ COPY . ./
 
 # Build the frontend application
 RUN npm run build
-
+ 
 # Install the serve package globally to serve the built files
 RUN npm install -g serve
 

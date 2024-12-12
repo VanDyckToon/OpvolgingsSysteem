@@ -64,61 +64,58 @@
         <h2 class="text-3xl font-bold mb-6 text-center text-[#456A50]">
           Subgroepen
         </h2>
-        <div class="max-h-80 overflow-y-auto [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:rounded-full
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-[#456A50]
-  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
-        <ul v-if="subgroepen.length" class="divide-y divide-gray-200">
-          <li
-            v-for="subgroep in subgroepen"
-            :key="subgroep.subgroepID"
-            class="py-4 flex items-center justify-between"
-          >
-            <div>
-              <div class="text-[#456A50] font-bold">
-                {{ subgroep.subgroepNaam }}
+        <div
+          class="max-h-80 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#456A50] dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4"
+        >
+          <ul v-if="subgroepen.length" class="divide-y divide-gray-200">
+            <li
+              v-for="subgroep in subgroepen"
+              :key="subgroep.subgroepID"
+              class="py-4 flex items-center justify-between"
+            >
+              <div>
+                <div class="text-[#456A50] font-bold">
+                  {{ subgroep.subgroepNaam }}
+                </div>
+                <div class="text-[#456A50]">{{ subgroep.groep?.naam }}</div>
               </div>
-              <div class="text-[#456A50]">{{ subgroep.groep?.naam }}</div>
-            </div>
-            <div class="flex space-x-4">
-              <img
-                src="../assets/groep-icoon.svg"
-                alt="Image"
-                class="hover:scale-110 hover:ease-in-out hover:duration-500 h-8 w-auto cursor-pointer"
-                @click="openSubgroepOverviewModel(subgroep.subgroepID)"
-              />
-              <img
-                src="../assets/edit.svg"
-                alt="edit"
-                class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
-                @click="
-                  openEditModal(
-                    subgroep.subgroepID,
-                    subgroep.subgroepNaam,
-                    subgroep.groep?.groepID,
-                  )
-                "
-              />
-              <img
-                src="../assets/delete.svg"
-                alt="delete"
-                class="text-[#c9184a] hover:text-[#800f2f] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
-                @click="
-                  openDeleteModal(subgroep.subgroepID, subgroep.subgroepNaam)
-                "
-              />
-            </div>
-          </li>
-        </ul>
-        <p v-else class="text-center text-gray-500">Geen subgroepen gevonden</p>
+              <div class="flex space-x-4">
+                <img
+                  src="../assets/groep-icoon.svg"
+                  alt="Image"
+                  class="hover:scale-110 hover:ease-in-out hover:duration-500 h-8 w-auto cursor-pointer"
+                  @click="openSubgroepOverviewModel(subgroep.subgroepID)"
+                />
+                <img
+                  src="../assets/edit.svg"
+                  alt="edit"
+                  class="text-[#456A50] hover:text-[#104116] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
+                  @click="
+                    openEditModal(
+                      subgroep.subgroepID,
+                      subgroep.subgroepNaam,
+                      subgroep.groep?.groepID,
+                    )
+                  "
+                />
+                <img
+                  src="../assets/delete.svg"
+                  alt="delete"
+                  class="text-[#c9184a] hover:text-[#800f2f] hover:scale-110 hover:ease-in-out hover:duration-500 w-8 h-8 cursor-pointer"
+                  @click="
+                    openDeleteModal(subgroep.subgroepID, subgroep.subgroepNaam)
+                  "
+                />
+              </div>
+            </li>
+          </ul>
+          <p v-else class="text-center text-gray-500">
+            Geen subgroepen gevonden
+          </p>
+        </div>
       </div>
     </div>
-    </div>
 
-    <!-- Modal component voor het aanpassen van de rolen -->
     <!-- Modal component for editing the subgroup -->
     <div
       v-if="isEditModalVisible"
@@ -243,10 +240,11 @@
               icon="gridicons:add"
               width="30"
               class="ml-4 text-[#104116]"
-              @click="addGebruikerToSubgroep"
+              @click="addGebruikerToSubgroep(), assignBegeleiderToSubgroep()"
             />
           </div>
         </div>
+
         <ul
           v-if="
             Array.isArray(gebruikers) &&
@@ -282,9 +280,7 @@
                 <p class="font-bold text-[#456A50]">
                   {{ gebruiker.voornaam }} {{ gebruiker.achternaam }}
                 </p>
-                <p class="text-md text-gray-600">
-                  {{ gebruiker.email }}
-                </p>
+                <p class="text-md text-gray-600">{{ gebruiker.email }}</p>
                 <p
                   v-if="gebruiker.telefoonnummer"
                   class="text-md text-gray-600"
@@ -295,7 +291,16 @@
 
               <!-- Remove Icon -->
               <button
-                @click="removeUserFromSubgroep(gebruiker.gebruikerID)"
+                @click="
+                  removeBegeleiderFromGebruiker(
+                    gebruiker.gebruikerID,
+                    selectedSubgroepID,
+                  ),
+                    removeUserFromSubgroep(
+                      gebruiker.gebruikerID,
+                      selectedSubgroepID,
+                    )
+                "
                 class="text-red-600 hover:text-red-800"
                 aria-label="Remove user from subgroep"
               >
@@ -341,10 +346,13 @@
               icon="gridicons:add"
               width="30"
               class="ml-4 text-[#104116]"
-              @click="addGebruikerToSubgroep"
+              @click="
+                addGebruikerToSubgroep(), addExistingBegeleiderToGebruiker()
+              "
             />
           </div>
         </div>
+
         <ul
           v-if="
             Array.isArray(gebruikers) &&
@@ -391,7 +399,16 @@
 
               <!-- Remove Icon -->
               <button
-                @click="removeUserFromSubgroep(gebruiker.gebruikerID)"
+                @click="
+                  removeWerknemerFromBegeleiders(
+                    gebruiker.gebruikerID,
+                    selectedSubgroepID,
+                  ),
+                    removeUserFromSubgroep(
+                      gebruiker.gebruikerID,
+                      selectedSubgroepID,
+                    )
+                "
                 class="text-red-600 hover:text-red-800"
                 aria-label="Remove user from subgroep"
               >
@@ -420,6 +437,7 @@ import axios from 'axios'
 import { defineComponent } from 'vue'
 import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
+import Gebruiker from './Gebruiker.vue'
 
 interface Groep {
   groepID: number
@@ -443,7 +461,7 @@ interface Gebruiker {
     rolID: number
     naam: string
   }
-  subgroep: {
+  gebruiker_subgroeps: {
     subgroepID: number
   }
 }
@@ -507,21 +525,17 @@ export default defineComponent({
     closeDeleteModal() {
       this.isDeleteModalVisible = false
     },
-    async removeUserFromSubgroep(gebruikerID: number) {
+    async removeUserFromSubgroep(gebruikerID: number, subgroepID: number) {
       try {
         const token = localStorage.getItem('access_token')
-        await axios.patch(
-          `http://localhost:3000/gebruiker/${gebruikerID}/removeFromSubgroep`,
-
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+        await axios.delete(
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${gebruikerID}/${subgroepID}`,
+          { headers: { Authorization: `Bearer ${token}` } },
         )
         this.gebruikers = this.gebruikers.filter(
           gebruiker => gebruiker.gebruikerID !== gebruikerID,
         )
+        console.log(`User ${gebruikerID} removed from subgroep ${subgroepID}`)
       } catch (error) {
         console.error(
           'Er is een fout opgetreden bij het verwijderen van de gebruiker:',
@@ -566,12 +580,21 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          `http://localhost:3000/subgroep/${subgroepID}/gebruikers`,
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${subgroepID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
         )
-        this.gebruikers = Array.isArray(response.data) ? response.data : []
+
+        // Voeg expliciet de subgroepID toe aan elk gebruiker-object
+        this.gebruikers = Array.isArray(response.data)
+          ? response.data.map(item => ({
+              ...item.gebruiker,
+              subgroepID: subgroepID, // Zorg ervoor dat dit veld beschikbaar is
+            }))
+          : []
+
+        console.log('Fetched gebruikers:', this.gebruikers)
       } catch (error) {
         console.error('Error fetching gebruikers:', error)
         this.gebruikers = []
@@ -619,14 +642,12 @@ export default defineComponent({
           { headers: { Authorization: `Bearer ${token}` } },
         )
 
-        // Optional: Check the response for success
         console.log('Response from addSubgroep:', response.data)
 
         // Clear the input fields
         this.naam = ''
-        this.selectedGroepID = 0 // Reset selected group
+        this.selectedGroepID = 0
 
-        // Refresh the list of subgroepen
         await this.fetchSubgroepen()
       } catch (error) {
         console.error('Error adding subgroep:', error)
@@ -636,7 +657,7 @@ export default defineComponent({
     async confirmDelete() {
       try {
         await this.deleteSubgroep(this.selectedSubgroepID)
-        this.isDeleteModalVisible = false // Close the modal after confirmation
+        this.isDeleteModalVisible = false
       } catch (error) {
         console.error('Error deleting subgroep:', error)
       }
@@ -648,7 +669,7 @@ export default defineComponent({
         await axios.delete(`http://localhost:3000/subgroep/${subgroepID}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
-        this.fetchSubgroepen() // Refresh the list after deletion
+        this.fetchSubgroepen()
       } catch (error) {
         console.error(
           'Er is een fout opgetreden bij het verwijderen van de subgroep:',
@@ -658,10 +679,10 @@ export default defineComponent({
     },
 
     openEditModal(subgroepID: number, naam: string, groepID: number) {
-      this.selectedSubgroepID = subgroepID // Set the ID of the selected subgroep
-      this.editedNaam = naam // Set the current subgroep name
-      this.editedGroepnaam = groepID // Set the current group ID (assuming you want to show the group ID in the dropdown)
-      this.isEditModalVisible = true // Show the modal
+      this.selectedSubgroepID = subgroepID
+      this.editedNaam = naam
+      this.editedGroepnaam = groepID
+      this.isEditModalVisible = true
     },
 
     async openSubgroepOverviewModel(subgroepID: number) {
@@ -670,114 +691,213 @@ export default defineComponent({
       this.isUserOverviewModalVisible = true
     },
     async addGebruikerToSubgroep() {
-      if (this.selectedGebruikerID && this.selectedSubgroepID) {
-        await this.fetchGebruikers(this.selectedSubgroepID)
-        const geselecteerdeGebruiker =
-          this.begeleiders.find(
-            b => b.gebruikerID === this.selectedGebruikerID,
-          ) ||
-          this.werknemers.find(w => w.gebruikerID === this.selectedGebruikerID)
-
-        if (!geselecteerdeGebruiker) {
-          alert('Geselecteerde gebruiker niet gevonden.')
-          return
-        }
-
-        const isBegeleider = geselecteerdeGebruiker.rol?.rolID === 2
-
-        if (
-          isBegeleider &&
-          (await this.hasExistingBegeleider(this.selectedSubgroepID))
-        ) {
-          alert('Er kan slechts één begeleider in een subgroep zitten.')
-          return
-        }
-
-        // Voeg de gebruiker toe (begeleider of werknemer)
-        try {
-          const token = localStorage.getItem('access_token')
-          if (!token) throw new Error('Geen toegang tot API')
-
-          if (isBegeleider) {
-            await this.addBegeleiderToSubgroep(geselecteerdeGebruiker)
-          } else {
-            await this.addWerknemerToSubgroep(geselecteerdeGebruiker)
-          }
-
-          // Ververs de gebruikerslijst
-          await this.fetchGebruikers(this.selectedSubgroepID)
-        } catch (error) {
-          console.error(
-            'Fout bij het toevoegen van gebruiker aan subgroep:',
-            error,
-          )
-        }
-      }
-    },
-    async hasExistingBegeleider(subgroepID: number) {
-      return this.gebruikers.some(
-        gebruiker =>
-          gebruiker.rol?.rolID === 2 &&
-          gebruiker.subgroep?.subgroepID === subgroepID,
-      )
-    },
-    async addBegeleiderToSubgroep(begeleider: Gebruiker) {
-      const hasBegeleider = this.gebruikers.some(
-        gebruiker =>
-          gebruiker.rol?.rolID === 2 &&
-          gebruiker.subgroep?.subgroepID === this.selectedSubgroepID,
-      )
-
-      if (hasBegeleider) {
-        alert('Er kan slechts één begeleider in een subgroep zitten.')
-        return
-      }
-      const token = localStorage.getItem('access_token')
-      const response = await axios.patch(
-        `http://localhost:3000/gebruiker/${begeleider.gebruikerID}/addToSubgroep/${this.selectedSubgroepID}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } },
-      )
-
-      console.log('Begeleider toegevoegd:', response.data)
-
-      // Werknemers in de subgroep updaten
-      const werknemersInSubgroep = this.werknemers.filter(
-        werknemer => werknemer.subgroep?.subgroepID === this.selectedSubgroepID,
-      )
-
-      for (const werknemer of werknemersInSubgroep) {
+      try {
         const token = localStorage.getItem('access_token')
-        await axios.patch(
-          `http://localhost:3000/gebruiker/${werknemer.gebruikerID}`,
-          { begeleider: { gebruikerID: begeleider.gebruikerID } },
-          { headers: { Authorization: `Bearer ${token}` } },
+        const response = await axios.get(
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { subgroepID: this.selectedSubgroepID },
+          },
         )
+
+        console.log(response.data)
+
+        // Adjust how you're accessing gebruikerID to ensure correct comparison
+        const isGebruikerAlreadyInSubgroep = response.data.some(
+          (entry: { gebruiker: { gebruikerID: number } }) =>
+            entry.gebruiker.gebruikerID === this.selectedGebruikerID,
+        )
+
+        if (!isGebruikerAlreadyInSubgroep) {
+          await axios.post(
+            'http://localhost:3000/gebruiker-subgroep',
+            {
+              gebruiker: { gebruikerID: this.selectedGebruikerID },
+              subgroep: { subgroepID: this.selectedSubgroepID },
+            },
+            { headers: { Authorization: `Bearer ${token}` } },
+          )
+          this.fetchGebruikers(this.selectedSubgroepID)
+        } else {
+          console.log('Gebruiker is already in the subgroep')
+        }
+      } catch (error) {
+        console.error('Error adding gebruiker to subgroep:', error)
       }
     },
-    async addWerknemerToSubgroep(werknemer: Gebruiker) {
-      const token = localStorage.getItem('access_token')
-      const response = await axios.patch(
-        `http://localhost:3000/gebruiker/${werknemer.gebruikerID}/addToSubgroep/${this.selectedSubgroepID}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } },
-      )
 
-      console.log('Werknemer toegevoegd:', response.data)
-
-      // Controleer of er een begeleider in de subgroep aanwezig is
-      const begeleiderInSubgroep = this.gebruikers.find(
-        gebruiker =>
-          gebruiker.rol?.rolID === 2 &&
-          gebruiker.subgroep?.subgroepID === this.selectedSubgroepID,
-      )
-
-      if (begeleiderInSubgroep) {
+    async addExistingBegeleiderToGebruiker() {
+      try {
+        if (!this.selectedGebruikerID || !this.selectedGebruikerID) {
+          console.error('Fout: Gebruiker of Begeleider ID ontbreekt')
+          return
+        }
         const token = localStorage.getItem('access_token')
-        await axios.patch(
-          `http://localhost:3000/gebruiker/${werknemer.gebruikerID}`,
-          { begeleider: { gebruikerID: begeleiderInSubgroep.gebruikerID } },
-          { headers: { Authorization: `Bearer ${token}` } },
+        const gebruikersInSubgroep = await axios.get(
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { subgroepID: this.selectedSubgroepID },
+          },
+        )
+        for (const gebruiker of gebruikersInSubgroep.data) {
+          if (gebruiker.gebruiker.rol.rolID === 2) {
+            await axios.post(
+              `http://localhost:3000/gebruiker/${this.selectedGebruikerID}/begeleiders/${gebruiker.gebruiker.gebruikerID}`, // Gebruik selectedGebruikerID
+              {},
+              { headers: { Authorization: `Bearer ${token}` } },
+            )
+          }
+        }
+      } catch (error) {
+        console.error('Error adding gebruiker to subgroep:', error)
+      }
+    },
+
+    async assignBegeleiderToSubgroep() {
+      try {
+        console.log(this.selectedGebruikerID)
+        // Controleer of selectedGebruikerID en selectedBegeleiderID zijn ingesteld
+        if (!this.selectedGebruikerID || !this.selectedSubgroepID) {
+          console.error('Fout: Gebruiker of Subgroep ID ontbreekt')
+          return
+        }
+
+        const token = localStorage.getItem('access_token')
+
+        const gebruikersInSubgroep = await axios.get(
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { subgroepID: this.selectedSubgroepID },
+          },
+        )
+
+        if (gebruikersInSubgroep.data.length === 0) {
+          console.warn('Geen gebruikers gevonden in de subgroep.')
+          return
+        }
+
+        console.log(gebruikersInSubgroep.data)
+
+        // Verstuur een API-aanroep voor elke gebruiker in de subgroep
+        for (const gebruiker of gebruikersInSubgroep.data) {
+          if (gebruiker.gebruiker.rol.rolID === 3) {
+            await axios.post(
+              `http://localhost:3000/gebruiker/${gebruiker.gebruiker.gebruikerID}/begeleiders/${this.selectedGebruikerID}`, // Gebruik selectedGebruikerID
+              {},
+              { headers: { Authorization: `Bearer ${token}` } },
+            )
+          }
+        }
+
+        this.fetchGebruikers(this.selectedSubgroepID) // Vernieuw de gebruikerslijst
+        console.log(
+          'Begeleider succesvol toegewezen aan alle gebruikers in de subgroep.',
+        )
+      } catch (error) {
+        console.error('Fout bij het toewijzen van begeleider:', error)
+      }
+    },
+
+    async removeBegeleiderFromGebruiker(
+      gebruikerID: number,
+      subgroepID: number,
+    ) {
+      try {
+        this.selectedGebruikerID = gebruikerID
+        this.selectedSubgroepID = subgroepID
+        console.log(this.selectedGebruikerID, this.selectedSubgroepID)
+        if (!this.selectedGebruikerID || !this.selectedSubgroepID) {
+          console.error('Fout: Gebruiker of Subgroep ID ontbreekt')
+          return
+        }
+        const token = localStorage.getItem('access_token')
+        const gebruikersInSubgroep = await axios.get(
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { subgroepID: this.selectedSubgroepID },
+          },
+        )
+        if (gebruikersInSubgroep.data.length === 0) {
+          console.warn('Geen gebruikers gevonden in de subgroep.')
+          return
+        }
+        // Verstuur een API-aanroep voor elke gebruiker in de subgroep
+        for (const gebruiker of gebruikersInSubgroep.data) {
+          if (gebruiker.gebruiker.rol.rolID === 3) {
+            await axios.delete(
+              `http://localhost:3000/gebruiker/${gebruiker.gebruiker.gebruikerID}/begeleiders/${this.selectedGebruikerID}`, // Gebruik selectedGebruikerID
+              { headers: { Authorization: `Bearer ${token}` } },
+            )
+          }
+        }
+        this.fetchGebruikers(this.selectedSubgroepID) // Vernieuw de gebruikerslijst
+        console.log(
+          'Begeleider succesvol verwijderd uit alle gebruikers in de subgroep.',
+        )
+      } catch (error) {
+        console.error('Fout bij het verwijderen van begeleider:', error)
+      }
+    },
+
+    async removeWerknemerFromBegeleiders(
+      gebruikerID: number,
+      subgroepID: number,
+    ) {
+      try {
+        this.selectedGebruikerID = gebruikerID
+        this.selectedSubgroepID = subgroepID
+        console.log(
+          'Selected IDs:',
+          this.selectedGebruikerID,
+          this.selectedSubgroepID,
+        )
+        if (!this.selectedGebruikerID || !this.selectedSubgroepID) {
+          console.error('Fout: Gebruiker of Subgroep ID ontbreekt')
+          return
+        }
+
+        const token = localStorage.getItem('access_token')
+        const gebruikersInSubgroep = await axios.get(
+          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { subgroepID: this.selectedSubgroepID },
+          },
+        )
+
+        console.log(
+          'Fetched gebruikersInSubgroep data:',
+          gebruikersInSubgroep.data,
+        )
+
+        for (const gebruiker of gebruikersInSubgroep.data) {
+          console.log('Processing gebruiker:', gebruiker)
+
+          // Use optional chaining to handle missing properties
+          if (
+            gebruiker?.gebruiker?.rol?.rolID === 2 &&
+            gebruiker?.subgroep?.subgroepID === this.selectedSubgroepID
+          ) {
+            console.log('Deleting begeleider:', gebruiker)
+
+            await axios.delete(
+              `http://localhost:3000/gebruiker/${this.selectedGebruikerID}/begeleiders/${gebruiker.gebruiker.gebruikerID}`,
+              { headers: { Authorization: `Bearer ${token}` } },
+            )
+
+            console.log('Begeleider verwijderd')
+          }
+        }
+
+        await this.fetchGebruikers(this.selectedSubgroepID) // Refresh users list
+      } catch (error) {
+        console.error(
+          `Fout bij het verwijderen van begeleider in subgroep ${this.selectedSubgroepID}:`,
+          error,
         )
       }
     },

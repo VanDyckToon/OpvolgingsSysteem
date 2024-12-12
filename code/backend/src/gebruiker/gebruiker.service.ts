@@ -29,7 +29,6 @@ export class GebruikerService {
       }
     } else {
       data.wachtwoord = null;
-      //data.email = null;
     }
 
     const gebruiker = await this.gebruikerRepository.save(data);
@@ -38,7 +37,7 @@ export class GebruikerService {
 
   findAll() {
     return this.gebruikerRepository.find({
-      relations: ['rol', 'opleidingGebruikers', 'subgroep', 'begeleider'],
+      relations: ['rol', 'opleidingGebruikers', 'subgroep', 'begeleiders'],
     });
   }
 
@@ -79,8 +78,8 @@ export class GebruikerService {
     begeleiderID: number,
   ): Promise<Gebruiker[]> {
     return this.gebruikerRepository.find({
-      where: { begeleider: { gebruikerID: begeleiderID } },
-      relations: ['begeleider'],
+      where: { begeleiders: { gebruikerID: begeleiderID } },
+      relations: ['begeleiders'],
     });
   }
 
@@ -90,6 +89,7 @@ export class GebruikerService {
       relations: ['rol', 'subgroep'],
     });
   }
+
   async getSubgroepByGebruikerID(gebruikerID: number): Promise<any> {
     const gebruiker = await this.gebruikerRepository.findOne({
       where: { gebruikerID },
@@ -118,17 +118,15 @@ export class GebruikerService {
     subgroepID: number,
   ): Promise<Gebruiker> {
     try {
-      // Find the user (gebruiker) to add to the subgroep
       const gebruiker = await this.gebruikerRepository.findOne({
         where: { gebruikerID },
-        relations: ['rol'],
+        relations: ['rol', 'begeleiders', 'subgroep'],
       });
 
       if (!gebruiker) {
         throw new Error(`Gebruiker with ID ${gebruikerID} not found`);
       }
 
-      // Find the subgroep where the user will be added
       const subgroep = await this.subgroepRepository.findOne({
         where: { subgroepID },
       });
@@ -137,17 +135,13 @@ export class GebruikerService {
         throw new Error(`Subgroep with ID ${subgroepID} not found`);
       }
 
-      // Check if the user is already in the subgroep (for other roles)
       if (gebruiker.subgroep?.subgroepID === subgroepID) {
         throw new Error(`Gebruiker is already in subgroep ${subgroepID}`);
       }
 
-      // Set the subgroep for the gebruiker
       gebruiker.subgroep = subgroep;
 
-      // If the gebruiker is a begeleider (role ID 2), we need to check if there is already a begeleider
       if (gebruiker.rol?.rolID === 2) {
-        // Check if there's already a begeleider in the subgroep
         const existingBegeleider = await this.gebruikerRepository.findOne({
           where: { rol: { rolID: 2 }, subgroep: { subgroepID } },
         });
@@ -156,26 +150,23 @@ export class GebruikerService {
           throw new Error(`Subgroep ${subgroepID} already has a begeleider.`);
         }
 
-        // If the gebruiker is a begeleider, update all werknemers to have this begeleider
         await this.updateWerknemersBegeleider(subgroepID, gebruikerID);
       }
 
-      // Save the gebruiker after adding to the subgroep
       const updatedGebruiker = await this.gebruikerRepository.save(gebruiker);
 
-      // If the gebruiker is a werknemer (role ID 3), update the begeleider relationship
       if (gebruiker.rol?.rolID === 3) {
         const begeleider = await this.gebruikerRepository.findOne({
           where: { rol: { rolID: 2 }, subgroep: { subgroepID } },
         });
 
         if (begeleider) {
-          gebruiker.begeleider = begeleider;
+          gebruiker.begeleiders = gebruiker.begeleiders || [];
+          gebruiker.begeleiders.push(begeleider);
           await this.gebruikerRepository.save(gebruiker);
         }
       }
 
-      // Return the updated gebruiker
       return updatedGebruiker;
     } catch (error) {
       console.error('Error in addToSubgroep:', error.message, error.stack);
@@ -188,8 +179,8 @@ export class GebruikerService {
     begeleiderID: number,
   ): Promise<void> {
     const werknemers = await this.gebruikerRepository.find({
-      where: { subgroep: { subgroepID }, rol: { rolID: 3 } }, // rolID 3 for werknemers
-      relations: ['begeleider'],
+      where: { subgroep: { subgroepID }, rol: { rolID: 3 } },
+      relations: ['begeleiders'],
     });
 
     const begeleider = await this.gebruikerRepository.findOne({
@@ -201,29 +192,49 @@ export class GebruikerService {
     }
 
     for (const werknemer of werknemers) {
-      werknemer.begeleider = begeleider;
+      werknemer.begeleiders = werknemer.begeleiders || [];
+      werknemer.begeleiders.push(begeleider);
       await this.gebruikerRepository.save(werknemer);
     }
   }
 
-    //voorwachtwoorden aan te passen
   async findById(gebruikerID: number): Promise<Gebruiker> {
     return this.gebruikerRepository.findOne({ where: { gebruikerID } });
   }
 
-  async assignBegeleiderToWerknemer(
-    werknemerID: number,
-    begeleiderID: number,
-  ): Promise<Gebruiker> {
-    const werknemer = await this.gebruikerRepository.findOne({
-      where: { gebruikerID: werknemerID },
-      relations: ['begeleider', 'subgroep', 'rol'],
-    });
-
-    if (!werknemer) {
-      throw new Error('Werknemer not found');
+  async updateWachtwoord(
+    gebruikerID: number,
+    nieuwWachtwoord: string,
+  ): Promise<void> {
+    if (!nieuwWachtwoord || typeof nieuwWachtwoord !== 'string') {
+      throw new Error('A valid password is required');
     }
 
+    const gebruiker = await this.gebruikerRepository.findOne({
+      where: { gebruikerID },
+    });
+    if (!gebruiker) {
+      throw new Error('Gebruiker not found');
+    }
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(nieuwWachtwoord, saltRounds);
+
+    gebruiker.wachtwoord = hashedPassword;
+    await this.gebruikerRepository.save(gebruiker);
+  }
+  async assignBegeleider(gebruikerID: number, begeleiderID: number) {
+    // Fetch the gebruiker from the repository
+    const gebruiker = await this.gebruikerRepository.findOne({
+      where: { gebruikerID },
+      relations: ['begeleiders'], // Include relations to fetch begeleiders
+    });
+
+    if (!gebruiker) {
+      throw new Error('Gebruiker not found');
+    }
+
+    // Fetch the begeleider from the repository
     const begeleider = await this.gebruikerRepository.findOne({
       where: { gebruikerID: begeleiderID },
     });
@@ -232,26 +243,35 @@ export class GebruikerService {
       throw new Error('Begeleider not found');
     }
 
-    // Set the "begeleider" property, not "begeleiderID"
-    werknemer.begeleider = begeleider;
-    return this.gebruikerRepository.save(werknemer);
-  }
+    // Initialize gebruiker.begeleiders if it's undefined or null
+    gebruiker.begeleiders = gebruiker.begeleiders || [];
 
-  async updateWachtwoord(gebruikerID: number, nieuwWachtwoord: string): Promise<void> {
-    if (!nieuwWachtwoord || typeof nieuwWachtwoord !== 'string') {
-      throw new Error('A valid password is required');
+    // Check if the begeleider is already assigned to the gebruiker
+    if (gebruiker.begeleiders.some((b) => b.gebruikerID === begeleiderID)) {
+      throw new Error('Begeleider already assigned to this gebruiker');
     }
-  
-    const gebruiker = await this.gebruikerRepository.findOne({ where: { gebruikerID } });
-    if (!gebruiker) {
-      throw new Error('Gebruiker not found');
-    }
-  
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(nieuwWachtwoord, saltRounds);  // Ensure nieuwWachtwoord is valid
-  
-    gebruiker.wachtwoord = hashedPassword;
+
+    // Add the begeleider to the gebruiker.begeleiders array
+    gebruiker.begeleiders.push(begeleider);
+
+    // Save the updated gebruiker
     await this.gebruikerRepository.save(gebruiker);
+
+    // Return the gebruiker with the updated begeleiders relation
+    return this.gebruikerRepository.findOne({
+      where: { gebruikerID },
+      relations: ['begeleiders'],
+    });
   }
-  
+  async removeBegeleiderFromGebruiker(
+    gebruikerID: number,
+    begeleiderID: number,
+  ): Promise<void> {
+    // Use QueryBuilder to delete the association in the join table
+    await this.gebruikerRepository
+      .createQueryBuilder()
+      .relation(Gebruiker, 'begeleiders') // Relation name matches @ManyToMany property
+      .of(gebruikerID) // Target the specific gebruiker
+      .remove(begeleiderID); // Remove the relation with the specified begeleider
+  }
 }

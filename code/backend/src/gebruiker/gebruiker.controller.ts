@@ -1,6 +1,5 @@
 import {
   Controller,
-  Req,
   Get,
   Post,
   Body,
@@ -110,26 +109,13 @@ export class GebruikerController {
     return { message: 'Begeleider updated for all werknemers in subgroep' };
   }
 
-  // Endpoint to assign a specific begeleider to a werknemer
-  @Patch('werknemer/:werknemerID/assignBegeleider/:begeleiderID')
-  async assignBegeleider(
-    @Param('werknemerID') werknemerID: number,
-    @Param('begeleiderID') begeleiderID: number,
-  ) {
-    const werknemer = await this.gebruikerService.assignBegeleiderToWerknemer(
-      werknemerID,
-      begeleiderID,
-    );
-    return werknemer;
-  }
-
   //wachtwoord verificatie
   @Post('wachtwoord')
   async wachtwoord(
-    @Body() body: { wachtwoord: string; gebruikerID: number },  // Expect wachtwoord and gebruikerID in body
+    @Body() body: { wachtwoord: string; gebruikerID: number }, // Expect wachtwoord and gebruikerID in body
   ) {
     console.log('Received request to verify password');
-    console.log('Request Body:', body);  // Log the body to check received values
+    console.log('Request Body:', body); // Log the body to check received values
 
     const { wachtwoord, gebruikerID } = body;
 
@@ -145,13 +131,13 @@ export class GebruikerController {
       throw new UnauthorizedException('Gebruiker niet gevonden');
     }
 
-    console.log('User found:', gebruiker);  // Log the found gebruiker
+    console.log('User found:', gebruiker); // Log the found gebruiker
 
     // Compare the provided password with the stored hashed password
     const isMatch = await bcrypt.compare(wachtwoord, gebruiker.wachtwoord);
     if (isMatch) {
       console.log('Password match');
-      return { valid: true };  // Password is correct
+      return { valid: true }; // Password is correct
     } else {
       console.log('Incorrect password');
       throw new UnauthorizedException('Wachtwoord is onjuist');
@@ -164,5 +150,34 @@ export class GebruikerController {
     @Body('wachtwoord') nieuwWachtwoord: string,
   ) {
     return this.gebruikerService.updateWachtwoord(gebruikerID, nieuwWachtwoord);
+  }
+  @Post(':gebruikerID/begeleiders/:begeleiderID')
+  async assignBegeleider(
+    @Param('gebruikerID') gebruikerID: number,
+    @Param('begeleiderID') begeleiderID: number,
+  ) {
+    return this.gebruikerService.assignBegeleider(gebruikerID, begeleiderID);
+  }
+  @Post('batch/begeleiders/:begeleiderID')
+  async assignBegeleiderToSubgroep(
+    @Body() gebruikerIDs: number[],
+    @Param('begeleiderID') begeleiderID: number,
+  ) {
+    return Promise.all(
+      gebruikerIDs.map((gebruikerID) =>
+        this.gebruikerService.assignBegeleider(gebruikerID, begeleiderID),
+      ),
+    );
+  }
+  @Delete(':gebruikerID/begeleiders/:begeleiderID')
+  async removeBegeleider(
+    @Param('gebruikerID') gebruikerID: number,
+    @Param('begeleiderID') begeleiderID: number,
+  ) {
+    await this.gebruikerService.removeBegeleiderFromGebruiker(
+      gebruikerID,
+      begeleiderID,
+    );
+    return { message: 'Begeleider removed from gebruiker successfully' };
   }
 }

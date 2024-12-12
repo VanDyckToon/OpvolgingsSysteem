@@ -82,24 +82,40 @@ export default defineComponent({
     const errorMessage = ref('')
     const router = useRouter()
 
+    console.log(import.meta.env.VITE_APP_API_URL)
+
     const login = async () => {
       try {
         const response = await axios.post(
-          'http://localhost:3000/auth/loginBegeleider',
+          `${import.meta.env.VITE_APP_API_URL}/auth/loginBegeleider`,
           {
             email: email.value,
             wachtwoord: password.value,
           },
         )
 
-        const { access_token } = response.data
-        localStorage.setItem('access_token', access_token) // Store token
+        // Log response to check if access_token exists
+        console.log('Response from backend:', response)
 
-        // Redirect to the begeleider's workers overview
+        // Ensure response contains access_token
+        const { access_token } = response.data
+        if (!access_token) {
+          throw new Error('No access token found in the response')
+        }
+
+        // Store the access token in localStorage
+        localStorage.setItem('access_token', access_token)
+
+        // Decode the JWT token and handle the redirect
         const decodedToken = JSON.parse(atob(access_token.split('.')[1])) // Decode JWT token
-        router.push(`/begeleider/${decodedToken.gebruikerID}`) // Ensure the path is properly formatted
+        console.log('Decoded token:', decodedToken)
+
+        // Redirect to the worker's overview page
+        router.push(`/begeleider/${decodedToken.gebruikerID}`)
       } catch (error) {
         console.error(error)
+
+        // Handle error messages
         errorMessage.value = 'Verkeerde email en/of wachtwoord'
       }
     }
