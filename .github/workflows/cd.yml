@@ -25,8 +25,9 @@ jobs:
           port: 22
 
           script: |
+            pwd
             cd ../opt/desprong
             docker-compose down
             docker pull ghcr.io/vandycktoon/opvolgingssysteem:backend-latest
             docker pull ghcr.io/vandycktoon/opvolgingssysteem:frontend-latest
-            docker-compose up -d
+            docker-compose up --build -d
