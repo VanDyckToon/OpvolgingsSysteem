@@ -4,7 +4,7 @@
       <img src="../assets/logo-de-sprong.svg" alt="Logo" class="w-44 h-44" />
     </div>
     <div class="w-full max-w-xl p-8 bg-white shadow-lg rounded-lg">
-      <h2 class="text-4xl font-bold mb-6 text-center text-[#456A50]">Login</h2>
+      <h2 class="text-4xl font-bold mb-6 text-center text-[#456A50]">Login Test</h2>
       <form @submit.prevent="login">
         <div class="mb-4">
           <label
