@@ -458,7 +458,7 @@ export default defineComponent({
 
         // Haal de gebruikers voor de geselecteerde opleiding op
         const response = await axios.get(
-          `http://localhost:3000/opleiding-gebruiker/opleiding/${opleidingID}`,
+          `${import.meta.env.VITE_APP_API_URL}/opleiding-gebruiker/opleiding/${opleidingID}`,
           { headers: { Authorization: `Bearer ${token}` } },
         )
 
@@ -471,7 +471,7 @@ export default defineComponent({
 
         // Haal de details van de opleiding op
         const opleidingResponse = await axios.get(
-          `http://localhost:3000/opleiding/${opleidingID}`,
+          `${import.meta.env.VITE_APP_API_URL}/opleiding/${opleidingID}`,
           { headers: { Authorization: `Bearer ${token}` } },
         )
         const opleidingNaam = opleidingResponse.data.naam
@@ -599,7 +599,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
 
-        const response = await axios.get('http://localhost:3000/opleiding', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/opleiding`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.opleidingen = response.data.sort((a: Opleiding, b: Opleiding) =>
@@ -617,7 +617,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.post(
-          'http://localhost:3000/opleiding',
+          `${import.meta.env.VITE_APP_API_URL}/opleiding`,
           {
             naam: this.naam,
             intern: this.intern,
@@ -638,7 +638,6 @@ export default defineComponent({
 
     async confirmDelete() {
       try {
-        const token = localStorage.getItem('access_token')
         await this.deleteOpleiding(this.selectedOpleidingID)
         this.isDeleteModalVisible = false
       } catch (error) {
@@ -649,7 +648,7 @@ export default defineComponent({
     async deleteOpleiding(opleidingID: number) {
       try {
         const token = localStorage.getItem('access_token')
-        await axios.delete(`http://localhost:3000/opleiding/${opleidingID}`, {
+        await axios.delete(`${import.meta.env.VITE_APP_API_URL}/opleiding/${opleidingID}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.fetchOpleidingen()
@@ -723,7 +722,7 @@ export default defineComponent({
         }
         const token = localStorage.getItem('access_token')
         await axios.patch(
-          `http://localhost:3000/opleiding/${opleidingID}`,
+          `${import.meta.env.VITE_APP_API_URL}/opleiding/${opleidingID}`,
           {
             naam: updatedNaam,
             intern: updatedIntern,
@@ -757,7 +756,7 @@ export default defineComponent({
         const token = localStorage.getItem('access_token')
 
         const response = await axios.get(
-          `http://localhost:3000/opleiding-gebruiker/opleiding/${opleidingID}`,
+          `${import.meta.env.VITE_APP_API_URL}/opleiding-gebruiker/opleiding/${opleidingID}`,
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.selectedOpleidingGebruikers = response.data
@@ -779,7 +778,7 @@ export default defineComponent({
           }
 
           const response = await axios.get(
-            `http://localhost:3000/opleiding-gebruiker/check/${this.selectedOpleidingID}/${this.selectedGebruikerID}`,
+            `${import.meta.env.VITE_APP_API_URL}/opleiding-gebruiker/check/${this.selectedOpleidingID}/${this.selectedGebruikerID}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             },
@@ -790,7 +789,7 @@ export default defineComponent({
             return
           }
 
-          await axios.post('http://localhost:3000/opleiding-gebruiker', data, {
+          await axios.post(`${import.meta.env.VITE_APP_API_URL}/opleiding-gebruiker`, data, {
             headers: { Authorization: `Bearer ${token}` },
           })
 
@@ -805,7 +804,7 @@ export default defineComponent({
     async fetchGebruikers() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/gebruiker', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/gebruiker`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.gebruikers = response.data.filter(
@@ -831,7 +830,7 @@ export default defineComponent({
         if (gebruikerID && opleidingID) {
           // Perform the delete request
           const response = await axios.delete(
-            `http://localhost:3000/opleiding-gebruiker/opleiding/${opleidingID}/gebruiker/${gebruikerID}`,
+            `${import.meta.env.VITE_APP_API_URL}/opleiding-gebruiker/opleiding/${opleidingID}/gebruiker/${gebruikerID}`,
             { headers: { Authorization: `Bearer ${token}` } },
           )
 

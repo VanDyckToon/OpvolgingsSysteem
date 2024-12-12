@@ -163,7 +163,7 @@ export default defineComponent({
         if (this.rolID == '1') {
           // Fetch users with rolID 3
           const response = await axios.get(
-            'http://localhost:3000/gebruiker/rol/3',
+            `${import.meta.env.VITE_APP_API_URL}/gebruiker/rol/3`,
             {
               headers: { Authorization: `Bearer ${token}` },
             },
@@ -171,12 +171,12 @@ export default defineComponent({
           this.gebruikers = response.data
         } else if (this.rolID == '2') {
           const response = await axios.get(
-            `http://localhost:3000/gebruiker/begeleider/${this.begeleiderID}`,
+            `${import.meta.env.VITE_APP_API_URL}/gebruiker/begeleider/${this.begeleiderID}`,
             { headers: { Authorization: `Bearer ${token}` } },
           )
           this.gebruikers = response.data
         } else {
-          const response = await axios.get('http://localhost:3000/admin', {
+          const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/admin`, {
             headers: { Authorization: `Bearer ${token}` },
           })
           this.gebruikers = response.data

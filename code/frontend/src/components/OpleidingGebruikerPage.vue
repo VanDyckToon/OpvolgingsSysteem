@@ -107,7 +107,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          `http://localhost:3000/gebruiker/${this.$route.params.id}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker/${this.$route.params.id}`,
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.gebruiker = response.data
@@ -119,7 +119,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          `http://localhost:3000/opleiding-gebruiker/gebruiker/${this.$route.params.id}`,
+          `${import.meta.env.VITE_APP_API_URL}/opleiding-gebruiker/gebruiker/${this.$route.params.id}`,
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.opleidingen = response.data

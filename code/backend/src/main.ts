@@ -17,9 +17,9 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
   app.enableCors({
-    origin: ['http://localhost:5173', 'http://161.35.20.135:5173/'],
-    methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: 'Content-Type,Authorization',
+    origin: ['http://desprong.opvolging.com', 'https://desprong.opvolging.com'], // Allow requests from the frontend
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allow these HTTP methods
+    allowedHeaders: 'Content-Type, Authorization', // Allow these headers
   });
 
   await app.listen(3000);

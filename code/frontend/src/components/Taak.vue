@@ -192,7 +192,6 @@
 <script lang="ts">
 import axios from 'axios'
 import { defineComponent } from 'vue'
-import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
 interface Groep {
@@ -209,7 +208,6 @@ interface Taak {
 export default defineComponent({
   name: 'Taak',
   components: {
-    Icon,
     HeaderComponent,
   },
   data() {
@@ -247,7 +245,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
 
-        const response = await axios.get('http://localhost:3000/taak', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/taak`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.taken = response.data.sort((a: Taak, b: Taak) =>
@@ -263,7 +261,7 @@ export default defineComponent({
     async fetchGroepen() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/groep', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/groep`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.groepen = response.data.sort((a: Groep, b: Groep) =>
@@ -287,7 +285,7 @@ export default defineComponent({
         )
         const token = localStorage.getItem('access_token')
         const response = await axios.post(
-          'http://localhost:3000/taak',
+          `${import.meta.env.VITE_APP_API_URL}/taak`,
           { naam: this.naam, groep: { groepID: this.selectedGroepID } },
           { headers: { Authorization: `Bearer ${token}` } },
         )
@@ -307,7 +305,6 @@ export default defineComponent({
 
     async confirmDelete() {
       try {
-        const token = localStorage.getItem('access_token')
         await this.deleteTaak(this.selectedTaakID)
         this.isDeleteModalVisible = false // Close the modal after confirmation
       } catch (error) {
@@ -318,7 +315,7 @@ export default defineComponent({
     async deleteTaak(taakID: number) {
       try {
         const token = localStorage.getItem('access_token')
-        await axios.delete(`http://localhost:3000/taak/${taakID}`, {
+        await axios.delete(`${import.meta.env.VITE_APP_API_URL}/taak/${taakID}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.fetchTaken() // Refresh the list after deletion
@@ -345,7 +342,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.patch(
-          `http://localhost:3000/taak/${taakID}`,
+          `${import.meta.env.VITE_APP_API_URL}/taak/${taakID}`,
           {
             naam: updatedNaam,
             groep: { groepID: updatedGroepID }, // Update the group ID as well

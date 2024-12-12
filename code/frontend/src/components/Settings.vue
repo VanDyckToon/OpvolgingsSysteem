@@ -58,7 +58,7 @@ export default defineComponent({
     async fetchGebruiker() {
       try {
         const response = await axios.get(
-          `http://localhost:3000/gebruiker/${this.$route.params.id}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker/${this.$route.params.id}`,
         )
         this.gebruiker = response.data
       } catch (error) {

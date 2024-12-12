@@ -220,7 +220,6 @@
 import axios from 'axios'
 import { defineComponent } from 'vue'
 import ColorPicker from 'primevue/colorpicker'
-import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
 interface Score {
@@ -233,7 +232,6 @@ interface Score {
 export default defineComponent({
   name: 'Score',
   components: {
-    Icon,
     HeaderComponent,
     ColorPicker,
   },
@@ -263,7 +261,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.post(
-          'http://localhost:3000/score',
+          `${import.meta.env.VITE_APP_API_URL}/score`,
           {
             scoreNaam: this.naam,
             waarde: this.waarde,
@@ -282,7 +280,7 @@ export default defineComponent({
     async fetchScores() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get(`http://localhost:3000/score`, {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/score`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.scores = response.data
@@ -318,7 +316,7 @@ export default defineComponent({
         }
         const token = localStorage.getItem('access_token')
         await axios.patch(
-          `http://localhost:3000/score/${scoreID}`,
+          `${import.meta.env.VITE_APP_API_URL}/score/${scoreID}`,
           {
             scoreNaam: naam,
             waarde: waarde,
@@ -350,7 +348,7 @@ export default defineComponent({
     async deleteScore(scoreID: number) {
       try {
         const token = localStorage.getItem('access_token')
-        await axios.delete(`http://localhost:3000/score/${scoreID}`, {
+        await axios.delete(`${import.meta.env.VITE_APP_API_URL}/score/${scoreID}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.fetchScores() // Refresh the scores list

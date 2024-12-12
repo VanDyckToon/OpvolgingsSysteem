@@ -83,7 +83,6 @@ export default defineComponent({
     const router = useRouter()
 
     console.log(import.meta.env.VITE_APP_API_URL)
-
     const login = async () => {
       try {
         const response = await axios.post(

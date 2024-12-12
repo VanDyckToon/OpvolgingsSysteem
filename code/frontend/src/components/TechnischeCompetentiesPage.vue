@@ -235,7 +235,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          `http://localhost:3000/taak/gebruiker/${this.begeleiderID}`,
+          `${import.meta.env.VITE_APP_API_URL}/taak/gebruiker/${this.begeleiderID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -254,7 +254,7 @@ export default defineComponent({
         const token = localStorage.getItem('access_token')
 
         const response = await axios.get(
-          `http://localhost:3000/gebruiker/${this.$route.params.id}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker/${this.$route.params.id}`,
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.gebruiker = response.data
@@ -267,7 +267,7 @@ export default defineComponent({
     async fetchScores() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/score', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/score`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.scores = response.data
@@ -284,7 +284,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         const response = await axios.get(
-          `http://localhost:3000/technische-competentie-gebruiker/werknemer/${this.begeleiderID}`,
+          `${import.meta.env.VITE_APP_API_URL}/technische-competentie-gebruiker/werknemer/${this.begeleiderID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -325,7 +325,7 @@ export default defineComponent({
 
         // Verstuur de payload naar de backend om de scores op te slaan
         await axios.post(
-          'http://localhost:3000/technische-competentie-gebruiker',
+          `${import.meta.env.VITE_APP_API_URL}/technische-competentie-gebruiker`,
           payload,
           {
             headers: { Authorization: `Bearer ${token}` },

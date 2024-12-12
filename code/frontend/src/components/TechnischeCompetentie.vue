@@ -393,7 +393,7 @@ export default defineComponent({
   methods: {
     async filterTaken(groepID: number = 0) {
       try {
-        let url = 'http://localhost:3000/taak'
+        let url = `${import.meta.env.VITE_APP_API_URL}/taak`
         const token = localStorage.getItem('access_token')
 
         if (groepID) {
@@ -437,7 +437,7 @@ export default defineComponent({
         const token = localStorage.getItem('access_token')
 
         const response = await axios.get(
-          'http://localhost:3000/technische-competentie',
+          `${import.meta.env.VITE_APP_API_URL}/technische-competentie`,
           { headers: { Authorization: `Bearer ${token}` } },
         )
         this.technischeCompetenties = response.data.sort(
@@ -455,7 +455,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
 
-        const response = await axios.get('http://localhost:3000/taak', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/taak`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.taken = response.data.sort((a: Taak, b: Taak) =>
@@ -471,7 +471,7 @@ export default defineComponent({
     async fetchGroepen() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/groep', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/groep`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.groepen = response.data.sort((a: Groep, b: Groep) =>
@@ -497,7 +497,7 @@ export default defineComponent({
         )
         const token = localStorage.getItem('access_token')
         const response = await axios.post(
-          'http://localhost:3000/technische-competentie',
+          `${import.meta.env.VITE_APP_API_URL}/technische-competentie`,
           {
             naam: this.naam,
             beschrijving: this.beschrijving,
@@ -535,7 +535,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.delete(
-          `http://localhost:3000/technische-competentie/${technischeCompetentieID}`,
+          `${import.meta.env.VITE_APP_API_URL}/technische-competentie/${technischeCompetentieID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -573,7 +573,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.patch(
-          `http://localhost:3000/technische-competentie/${technischeCompetentieID}`,
+          `${import.meta.env.VITE_APP_API_URL}/technische-competentie/${technischeCompetentieID}`,
           {
             naam: updatedNaam,
             beschrijving: updatedBeschrijving,

@@ -57,13 +57,9 @@
         <h2 class="text-3xl font-bold mb-6 text-center text-[#456A50]">
           Competenties
         </h2>
-        <div class="max-h-80 overflow-y-auto [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:rounded-full
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-[#456A50]
-  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4">
+        <div
+          class="max-h-80 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#456A50] dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 pr-4"
+        >
           <ul v-if="competenties.length" class="divide-y divide-gray-200">
             <li
               v-for="competentie in competenties"
@@ -195,7 +191,6 @@
 <script lang="ts">
 import axios from 'axios'
 import { defineComponent } from 'vue'
-import { Icon } from '@iconify/vue'
 import HeaderComponent from '../components/Header.vue'
 
 interface Competentie {
@@ -207,7 +202,6 @@ interface Competentie {
 export default defineComponent({
   name: 'Competentie',
   components: {
-    Icon,
     HeaderComponent,
   },
 
@@ -244,9 +238,12 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
 
-        const response = await axios.get('http://localhost:3000/competentie', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const response = await axios.get(
+          `${import.meta.env.VITE_APP_API_URL}/competentie`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        )
         this.competenties = response.data.sort(
           (a: Competentie, b: Competentie) => a.naam.localeCompare(b.naam),
         )
@@ -262,7 +259,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.post(
-          'http://localhost:3000/competentie',
+          `${import.meta.env.VITE_APP_API_URL}/competentie`,
           { naam: this.naam, beschrijving: this.beschrijving },
           { headers: { Authorization: `Bearer ${token}` } },
         )
@@ -276,7 +273,6 @@ export default defineComponent({
 
     async confirmDelete() {
       try {
-        const token = localStorage.getItem('access_token')
         await this.deleteCompetentie(this.selectedCompetentieID)
         this.isDeleteModalVisible = false // Close the modal after confirmation
       } catch (error) {
@@ -288,7 +284,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.delete(
-          `http://localhost:3000/competentie/${competentieID}`,
+          `${import.meta.env.VITE_APP_API_URL}/competentie/${competentieID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -321,7 +317,7 @@ export default defineComponent({
         }
         const token = localStorage.getItem('access_token')
         await axios.patch(
-          `http://localhost:3000/competentie/${competentieID}`,
+          `${import.meta.env.VITE_APP_API_URL}/competentie/${competentieID}`,
           { naam: updatedNaam, beschrijving: updatedBeschrijving },
           { headers: { Authorization: `Bearer ${token}` } },
         )

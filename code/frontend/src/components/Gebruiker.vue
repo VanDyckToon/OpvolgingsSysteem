@@ -876,7 +876,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
 
-        const response = await axios.get('http://localhost:3000/gebruiker', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/gebruiker`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.gebruikers = response.data.sort((a: Gebruiker, b: Gebruiker) =>
@@ -892,7 +892,7 @@ export default defineComponent({
     async fetchSubgroepen() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/subgroep', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/subgroep`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.subgroepen = response.data.sort((a: Subgroep, b: Subgroep) =>
@@ -908,7 +908,7 @@ export default defineComponent({
     async fetchRolen() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/rol', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/rol`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.rolen = response.data.sort((a: Rol, b: Rol) =>
@@ -924,12 +924,12 @@ export default defineComponent({
     async fetchBegeleiders() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get('http://localhost:3000/gebruiker', {
+        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/gebruiker`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.gebruikers = response.data
 
-        const rolesResponse = await axios.get('http://localhost:3000/rol', {
+        const rolesResponse = await axios.get(`${import.meta.env.VITE_APP_API_URL}/rol`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.rolen = rolesResponse.data
@@ -976,14 +976,14 @@ export default defineComponent({
 
         // Make the API request to add the gebruiker
         const response = await axios.post(
-          'http://localhost:3000/gebruiker',
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker`,
           requestData,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
         )
         await axios.post(
-          'http://localhost:3000/gebruiker-subgroep',
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker-subgroep`,
           {
             gebruiker: { gebruikerID: response.data.gebruikerID },
             subgroep: { subgroepID: this.selectedSubgroepID },
@@ -993,7 +993,7 @@ export default defineComponent({
           },
         )
         const gebruikersInSubgroep = await axios.get(
-          `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             params: { subgroepID: this.selectedSubgroepID },
@@ -1001,7 +1001,7 @@ export default defineComponent({
         )
         if (requestData.rol.rolID === 3) {
           await axios.get(
-            `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+            `${import.meta.env.VITE_APP_API_URL}/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
             {
               headers: { Authorization: `Bearer ${token}` },
               params: { subgroepID: this.selectedSubgroepID },
@@ -1010,7 +1010,7 @@ export default defineComponent({
           for (const gebruiker of gebruikersInSubgroep.data) {
             if (gebruiker.gebruiker.rol.rolID === 2) {
               await axios.post(
-                `http://localhost:3000/gebruiker/${response.data.gebruikerID}/begeleiders/${gebruiker.gebruiker.gebruikerID}`, // Gebruik selectedGebruikerID
+                `${import.meta.env.VITE_APP_API_URL}/gebruiker/${response.data.gebruikerID}/begeleiders/${gebruiker.gebruiker.gebruikerID}`, // Gebruik selectedGebruikerID
                 {},
                 { headers: { Authorization: `Bearer ${token}` } },
               )
@@ -1019,7 +1019,7 @@ export default defineComponent({
         }
         if (requestData.rol.rolID === 2) {
           await axios.get(
-            `http://localhost:3000/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
+            `${import.meta.env.VITE_APP_API_URL}/gebruiker-subgroep/gebruikers/${this.selectedSubgroepID}`,
             {
               headers: { Authorization: `Bearer ${token}` },
               params: { subgroepID: this.selectedSubgroepID },
@@ -1028,7 +1028,7 @@ export default defineComponent({
           for (const gebruiker of gebruikersInSubgroep.data) {
             if (gebruiker.gebruiker.rol.rolID === 3) {
               await axios.post(
-                `http://localhost:3000/gebruiker/${gebruiker.gebruiker.gebruikerID}/begeleiders/${response.data.gebruikerID}`, // Gebruik selectedGebruikerID
+                `${import.meta.env.VITE_APP_API_URL}/gebruiker/${gebruiker.gebruiker.gebruikerID}/begeleiders/${response.data.gebruikerID}`, // Gebruik selectedGebruikerID
                 {},
                 { headers: { Authorization: `Bearer ${token}` } },
               )
@@ -1073,7 +1073,7 @@ export default defineComponent({
     async deleteGebruiker(gebruikerID: number) {
       try {
         const token = localStorage.getItem('access_token')
-        await axios.delete(`http://localhost:3000/gebruiker/${gebruikerID}`, {
+        await axios.delete(`${import.meta.env.VITE_APP_API_URL}/gebruiker/${gebruikerID}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.fetchGebruikers() // Refresh the list after deletion
@@ -1149,7 +1149,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('access_token')
         await axios.patch(
-          `http://localhost:3000/gebruiker/${gebruikerID}`,
+          `${import.meta.env.VITE_APP_API_URL}/gebruiker/${gebruikerID}`,
           {
             voornaam: updatedVoornaam,
             achternaam: updatedAchternaam,
