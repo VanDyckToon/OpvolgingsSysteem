@@ -134,5 +134,5 @@ jobs:
 
       - name: Build and Push Frontend Docker image
         run: |
-          docker build -f code/frontend/Dockerfile -t ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):frontend-latest ./code/frontend
+          docker build -f code/frontend/Dockerfile -t ghcr.io/$(echo "VanDyckToon/OpvolgingsSysteem" | tr '[:upper:]' '[:lower:]'):frontend-latest ./code
           docker push ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]'):frontend-latest
