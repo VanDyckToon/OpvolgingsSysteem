@@ -21,7 +21,7 @@
             {{ showNVT ? 'Verberg NVT' : 'Toon NVT' }}
           </button>
         </div>
-
+        <div class="md:h-[28rem] lg:h-[22rem] overflow-y-scroll [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#456A50] dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
         <ul v-if="filteredCompetenties.length" class="divide-y divide-gray-200">
           <li
             v-for="taak in taken"
@@ -92,7 +92,7 @@
         <p v-else class="text-center text-gray-500">
           Geen technische competenties gevonden
         </p>
-
+      </div>
         <div class="text-center mt-6">
           <button
             class="px-6 py-2 text-white bg-[#456A50] rounded shadow hover:bg-[#3a5742] transition duration-300"

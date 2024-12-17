@@ -10,6 +10,7 @@
         <h3 class="text-xl font-semibold mb-2 text-[#456A50]">
           Toekomstige/Huidige Opleidingen
         </h3>
+        <div class="md:h-56 lg:h-44 overflow-y-scroll [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#456A50] dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
         <ul
           v-if="toekomstigeOpleidingen.length"
           class="divide-y divide-gray-200 mb-6"
@@ -35,10 +36,11 @@
         <p v-else class="text-center text-gray-500">
           Geen toekomstige opleidingen gevonden
         </p>
-
+      </div>
         <h3 class="text-xl font-semibold mt-6 mb-2 text-[#456A50]">
           Voltooide Opleidingen
         </h3>
+        <div class="md:h-56 lg:h-44 overflow-y-scroll [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#456A50] dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
         <ul v-if="voltooideOpleidingen.length" class="divide-y divide-gray-200">
           <li
             v-for="opleiding in voltooideOpleidingen"
@@ -61,6 +63,7 @@
         <p v-else class="text-center text-gray-500">
           Geen voltooide opleidingen gevonden
         </p>
+      </div>
       </div>
     </div>
   </div>
