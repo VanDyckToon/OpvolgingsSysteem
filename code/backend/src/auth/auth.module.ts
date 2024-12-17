@@ -23,7 +23,7 @@ import { AuthGuard } from './auth.guard';
     Gebruiker,
     JwtStrategy,
     AuthGuard,
-    { provide: 'APP_GUARD', useClass: AuthGuard },
+    //{ provide: 'APP_GUARD', useClass: AuthGuard },
   ],
   exports: [AuthService],
 })
