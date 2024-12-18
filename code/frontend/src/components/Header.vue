@@ -31,7 +31,7 @@
           <img
             src="../assets/gebruiker-info.svg"
             alt="home"
-            class="h-9 w-auto object-contain color-[#101234]"
+            class="h-10 w-auto object-contain color-[#101234]"
           />
         </router-link>
 
