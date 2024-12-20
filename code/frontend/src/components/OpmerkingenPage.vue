@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-[#ECF3EB] flex flex-col">
     <HeaderComponent :begeleiderID="begeleiderID" />
     <div class="flex-grow flex justify-center items-center">
-      <div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
+      <div class="w-full max-w-4xl p-8 md:p-4 bg-white shadow-lg rounded-lg">
         <div class="flex justify-between mb-6">
           <h2 class="text-2xl font-bold mb-4 text-left text-black">
             Opmerkingen: {{ gebruiker?.voornaam }} {{ gebruiker?.achternaam }}
@@ -17,8 +17,9 @@
 
         <div class="flex">
           <!-- Left Side: List of Comments -->
-          <div class="w-1/2 pr-4">
+          <div class="w-1/2 pr-4 flex flex-col md:h-[32rem] lg:h-[26rem]">
             <h3 class="text-xl font-semibold mb-2">Laatste 4 Opmerkingen</h3>
+            <div class="flex-1 overflow-y-scroll [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#456A50] dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
             <div v-if="limitedComments.length > 0" class="space-y-2">
               <div
                 v-for="comment in limitedComments"
@@ -34,13 +35,14 @@
             </div>
             <p v-else class="text-gray-500">Geen opmerkingen gevonden</p>
           </div>
+          </div>
 
           <!-- Right Side: Latest Comment and Input -->
-          <div class="w-1/2 pl-4">
+          <div class="w-1/2 pl-4 flex flex-col md:h-[32rem] lg:h-[26rem]">
             <h3 class="text-xl font-semibold mb-2">Laatste Opmerking</h3>
             <div
               v-if="latestComment"
-              class="p-4 border rounded bg-gray-100 mb-4"
+              class="p-4 border rounded bg-gray-100 mb-4 overflow-y-scroll [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#456A50] dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
             >
               <h4 class="font-bold">{{ latestComment.titel }}</h4>
               <p class="text-gray-500 text-sm">
