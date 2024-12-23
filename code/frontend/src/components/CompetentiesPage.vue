@@ -212,9 +212,12 @@ export default defineComponent({
     async fetchScores() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}:3000/score`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const response = await axios.get(
+          `${import.meta.env.VITE_APP_API_URL}/score`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        )
         this.scores = response.data
       } catch (error) {
         console.error(

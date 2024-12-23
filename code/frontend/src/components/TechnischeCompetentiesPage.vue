@@ -21,78 +21,85 @@
             {{ showNVT ? 'Verberg NVT' : 'Toon NVT' }}
           </button>
         </div>
-        <div class="md:h-[28rem] lg:h-[22rem] overflow-y-scroll [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#456A50] dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
-        <ul v-if="filteredCompetenties.length" class="divide-y divide-gray-200">
-          <li
-            v-for="taak in taken"
-            :key="taak.taakID"
-            class="py-4 flex items-center justify-between"
+        <div
+          class="md:h-[28rem] lg:h-[22rem] overflow-y-scroll [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#456A50] dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+        >
+          <ul
+            v-if="filteredCompetenties.length"
+            class="divide-y divide-gray-200"
           >
-            <!-- Taak Naam + Technische Competenties op dezelfde lijn -->
-            <div class="flex items-start w-full">
-              <div class="text-[#456A50] font-bold w-1/3 py-2">
-                {{ taak.naam }}
-              </div>
-              <div class="flex-grow">
-                <ul>
-                  <li
-                    v-for="competentie in filteredCompetentiesForTaak(
-                      taak.taakID,
-                    )"
-                    :key="competentie.technischeCompetentieID"
-                    class="py-2 flex items-start"
-                  >
-                    <div class="flex-grow">
-                      {{ competentie.naam }}
-                      <span
-                        v-if="latestScores[competentie.technischeCompetentieID]"
-                        :style="{
-                          color:
+            <li
+              v-for="taak in taken"
+              :key="taak.taakID"
+              class="py-4 flex items-center justify-between"
+            >
+              <!-- Taak Naam + Technische Competenties op dezelfde lijn -->
+              <div class="flex items-start w-full">
+                <div class="text-[#456A50] font-bold w-1/3 py-2">
+                  {{ taak.naam }}
+                </div>
+                <div class="flex-grow">
+                  <ul>
+                    <li
+                      v-for="competentie in filteredCompetentiesForTaak(
+                        taak.taakID,
+                      )"
+                      :key="competentie.technischeCompetentieID"
+                      class="py-2 flex items-start"
+                    >
+                      <div class="flex-grow">
+                        {{ competentie.naam }}
+                        <span
+                          v-if="
                             latestScores[competentie.technischeCompetentieID]
-                              .kleurcode,
-                        }"
-                        class="ml-2 font-bold"
-                        ><br />
-                        (Laatste score:
-                        {{
-                          latestScores[competentie.technischeCompetentieID]
-                            ?.scoreNaam
-                        }})
-                      </span>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                      <select
-                        v-model="
-                          selectedScores[competentie.technischeCompetentieID]
-                        "
-                        class="border border-gray-300 p-2 rounded"
-                      >
-                        <option disabled value="">Selecteer een score</option>
-                        <option
-                          v-for="score in scores"
-                          :key="score.scoreID"
-                          :value="score.scoreID"
+                          "
+                          :style="{
+                            color:
+                              latestScores[competentie.technischeCompetentieID]
+                                .kleurcode,
+                          }"
+                          class="ml-2 font-bold"
+                          ><br />
+                          (Laatste score:
+                          {{
+                            latestScores[competentie.technischeCompetentieID]
+                              ?.scoreNaam
+                          }})
+                        </span>
+                      </div>
+                      <div class="flex items-center space-x-4">
+                        <select
+                          v-model="
+                            selectedScores[competentie.technischeCompetentieID]
+                          "
+                          class="border border-gray-300 p-2 rounded"
                         >
-                          {{ score.scoreNaam }}
-                        </option>
-                      </select>
-                      <Icon
-                        icon="material-symbols:info"
-                        class="text-[#456A50] w-8 h-8 cursor-pointer"
-                        @click="openPopup(competentie)"
-                      />
-                    </div>
-                  </li>
-                </ul>
+                          <option disabled value="">Selecteer een score</option>
+                          <option
+                            v-for="score in scores"
+                            :key="score.scoreID"
+                            :value="score.scoreID"
+                          >
+                            {{ score.scoreNaam }}
+                          </option>
+                        </select>
+                        <Icon
+                          icon="material-symbols:info"
+                          class="text-[#456A50] w-8 h-8 cursor-pointer"
+                          @click="openPopup(competentie)"
+                        />
+                      </div>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
-          </li>
-        </ul>
+            </li>
+          </ul>
 
-        <p v-else class="text-center text-gray-500">
-          Geen technische competenties gevonden
-        </p>
-      </div>
+          <p v-else class="text-center text-gray-500">
+            Geen technische competenties gevonden
+          </p>
+        </div>
         <div class="text-center mt-6">
           <button
             class="px-6 py-2 text-white bg-[#456A50] rounded shadow hover:bg-[#3a5742] transition duration-300"
@@ -159,6 +166,9 @@ interface Taak {
   taakID: number
   naam: string
   technischeCompetenties: TechnischeCompetentie[]
+  groep: {
+    groepID: number
+  }
 }
 interface Gebruiker {
   gebruikerID: number
@@ -240,7 +250,9 @@ export default defineComponent({
             headers: { Authorization: `Bearer ${token}` },
           },
         )
-        this.taken = response.data
+        this.taken = response.data.sort(
+          (a: Taak, b: Taak) => a.groep.groepID - b.groep.groepID,
+        )
       } catch (error) {
         console.error(
           'Er is een fout opgetreden bij het ophalen van de taken:',
@@ -267,9 +279,12 @@ export default defineComponent({
     async fetchScores() {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/score`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const response = await axios.get(
+          `${import.meta.env.VITE_APP_API_URL}/score`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        )
         this.scores = response.data
       } catch (error) {
         console.error(
