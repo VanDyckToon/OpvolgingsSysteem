@@ -85,7 +85,7 @@
         <h2 class="text-2xl font-bold mb-4">Alle Opmerkingen</h2>
         <div
           v-if="comments.length > 0"
-          class="space-y-4 max-h-[600px] overflow-y-auto"
+          class="space-y-4 max-h-[600px] overflow-y-auto md:h-[32rem] lg:h-[26rem]"
         >
           <div
             v-for="comment in comments"
