@@ -33,17 +33,28 @@
               </div>
             </div>
             <div class="w-1/2">
-              <img
+              <input
+                type="file"
+                id="media"
+                ref="fileInput"
+                accept="image/*"
+                multiple
+                @change="handleFileUpload"
+                style="display: none;"
+              />
+              <img 
                 v-if="gebruiker.foto"
-                :src="`/assets/${gebruiker.foto}.jpg`"
+                :src="profielFotoUrl"
                 alt="Profile picture"
                 class="w-52 h-52 object-cover rounded-full mb-4 float-right m-8"
+                @click="triggerFileInput"
               />
               <img
                 v-else
                 :src="`/assets/no_image_available.jpg`"
                 alt="No picture available"
                 class="w-52 h-52 object-cover rounded-full mb-4 float-right m-8"
+                @click="triggerFileInput"
               />
             </div>
             </div>
@@ -297,6 +308,7 @@
         bevestigWachtwoord: '',
         nieuwEmail: '',
         bevestigEmail: '',
+        uploadError: null as string | null,
       }
     },
     async mounted() {
@@ -481,6 +493,97 @@ async updateEmail() {
         alert('Er is iets misgegaan bij het bijwerken van het e-mail adres.');
       }
     },
+     async updateFoto(filename: string) {
+      if (this.gebruiker) {
+        try {
+          const token = localStorage.getItem('access_token');
+          await axios.patch(
+            `${import.meta.env.VITE_APP_API_URL}/gebruiker/${this.$route.params.id}`,
+            { foto: filename },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          alert('Foto is bijgewerkt!');
+        } catch (error) {
+          console.error('Fout bij het bijwerken van de foto:', error);
+          alert('Er is een fout opgetreden bij het bijwerken.');
+        }
+      }
     },
+    validateImageFile(file: File): boolean {
+      const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+        'image/svg+xml'
+      ];
+
+      if(!allowedTypes.includes(file.type)) {
+        this.uploadError = 'Alleen JPG, PNG, GIF, WEBP of SVG bestanden zijn toegestaan.';
+        return false;
+      }
+
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        this.uploadError = 'Bestand is te groot. Maximale grootte is 5MB.';
+        return false;
+      }
+      return true;
+    },
+    async handleFileUpload(event: Event) {
+      const target = event.target as HTMLInputElement
+      const file = target.files?.[0];
+
+      this.uploadError = null;
+
+      if (!file) return;
+
+      if (!this.validateImageFile(file)) {
+        target.value = '';
+        return;
+      }
+
+      const formData = new FormData()
+      formData.append('file', file);
+
+      try {
+        const token = localStorage.getItem('access_token');
+
+        const uploadResponse = await axios.post(
+            `${import.meta.env.VITE_APP_API_URL}/upload`,
+            formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`,
+              },
+            }
+        );
+
+        const savedFilename = uploadResponse.data.filename;
+        await this.updateFoto(savedFilename);
+
+        if(this.gebruiker) {
+          this.gebruiker.foto = savedFilename;
+        }
+        alert('Foto succesvol geüpload en opgeslagen!');
+      }catch(error) {
+        console.error('Fout bij het uploaden:', error)
+        this.uploadError = 'Upload mislukt. Probeer het later opnieuw.';
+      } finally {
+        target.value = '';
+      }
+    },
+    triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
+    },
+    computed: {
+      profielFotoUrl(): string | null {
+        if (this.gebruiker?.foto) {
+          return `${import.meta.env.VITE_APP_API_URL}/uploads/${this.gebruiker.foto}`;
+        }
+        return null;
+      }
+    }
   })
   </script>
