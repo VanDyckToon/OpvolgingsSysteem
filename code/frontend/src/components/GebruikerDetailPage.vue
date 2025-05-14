@@ -239,7 +239,8 @@ export default defineComponent({
       }
     },
     triggerFileInput() {
-      this.$refs.fileInput.click();
+      const input = this.$refs.fileInput as HTMLInputElement | undefined;
+      input?.click();
     },
   },
   computed: {

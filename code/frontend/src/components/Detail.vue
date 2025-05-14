@@ -308,7 +308,7 @@
         bevestigWachtwoord: '',
         nieuwEmail: '',
         bevestigEmail: '',
-        uploadError: null as string | null,
+        uploadError: undefined as string | undefined,
       }
     },
     async mounted() {
@@ -574,7 +574,8 @@ async updateEmail() {
       }
     },
     triggerFileInput() {
-      this.$refs.fileInput.click();
+      const input = this.$refs.fileInput as HTMLInputElement | undefined;
+      input?.click();
     },
     },
     computed: {
