@@ -534,7 +534,7 @@ async updateEmail() {
       const target = event.target as HTMLInputElement
       const file = target.files?.[0];
 
-      this.uploadError = null;
+      this.uploadError = undefined;
 
       if (!file) return;
 
