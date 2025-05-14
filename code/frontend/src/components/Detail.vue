@@ -43,7 +43,7 @@
                 style="display: none;"
               />
               <img 
-                v-if="gebruiker.foto"
+                v-if="profielFotoUrl"
                 :src="profielFotoUrl"
                 alt="Profile picture"
                 class="w-52 h-52 object-cover rounded-full mb-4 float-right m-8"
@@ -579,11 +579,11 @@ async updateEmail() {
     },
     },
     computed: {
-      profielFotoUrl(): string | null {
+    profielFotoUrl(): string | undefined {
         if (this.gebruiker?.foto) {
           return `${import.meta.env.VITE_APP_API_URL}/uploads/${this.gebruiker.foto}`;
         }
-        return null;
+        return undefined; // Return undefined instead of null
       }
     }
   })
