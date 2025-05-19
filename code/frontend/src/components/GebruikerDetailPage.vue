@@ -7,7 +7,7 @@
           <div class="flex items-start">
             <div class="w-1/2 pr-4">
               <h2 class="text-2xl font-bold mb-2 text-left text-black">
-                Persoon gegevens
+                Persoonsgegevens 
               </h2>
               <div class="flex flex-col text-[#104116] rounded-md">
                 <p class="font-bold">
@@ -20,7 +20,7 @@
               </div>
               <div class="pt-6">
                 <h2 class="text-2xl font-bold mb-2 text-left text-black">
-                  Contact gegevens
+                  Contactgegevens
                 </h2>
                 <div class="flex flex-col text-[#104116] rounded-md">
                   <p class="font-bold">GSM: <a href="tel:{{ gebruiker.telefoonnummer }}" class="text-[#62825D] underline">{{ gebruiker.telefoonnummer }}</a></p>
@@ -51,19 +51,33 @@
               </div>
             </div>
             <div class="w-1/2">
-              <img
-                v-if="gebruiker.foto"
-                :src="`/assets/${gebruiker.foto}.jpg`"
-                alt="Profile picture"
-                class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
-              />
-              <img
-                v-else
-                :src="`/assets/no_image_available.jpg`"
-                alt="No picture available"
-                class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
-              />
-            </div>
+            <!-- Hidden file input -->
+            <input
+              type="file"
+              id="media"
+              ref="fileInput"
+              accept="image/*"
+              multiple
+              @change="handleFileUpload"
+              style="display: none;" />
+
+            <!-- Profile Picture -->
+            <img
+              v-if="profielFotoUrl"
+              :src="profielFotoUrl"
+              alt="Profile picture"
+              class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
+              @click="triggerFileInput"
+            />
+
+            <!-- Default Image if no profile picture -->
+            <img
+              v-else
+              :src="`/assets/no_image_available.jpg`"
+              alt="No picture available"
+              class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
+              @click="triggerFileInput" />
+          </div>
           </div>
         </div>
         <p v-else class="text-center text-gray-500">Geen gegevens gevonden</p>
@@ -98,10 +112,12 @@ export default defineComponent({
   components: {
     HeaderComponent,
   },
+  
   data() {
     return {
       gebruiker: null as Gebruiker | null,
       begeleiderID: this.$route.params.id as string,
+      uploadError: null as string | null,
     }
   },
   async mounted() {
@@ -136,6 +152,104 @@ export default defineComponent({
         }
       }
     },
+    async updateFoto(filename: string) {
+      if (this.gebruiker) {
+        try {
+          const token = localStorage.getItem('access_token');
+          await axios.patch(
+            `${import.meta.env.VITE_APP_API_URL}/gebruiker/${this.$route.params.id}`,
+            { foto: filename },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          alert('Foto is bijgewerkt!');
+        } catch (error) {
+          console.error('Fout bij het bijwerken van de foto:', error);
+          alert('Er is een fout opgetreden bij het bijwerken.');
+        }
+      }
+    },
+    validateImageFile(file: File): boolean {
+      // Allowed image MIME types
+      const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+        'image/svg+xml'
+      ];
+      
+      // Check file type
+      if (!allowedTypes.includes(file.type)) {
+        this.uploadError = 'Alleen JPG, PNG, GIF, WEBP of SVG bestanden zijn toegestaan.';
+        return false;
+      }
+      
+      // Check file size (e.g., 5MB limit)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        this.uploadError = 'Bestand is te groot. Maximale grootte is 5MB.';
+        return false;
+      }
+      
+      return true;
+    },
+    async handleFileUpload(event: Event) {
+      const target = event.target as HTMLInputElement;
+      const file = target.files?.[0];
+      
+      // Reset previous errors
+      this.uploadError = null;
+      
+      if (!file) return;
+      
+      // Validate the file before upload
+      if (!this.validateImageFile(file)) {
+        target.value = ''; // Clear the file input
+        return;
+      }
+      
+      const formData = new FormData()
+      formData.append('file', file);
+
+      try {
+        const token = localStorage.getItem('access_token');
+
+        const uploadResponse = await axios.post(
+          `${import.meta.env.VITE_APP_API_URL}/upload`,
+          formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        
+        const savedFilename = uploadResponse.data.filename;
+        await this.updateFoto(savedFilename);
+
+        if(this.gebruiker) {
+          this.gebruiker.foto = savedFilename;
+        }
+        alert('Foto succesvol geüpload en opgeslagen!');
+      } catch(error) {
+        console.error('Fout bij het uploaden:', error)
+        this.uploadError = 'Uploaden mislukt. Probeer het later opnieuw.';
+      } finally {
+        target.value = ''; // Clear the file input after upload attempt
+      }
+    },
+    triggerFileInput() {
+      const input = this.$refs.fileInput as HTMLInputElement | undefined;
+      input?.click();
+    },
+  },
+  computed: {
+    profielFotoUrl(): string | null {
+      if (this.gebruiker?.foto) {
+        return `${import.meta.env.VITE_APP_API_URL}/uploads/${this.gebruiker.foto}`;
+      }
+      return null;
+    }
   },
 })
 </script>
