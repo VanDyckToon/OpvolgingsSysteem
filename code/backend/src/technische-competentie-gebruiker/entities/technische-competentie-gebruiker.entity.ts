@@ -1,6 +1,7 @@
 import { Gebruiker } from "../../gebruiker/entities/gebruiker.entity";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { Score } from "../../score/entities/score.entity";
+import { Taak } from "../../taak/entities/taak.entity";
 import { TechnischeCompetentie } from "../../technische-competentie/entities/technische-competentie.entity";
 
 @Entity()
@@ -22,4 +23,7 @@ export class TechnischeCompetentieGebruiker {
     @ManyToOne(() => TechnischeCompetentie, (technischeCompetentie) => technischeCompetentie.technischeCompetentieGebruikers)
     @JoinColumn({ name: 'technischeCompetentieID' })
     technischeCompetentie: TechnischeCompetentie;
+
+    @OneToMany(() => Taak, (taak) => taak.technischeCompetenties)
+    taken: Taak[];
 }

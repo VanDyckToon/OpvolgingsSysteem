@@ -54,4 +54,12 @@ export class CompetentieGebruikerController {
   findByWerknemer(@Param('werknemerID') werknemerID: number) {
     return this.competentieGebruikerService.findByWerknemer(werknemerID);
   }
+  @Get('werknemer/all/:werknemerID')
+  findAllByWerknemer(@Param('werknemerID') werknemerID: number) {
+    return this.competentieGebruikerService.findAllByWerknemer(werknemerID);
+  }
+  @Get('werknemer/avg/:werknemerID')
+  findAverageByWerknemer(@Param('werknemerID') werknemerID: number) {
+    return this.competentieGebruikerService.findAverageByWerknemer(werknemerID);
+  }
 }
