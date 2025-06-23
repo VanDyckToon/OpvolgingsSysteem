@@ -64,16 +64,13 @@ import { defineComponent } from 'vue'
 import { Icon } from '@iconify/vue'
 import * as echarts from 'echarts'
 import HeaderComponent from './Header.vue'
+import { extractMonthOptions, beoordelingToDataMap, getDateStr } from '../utils/chartUtils'
+import type { MonthOption } from '../utils/chartUtils'
 
 interface Gebruiker {
   gebruikerID: number
   voornaam: string
   achternaam: string
-}
-
-interface MonthOption {
-  value: string
-  label: string
 }
 
 interface Score {
@@ -132,34 +129,12 @@ export default defineComponent({
 
   computed: {
     availableMonths(): MonthOption[] {
-      const uniqueDates = new Set<string>()
-      const monthOptions: MonthOption[] = []
-
-      if (!this.competentieData || this.competentieData.length === 0) {
-        return []
-      }
-
+      // Flatten all beoordelingen from all competenties
+      const allBeoordelingen: any[] = []
       this.competentieData.forEach(comp => {
-        if (!comp.beoordelingen) return
-
-        comp.beoordelingen.forEach(beoordeling => {
-          const date = new Date(beoordeling.datumBeoordeeld)
-          const key = `${date.getFullYear()}-${date.getMonth()}`
-          if (!uniqueDates.has(key)) {
-            uniqueDates.add(key)
-            monthOptions.push({
-              value: key,
-              label: `${date.toLocaleString('nl-NL', { month: 'long' })} ${date.getFullYear()}`
-            })
-          }
-        })
+        comp.beoordelingen?.forEach((b: any) => allBeoordelingen.push(b))
       })
-
-      return monthOptions.sort((a, b) => {
-        const [aYear, aMonth] = a.value.split('-').map(Number)
-        const [bYear, bMonth] = b.value.split('-').map(Number)
-        return aYear === bYear ? aMonth - bMonth : aYear - bYear
-      })
+      return extractMonthOptions(allBeoordelingen)
     },
 
     chartData() {
@@ -286,7 +261,7 @@ export default defineComponent({
       const allDatesMap = new Map<string, boolean>()
       this.chartData.forEach(comp => {
         comp.beoordelingen.forEach(beoordeling => {
-          const dateStr = beoordeling.datumBeoordeeld.split('T')[0]
+          const dateStr = getDateStr(beoordeling.datumBeoordeeld)
           allDatesMap.set(dateStr, true)
         })
       })
@@ -295,12 +270,7 @@ export default defineComponent({
 
       // Create series for each competency
       const series: echarts.LineSeriesOption[] = this.chartData.map((comp: any, index: number) => {
-        // Define dataMap inside the map callback
-        const dataMap = new Map<string, number>()
-        comp.beoordelingen.forEach((beoordeling: any) => {
-          const dateStr = beoordeling.datumBeoordeeld.split('T')[0]
-          dataMap.set(dateStr, beoordeling.score.waarde * 100)
-        })
+        const dataMap = beoordelingToDataMap(comp.beoordelingen)
         return {
           name: comp.naam,
           type: 'line',
@@ -319,7 +289,7 @@ export default defineComponent({
           },
           data: allDates.map(dateStr => dataMap.get(dateStr) ?? null)
         }
-      });
+      })
 
       const option: echarts.EChartsOption = {
         title: {

@@ -194,6 +194,7 @@ import HeaderComponent from './Header.vue'
 import { jsPDF } from 'jspdf'
 import html2canvas from 'html2canvas'
 import sprongLogo from '../assets/logo-de-sprong.png'
+import { beoordelingToDataMap, extractMonthOptions, getDateStr } from '../utils/chartUtils'
 
 interface Gebruiker {
   gebruikerID: number
@@ -299,38 +300,14 @@ export default defineComponent({
 
   computed: {
     availableMonths(): MonthOption[] {
-      const uniqueDates = new Map<string, boolean>()
-      const monthOptions: MonthOption[] = []
-
-      if (!this.taken || this.taken.length === 0) {
-        return []
-      }
-
+      // Flatten all beoordelingen from all taken/competenties
+      const allBeoordelingen: any[] = []
       this.taken.forEach(taak => {
-        if (!taak.competenties) return
-
-        taak.competenties.forEach(comp => {
-          if (!comp.beoordeling) return
-
-          comp.beoordeling.forEach(beoordeling => {
-            const date = new Date(beoordeling.datumBeoordeeld)
-            const key = `${date.getFullYear()}-${date.getMonth()}`
-            if (!uniqueDates.has(key)) {
-              uniqueDates.set(key, true)
-              monthOptions.push({
-                value: key,
-                label: `${date.toLocaleString('nl-NL', { month: 'long' })} ${date.getFullYear()}`
-              })
-            }
-          })
+        taak.competenties?.forEach(comp => {
+          comp.beoordeling?.forEach((b: any) => allBeoordelingen.push(b))
         })
       })
-
-      return monthOptions.sort((a, b) => {
-        const [aYear, aMonth] = a.value.split('-').map(Number)
-        const [bYear, bMonth] = b.value.split('-').map(Number)
-        return aYear === bYear ? aMonth - bMonth : aYear - bYear
-      })
+      return extractMonthOptions(allBeoordelingen)
     },
 
     filteredTaken(): Taak[] {
@@ -496,7 +473,7 @@ export default defineComponent({
       const allDatesMap = new Map<string, boolean>()
       taak.competenties.forEach(comp => {
         comp.beoordeling.forEach(beoordeling => {
-          const dateStr = beoordeling.datumBeoordeeld.split('T')[0]
+          const dateStr = getDateStr(beoordeling.datumBeoordeeld)
           allDatesMap.set(dateStr, true)
         })
       })
@@ -504,11 +481,7 @@ export default defineComponent({
       const allDates = Array.from(allDatesMap.keys()).sort()
 
       const series: echarts.LineSeriesOption[] = taak.competenties.map((comp, index) => {
-        const dataMap = new Map<string, number>()
-        comp.beoordeling.forEach(beoordeling => {
-          const dateStr = beoordeling.datumBeoordeeld.split('T')[0]
-          dataMap.set(dateStr, beoordeling.score.waarde * 100)
-        })
+        const dataMap = beoordelingToDataMap(comp.beoordeling)
         return {
           name: comp.naam,
           type: 'line',
