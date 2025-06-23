@@ -34,7 +34,7 @@
               <!-- Profile Image -->
               <img
                 v-if="gebruiker.foto"
-                :src="imageUrl + gebruiker.foto"
+                 :src="`/assets/${gebruiker.foto}.jpg`"
                 alt="Profile picture"
                 class="w-10 h-10 object-cover rounded-full mr-4"
               />
@@ -133,7 +133,6 @@ export default defineComponent({
       begeleiderID: this.$route.params.id as string,
       rolID: null as string | null,
       searchQuery: '', // Add a search query property
-      imageUrl: `${import.meta.env.VITE_APP_API_URL}/uploads/`,
     }
   },
   async mounted() {

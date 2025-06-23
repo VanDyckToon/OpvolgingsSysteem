@@ -3,10 +3,21 @@
     <HeaderComponent :begeleiderID="begeleiderID" />
     <div class="flex-grow flex justify-center items-center">
       <div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
-        <h2 class="text-2xl font-bold mb-6 text-center text-[#456A50]">
-          Competenties - {{ gebruiker?.voornaam }}
-          {{ gebruiker?.achternaam }}
-        </h2>
+        <div class="flex justify-between">
+          <h2 class="text-2xl font-bold mb-6 text-center text-[#456A50]">
+                    Competenties - {{ gebruiker?.voornaam }}
+                    {{ gebruiker?.achternaam }}
+          </h2>
+            <router-link :to="`/profielanalyse/${gebruiker?.gebruikerID}`">
+              <button>
+              <Icon
+                      icon="material-symbols:blood-pressure"
+                      class="text-[#456A50] w-8 h-8 cursor-pointer"
+                />
+             </button>
+            </router-link>
+        </div>
+        
         <div class="md:h-[28rem] lg:h-[22rem] overflow-y-scroll [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#456A50] dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
         <ul v-if="competenties.length" class="divide-y divide-gray-200">
           <li
@@ -147,7 +158,6 @@ export default defineComponent({
     await this.fetchScores()
     await this.fetchLatestScoredCompetencies()
     await this.fetchWerknemer()
-    this.startPolling() // Start polling for updates
   },
   methods: {
     async fetchCompetenties() {
@@ -264,13 +274,14 @@ export default defineComponent({
       }
     },
 
-    startPolling() {
+    //Refresh
+    /*startPolling() {
       setInterval(() => {
         this.fetchCompetenties()
         this.fetchScores()
         this.fetchLatestScoredCompetencies()
       }, 5000) // Poll every 5000 ms (5 seconds)
-    },
+    },*/
   },
 })
 </script>

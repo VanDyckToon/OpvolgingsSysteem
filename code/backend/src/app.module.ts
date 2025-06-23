@@ -23,7 +23,6 @@ import { AuthModule } from './auth/auth.module';
 import { GebruikerSubgroepModule } from './gebruiker-subgroep/gebruiker-subgroep.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { UploadController } from './upload/upload.controller';
 
 @Module({
   imports: [
@@ -58,7 +57,6 @@ import { UploadController } from './upload/upload.controller';
     OpmerkingModule,
     GebruikerSubgroepModule,
   ],
-  controllers: [AppController, UploadController],
   providers: [AppService],
 })
 export class AppModule {}

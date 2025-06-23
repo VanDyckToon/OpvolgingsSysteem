@@ -53,10 +53,16 @@ export class TechnischeCompetentieGebruikerController {
   remove(@Param('id') id: string) {
     return this.technischeCompetentieGebruikerService.remove(+id);
   }
+
   @Get('werknemer/:werknemerID')
   findByWerknemer(@Param('werknemerID') werknemerID: number) {
     return this.technischeCompetentieGebruikerService.findByWerknemer(
       werknemerID,
     );
+  }
+
+  @Get('werknermer/all/:werknemerID')
+  findAllByWerknemer(@Param('werknemerID') werknemerID: number) {
+    return this.technischeCompetentieGebruikerService.findAllByWerknemer( werknemerID,);
   }
 }

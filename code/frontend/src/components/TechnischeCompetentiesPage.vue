@@ -8,7 +8,7 @@
           {{ gebruiker?.achternaam }}
         </h2>
 
-        <div class="flex justify-end mb-4">
+        <div class="flex justify-between mb-4">
           <!-- Toggle knop om NVT te tonen/verborgen te maken, helemaal rechts en kleur aangepast -->
           <button
             class="px-6 py-2 text-white rounded shadow transition duration-300 mb-6"
@@ -20,6 +20,14 @@
           >
             {{ showNVT ? 'Verberg NVT' : 'Toon NVT' }}
           </button>
+          <router-link :to="`/tecnischeDetailanalyse/${gebruiker?.gebruikerID}`">
+              <button>
+              <Icon
+                      icon="material-symbols:blood-pressure"
+                      class="text-[#456A50] w-8 h-8 cursor-pointer"
+                />
+             </button>
+            </router-link>
         </div>
         <div
           class="md:h-[28rem] lg:h-[22rem] overflow-y-scroll [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#456A50] dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
