@@ -471,6 +471,27 @@ export default defineComponent({
       })
     },
 
+    getAxisLineStyle() {
+      return { color: '#456A50', width: 2 }
+    },
+
+    getAxisTickStyle() {
+      return { color: '#456A50' }
+    },
+
+    getAxisLabelStyle() {
+      return { color: '#666', fontSize: 11 }
+    },
+
+    shortDateFormatter(value: string, index: number, allDates: string[]) {
+      const currentDate = new Date(value)
+      const previousDate = index > 0 ? new Date(allDates[index - 1]) : null
+      if (index === 0 || (previousDate && currentDate.getMonth() !== previousDate.getMonth())) {
+        return currentDate.toLocaleDateString('nl-NL', { month: 'short' })
+      }
+      return ''
+    },
+
     renderTaskChart(taak: Taak, chart: echarts.ECharts) {
       const allDatesMap = new Map<string, boolean>()
       taak.competenties.forEach(comp => {
@@ -483,7 +504,6 @@ export default defineComponent({
       const allDates = Array.from(allDatesMap.keys()).sort()
 
       const series: echarts.LineSeriesOption[] = taak.competenties.map((comp, index) => {
-        // Build a map for this competentie's beoordelingen
         const dataMap = new Map<string, number>()
         comp.beoordeling.forEach(beoordeling => {
           const dateStr = beoordeling.datumBeoordeeld.split('T')[0]
@@ -571,22 +591,11 @@ export default defineComponent({
           type: 'category',
           boundaryGap: false,
           data: allDates,
-          axisLine: { lineStyle: { color: '#456A50' } },
-          axisTick: { alignWithLabel: true },
+          axisLine: { lineStyle: this.getAxisLineStyle() },
+          axisTick: { alignWithLabel: true, lineStyle: this.getAxisTickStyle() },
           axisLabel: {
-            color: '#666',
-            formatter: (value: string, index: number) => {
-              const currentDate = new Date(value);
-              const previousDate = index > 0 ? new Date(allDates[index - 1]) : null;
-              
-              // Show month if it's either:
-              // 1. The first data point, or
-              // 2. The first occurrence of a new month compared to the previous date
-              if (index === 0 || (previousDate && currentDate.getMonth() !== previousDate.getMonth())) {
-                return currentDate.toLocaleDateString('nl-NL', { month: 'short' });
-              }
-              return '';
-            }
+            ...this.getAxisLabelStyle(),
+            formatter: (value: string, index: number) => this.shortDateFormatter(value, index, allDates)
           }
         },
         yAxis: {
@@ -594,9 +603,9 @@ export default defineComponent({
           min: 0,
           max: 100,
           interval: 25,
-          axisLine: { show: true, lineStyle: { color: '#456A50' } },
-          axisTick: { show: true },
-          axisLabel: { color: '#666', formatter: '{value}%' },
+          axisLine: { show: true, lineStyle: this.getAxisLineStyle() },
+          axisTick: { show: true, lineStyle: this.getAxisTickStyle() },
+          axisLabel: { ...this.getAxisLabelStyle(), formatter: '{value}%' },
           splitLine: { show: true, lineStyle: { type: 'dashed', color: '#ddd' } }
         },
         series: series as echarts.LineSeriesOption[]

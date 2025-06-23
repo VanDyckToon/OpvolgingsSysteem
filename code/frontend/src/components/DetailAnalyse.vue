@@ -262,6 +262,23 @@ export default defineComponent({
       })
     },
 
+    getAxisLineStyle() {
+      return { color: '#456A50', width: 2 }
+    },
+
+    getAxisTickStyle() {
+      return { color: '#456A50' }
+    },
+
+    getAxisLabelStyle() {
+      return { color: '#666', fontSize: 11 }
+    },
+
+    shortDateFormatter(value: string) {
+      const date = new Date(value)
+      return date.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })
+    },
+
     renderChart() {
       if (!this.chartInstance || !this.chartData.length) return
 
@@ -366,15 +383,11 @@ export default defineComponent({
           type: 'category',
           boundaryGap: false,
           data: allDates,
-          axisLine: { lineStyle: { color: '#456A50', width: 2 } },
-          axisTick: { alignWithLabel: true, lineStyle: { color: '#456A50' } },
+          axisLine: { lineStyle: this.getAxisLineStyle() },
+          axisTick: { alignWithLabel: true, lineStyle: this.getAxisTickStyle() },
           axisLabel: {
-            color: '#666',
-            fontSize: 11,
-            formatter: (value: string) => {
-              const date = new Date(value)
-              return date.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })
-            }
+            ...this.getAxisLabelStyle(),
+            formatter: this.shortDateFormatter
           }
         },
         yAxis: {
@@ -382,9 +395,9 @@ export default defineComponent({
           min: 0,
           max: 100,
           interval: 25,
-          axisLine: { show: true, lineStyle: { color: '#456A50', width: 2 } },
-          axisTick: { show: true, lineStyle: { color: '#456A50' } },
-          axisLabel: { color: '#666', formatter: '{value}%', fontSize: 11 },
+          axisLine: { show: true, lineStyle: this.getAxisLineStyle() },
+          axisTick: { show: true, lineStyle: this.getAxisTickStyle() },
+          axisLabel: { ...this.getAxisLabelStyle(), formatter: '{value}%' },
           splitLine: { show: true, lineStyle: { type: 'dashed', color: '#e0e0e0' } }
         },
         series: series
