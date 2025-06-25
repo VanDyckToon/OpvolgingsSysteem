@@ -33,7 +33,7 @@
               </div>
             </div>
             <div class="w-1/2">
-              <input
+              <!--<input
                 type="file"
                 id="media"
                 ref="fileInput"
@@ -41,20 +41,18 @@
                 multiple
                 @change="handleFileUpload"
                 style="display: none;"
-              />
+              />-->
               <img 
-                v-if="profielFotoUrl"
-                :src="profielFotoUrl"
+                v-if="gebruiker.foto"
+                :src="`/assets/${gebruiker.foto}.jpg`"
                 alt="Profile picture"
                 class="w-52 h-52 object-cover rounded-full mb-4 float-right m-8"
-                @click="triggerFileInput"
               />
               <img
                 v-else
                 :src="`/assets/no_image_available.jpg`"
                 alt="No picture available"
                 class="w-52 h-52 object-cover rounded-full mb-4 float-right m-8"
-                @click="triggerFileInput"
               />
             </div>
             </div>
@@ -270,6 +268,7 @@
   import axios from 'axios'
   import { defineComponent } from 'vue'
   import HeaderComponent from '../components/Header.vue'
+import Gebruiker from './Gebruiker.vue'
 
   interface Gebruiker {
     gebruikerID: number
@@ -308,7 +307,7 @@
         bevestigWachtwoord: '',
         nieuwEmail: '',
         bevestigEmail: '',
-        uploadError: undefined as string | undefined,
+        //uploadError: undefined as string | undefined,
       }
     },
     async mounted() {
@@ -493,7 +492,7 @@ async updateEmail() {
         alert('Er is iets misgegaan bij het bijwerken van het e-mail adres.');
       }
     },
-     async updateFoto(filename: string) {
+     /*async updateFoto(filename: string) {
       if (this.gebruiker) {
         try {
           const token = localStorage.getItem('access_token');
@@ -576,15 +575,15 @@ async updateEmail() {
     triggerFileInput() {
       const input = this.$refs.fileInput as HTMLInputElement | undefined;
       input?.click();
+    },*/
     },
-    },
-    computed: {
+    /*computed: {
     profielFotoUrl(): string | undefined {
         if (this.gebruiker?.foto) {
           return `${import.meta.env.VITE_APP_API_URL}/uploads/${this.gebruiker.foto}`;
         }
         return undefined; // Return undefined instead of null
       }
-    }
+    }*/
   })
   </script>

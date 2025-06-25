@@ -4,6 +4,7 @@ import { UpdateTechnischeCompetentieGebruikerDto } from './dto/update-technische
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TechnischeCompetentieGebruiker } from './entities/technische-competentie-gebruiker.entity';
+import { Competentie } from 'src/competentie/entities/competentie.entity';
 
 @Injectable()
 export class TechnischeCompetentieGebruikerService {
@@ -85,4 +86,86 @@ export class TechnischeCompetentieGebruikerService {
         b.technischeCompetentie.technischeCompetentieID,
     );
   }
+
+  async findAllByWerknemer(gebruikerID: number) {
+    const competencies = await this.technischeCompetentieGebruikerRepository.find({
+      where: { gebruiker: { gebruikerID } },
+      relations: ['gebruiker', 'score', 'technischeCompetentie', 'technischeCompetentie.taak'],
+      order: {
+        technischeCompetentie: { technischeCompetentieID: 'ASC' },
+      },
+    });
+
+    const taakMap = new Map<number, { taakID: number, taakNaam: string, competentieMap: Map<number, Map<string, any>> }>();
+
+    for (const competency of competencies) {
+      const compID = competency.technischeCompetentie.technischeCompetentieID;
+      const taak = competency.technischeCompetentie.taak;
+      const taakID = taak?.taakID ?? -1;
+      const taakNaam = taak?.naam ?? 'Onbekende taak';
+
+      const dateKey = new Date(competency.datumBeoordeeld).toISOString().split('T')[0];
+
+      if (!taakMap.has(taakID)) {
+        taakMap.set(taakID, {
+          taakID,
+          taakNaam,
+          competentieMap: new Map(),
+        });
+      }
+
+      const taakEntry = taakMap.get(taakID)!;
+
+      if (!taakEntry.competentieMap.has(compID)) {
+        taakEntry.competentieMap.set(compID, new Map());
+      }
+
+      const dateMap = taakEntry.competentieMap.get(compID)!;
+
+      if (!dateMap.has(dateKey)) {
+        dateMap.set(dateKey, competency);
+      } else {
+        const existing = dateMap.get(dateKey);
+        if (new Date(competency.datumBeoordeeld) > new Date(existing.datumBeoordeeld)) {
+          dateMap.set(dateKey, competency);
+        }
+      }
+    }
+
+    const result = [];
+
+    for (const { taakID, taakNaam, competentieMap } of taakMap.values()) {
+      const competenties = [];
+
+      for (const [compID, dateMap] of competentieMap.entries()) {
+        const entries = Array.from(dateMap.values()).sort(
+          (a, b) => new Date(a.datumBeoordeeld).getTime() - new Date(b.datumBeoordeeld).getTime()
+        );
+
+        const firstEntry = entries[0];
+        const { technischeCompetentie } = firstEntry;
+
+        for (const entry of entries) {
+          delete entry.technischeCompetentie;
+        }
+
+        competenties.push({
+          technischeCompetentieID: technischeCompetentie.technischeCompetentieID,
+          naam: technischeCompetentie.naam,
+          beschrijving: technischeCompetentie.beschrijving,
+          beoordeling: entries,
+        });
+      }
+
+      result.push({
+        taakID,
+        taakNaam,
+        competenties,
+      });
+    }
+
+    return result;
+  }
+
+
 }

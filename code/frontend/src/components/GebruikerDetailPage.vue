@@ -51,33 +51,19 @@
               </div>
             </div>
             <div class="w-1/2">
-            <!-- Hidden file input -->
-            <input
-              type="file"
-              id="media"
-              ref="fileInput"
-              accept="image/*"
-              multiple
-              @change="handleFileUpload"
-              style="display: none;" />
-
-            <!-- Profile Picture -->
-            <img
-              v-if="profielFotoUrl"
-              :src="profielFotoUrl"
-              alt="Profile picture"
-              class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
-              @click="triggerFileInput"
-            />
-
-            <!-- Default Image if no profile picture -->
-            <img
-              v-else
-              :src="`/assets/no_image_available.jpg`"
-              alt="No picture available"
-              class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
-              @click="triggerFileInput" />
-          </div>
+              <img
+                v-if="gebruiker.foto"
+                :src="`/assets/${gebruiker.foto}.jpg`"
+                alt="Profile picture"
+                class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
+              />
+              <img
+                v-else
+                :src="`/assets/no_image_available.jpg`"
+                alt="No picture available"
+                class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
+              />
+            </div>
           </div>
         </div>
         <p v-else class="text-center text-gray-500">Geen gegevens gevonden</p>
@@ -117,7 +103,7 @@ export default defineComponent({
     return {
       gebruiker: null as Gebruiker | null,
       begeleiderID: this.$route.params.id as string,
-      uploadError: null as string | null,
+      //uploadError: null as string | null,
     }
   },
   async mounted() {
@@ -152,7 +138,7 @@ export default defineComponent({
         }
       }
     },
-    async updateFoto(filename: string) {
+    /*async updateFoto(filename: string) {
       if (this.gebruiker) {
         try {
           const token = localStorage.getItem('access_token');
@@ -249,7 +235,7 @@ export default defineComponent({
         return `${import.meta.env.VITE_APP_API_URL}/uploads/${this.gebruiker.foto}`;
       }
       return null;
-    }
+    }*/
   },
 })
 </script>

@@ -19,6 +19,10 @@ import TechnischeCompetentie from '@/components/TechnischeCompetentie.vue'
 import Gebruiker from '@/components/Gebruiker.vue'
 import OpleidingGebruikerPage from '@/components/OpleidingGebruikerPage.vue'
 import Detail from '@/components/Detail.vue'
+import ProfielAnalyse from '@/components/ProfielAnalyse.vue'
+import DetailAnalyse from '@/components/DetailAnalyse.vue'
+import { ComponentModel } from 'echarts'
+import TechnischeDetailAnalyse from '@/components/TechnischeDetailAnalyse.vue'
 
 
 const routes = [
@@ -117,6 +121,21 @@ const routes = [
     name: 'Detail',
     component: Detail,
   },
+  {
+    path: '/profielanalyse/:id',
+    name: 'ProfielAnalyse',
+    component: ProfielAnalyse,
+  },
+  {
+    path: '/detailanalyse/:id',
+    name: 'DetailAnalyse',
+    component: DetailAnalyse,
+  },
+  {
+    path: '/tecnischeDetailanalyse/:id',
+    name: 'TechnischeDetailAnalyse',
+    component: TechnischeDetailAnalyse
+  }
 ]
 
 const router = createRouter({
