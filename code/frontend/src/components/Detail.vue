@@ -38,7 +38,6 @@
                 id="media"
                 ref="fileInput"
                 accept="image/*"
-                multiple
                 @change="handleFileUpload"
                 style="display: none;"
               />-->

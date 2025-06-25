@@ -51,17 +51,27 @@
               </div>
             </div>
             <div class="w-1/2">
+              <input
+                type="file"
+                id="media"
+                ref="fileInput"
+                accept="image/*"
+                @change="handleFileUpload"
+                style="display: none;"
+              />
               <img
-                v-if="gebruiker.foto"
-                :src="`/assets/${gebruiker.foto}.jpg`"
-                alt="Profile picture"
-                class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
+                v-if="profielFotoUrl"
+                :src="profielFotoUrl"
+                alt="Profiel Foto"
+                class="w-72 h-72 object-cover rounded-full mb-4 float-rigth m-8"
+                @click="triggerFileInput"
               />
               <img
                 v-else
                 :src="`/assets/no_image_available.jpg`"
-                alt="No picture available"
                 class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
+                @click="triggerFileInput"
+                alt="No picture available"
               />
             </div>
           </div>
