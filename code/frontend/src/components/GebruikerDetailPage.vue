@@ -71,6 +71,7 @@
                 :src="`/assets/no_image_available.jpg`"
                 class="w-72 h-72 object-cover rounded-full mb-4 float-right m-8"
                 @click="triggerFileInput"
+                alt="No picture available"
               />
             </div>
           </div>
@@ -112,7 +113,7 @@ export default defineComponent({
     return {
       gebruiker: null as Gebruiker | null,
       begeleiderID: this.$route.params.id as string,
-      uploadError: null as string | null,
+      //uploadError: null as string | null,
     }
   },
   async mounted() {
@@ -147,7 +148,7 @@ export default defineComponent({
         }
       }
     },
-    async updateFoto(filename: string) {
+    /*async updateFoto(filename: string) {
       if (this.gebruiker) {
         try {
           const token = localStorage.getItem('access_token');
@@ -244,7 +245,7 @@ export default defineComponent({
         return `${import.meta.env.VITE_APP_API_URL}/uploads/${this.gebruiker.foto}`;
       }
       return null;
-    }
+    }*/
   },
 })
 </script>
